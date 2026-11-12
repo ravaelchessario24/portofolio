@@ -1,0 +1,34 @@
+{
+  "logo": "images/itb-ad-logo.webp",
+  "logoDark": "images/itb-ad-logo-dark.webp",
+  "school": "Institut Teknologi dan Bisnis Ahmad Dahlan Jakarta",
+  "degree": {
+    "id": "Sarjana Teknologi Informasi",
+    "en": "Bachelor of Information Technology"
+  },
+  "period": "2022 – 2026",
+  "gpa": 3.77,
+  "gpaMax": 4.0,
+  "nomination": {
+    "id": "IPK tertinggi peringkat 4 dari 21 lulusan Program Studi Teknologi Informasi angkatan 2026",
+    "en": "4th-highest GPA among 21 graduates of the Information Technology Study Program, Class of 2026"
+  },
+  "nominationNote": {
+    "id": "IPK 3,77 / 4,00 · Lulus 2026",
+    "en": "GPA 3.77 / 4.00 · Graduated 2026"
+  },
+  "favorites": [
+    {
+      "id": "Basis Data",
+      "en": "Database Systems"
+    },
+    {
+      "id": "Data Mining dan Kecerdasan Bisnis",
+      "en": "Data Mining & Business Intelligence"
+    },
+    {
+      "id": "Big Data dan Analitik",
+      "en": "Big Data & Analytics"
+    }
+  ]
+}

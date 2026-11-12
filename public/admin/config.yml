@@ -1,0 +1,60 @@
+backend:
+  name: github
+  repo: ravaelchessario24/portofolio
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "images/uploads"
+
+collections:
+  - name: "pengaturan_utama"
+    label: "Konten Portofolio (ID & EN)"
+    files:
+      - name: "profile"
+        label: "1. Profil & Hero"
+        file: "src/content/profile.json"
+        fields:
+          - { label: "Nama Lengkap", name: "name", widget: "string" }
+          - { label: "Nama Navbar", name: "brand", widget: "string" }
+          - { label: "Foto Utama", name: "photo", widget: "image" }
+          - { label: "Foto Persegi Lanyard", name: "squarePhoto", widget: "image" }
+          - { label: "Foto Avatar Bulat", name: "avatar", widget: "image" }
+          - { label: "Berkas CV (PDF)", name: "cv", widget: "file" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Lokasi", name: "location", widget: "string" }
+
+      - name: "about"
+        label: "2. Tentang Saya"
+        file: "src/content/about.json"
+        fields:
+          - label: "Paragraf Profil"
+            name: "profile"
+            widget: "object"
+            fields:
+              - { label: "Bahasa Indonesia", name: "id", widget: "text" }
+              - { label: "English", name: "en", widget: "text" }
+          - { label: "Foto Bagian Tentang", name: "photo", widget: "image" }
+
+      - name: "education"
+        label: "3. Pendidikan"
+        file: "src/content/education.json"
+        fields:
+          - { label: "Logo Kampus", name: "logo", widget: "image" }
+          - { label: "Nama Kampus", name: "school", widget: "string" }
+          - { label: "Periode", name: "period", widget: "string" }
+          - { label: "IPK", name: "gpa", widget: "number", value_type: "float" }
+          - { label: "Skala IPK Maksimal", name: "gpaMax", widget: "number", value_type: "float" }
+
+      - name: "contact"
+        label: "4. Kontak & Ketersediaan"
+        file: "src/content/contact.json"
+        fields:
+          - label: "Tersedia Mulai"
+            name: "availableFrom"
+            widget: "object"
+            fields:
+              - { label: "Bahasa Indonesia", name: "id", widget: "string" }
+              - { label: "English", name: "en", widget: "string" }
+          - { label: "URL LinkedIn", name: "linkedin", widget: "string" }
+          - { label: "Kota Lokasi", name: "location", widget: "string" }
+          - { label: "Tautan Google Maps", name: "mapsUrl", widget: "string" }

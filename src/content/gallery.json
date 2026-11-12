@@ -1,0 +1,110 @@
+[
+  {
+    "id": "kkn-1",
+    "src": "images/gallery/kkn-1.webp",
+    "cat": {
+      "id": "KKN Digimapan",
+      "en": "KKN Community Service"
+    },
+    "catKey": "kkn",
+    "date": "2025",
+    "caption": {
+      "id": "Tim KKN Digimapan ITB Ahmad Dahlan bersama peserta program di Desa Lebak Wangi, Kec. Sepatan Timur, Kab. Tangerang.",
+      "en": "ITB Ahmad Dahlan KKN Digimapan team with program participants in Lebak Wangi Village, East Sepatan, Tangerang."
+    },
+    "privacyNote": {
+      "id": "Wajah anak-anak diburamkan untuk menjaga privasi.",
+      "en": "Children's faces are blurred to protect privacy."
+    }
+  },
+  {
+    "id": "kkn-2",
+    "src": "images/gallery/kkn-2.webp",
+    "cat": {
+      "id": "KKN Digimapan",
+      "en": "KKN Community Service"
+    },
+    "catKey": "kkn",
+    "date": "2025",
+    "caption": {
+      "id": "Dokumentasi kelas literasi digital bersama siswa SD/Madrasah dan rekan mahasiswa KKN ITB Ahmad Dahlan.",
+      "en": "Digital literacy class documentation with elementary students and fellow ITB Ahmad Dahlan KKN students."
+    },
+    "privacyNote": {
+      "id": "Wajah anak-anak diburamkan untuk menjaga privasi.",
+      "en": "Children's faces are blurred to protect privacy."
+    }
+  },
+  {
+    "id": "kkn-3",
+    "src": "images/gallery/kkn-3.webp",
+    "cat": {
+      "id": "Literasi Digital",
+      "en": "Digital Literacy"
+    },
+    "catKey": "literasi",
+    "date": "2025",
+    "caption": {
+      "id": "Mendampingi siswa berlatih mengetik dasar secara langsung dengan aplikasi Typingcore di laptop.",
+      "en": "Guiding students in hands-on basic typing practice using Typingcore on a laptop."
+    },
+    "privacyNote": {
+      "id": "Wajah anak-anak diburamkan untuk menjaga privasi.",
+      "en": "Children's faces are blurred to protect privacy."
+    }
+  },
+  {
+    "id": "kkn-4",
+    "src": "images/gallery/kkn-4.webp",
+    "cat": {
+      "id": "Literasi Digital",
+      "en": "Digital Literacy"
+    },
+    "catKey": "literasi",
+    "date": "2025",
+    "caption": {
+      "id": "Sesi pendampingan kelompok kecil untuk mengenalkan fungsi papan ketik dan navigasi kursor.",
+      "en": "Small-group mentoring session introducing keyboard functions and cursor navigation."
+    },
+    "privacyNote": {
+      "id": "Wajah anak-anak diburamkan untuk menjaga privasi.",
+      "en": "Children's faces are blurred to protect privacy."
+    }
+  },
+  {
+    "id": "kkn-5",
+    "src": "images/gallery/kkn-5.webp",
+    "cat": {
+      "id": "Literasi Digital",
+      "en": "Digital Literacy"
+    },
+    "catKey": "literasi",
+    "date": "2025",
+    "caption": {
+      "id": "Antusiasme siswa saat bergiliran mencoba latihan pengetikan dan pengenalan perangkat lunak dasar.",
+      "en": "Students enthusiastically taking turns practicing typing and exploring basic software."
+    },
+    "privacyNote": {
+      "id": "Wajah anak-anak diburamkan untuk menjaga privasi.",
+      "en": "Children's faces are blurred to protect privacy."
+    }
+  },
+  {
+    "id": "kkn-6",
+    "src": "images/gallery/kkn-6.webp",
+    "cat": {
+      "id": "Literasi Digital",
+      "en": "Digital Literacy"
+    },
+    "catKey": "literasi",
+    "date": "2025",
+    "caption": {
+      "id": "Praktik kreativitas visual menggambar objek menggunakan Microsoft Paint sebagai pengenalan kontrol mouse.",
+      "en": "Visual creativity practice drawing objects in Microsoft Paint to build mouse control skills."
+    },
+    "privacyNote": {
+      "id": "Wajah anak-anak diburamkan untuk menjaga privasi.",
+      "en": "Children's faces are blurred to protect privacy."
+    }
+  }
+]

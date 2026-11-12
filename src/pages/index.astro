@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+import PortfolioApp from '../components/PortfolioApp';
+import { profile, about, education, contact } from '../lib/content';
+
+const baseUrl = import.meta.env.BASE_URL || '/';
+const pageTitle = `${profile.name} — Data Analyst & Data Science Portfolio`;
+const pageDescription =
+  typeof about.profile === 'string' ? about.profile : about.profile.id;
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  alternateName: 'Ravael Chessario',
+  jobTitle: 'Data Analyst & Data Science Enthusiast',
+  email: `mailto:${profile.email}`,
+  url: 'https://ravaelchessario24.github.io/',
+  sameAs: [contact.linkedin],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Tangerang',
+    addressCountry: 'ID',
+  },
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: education.school,
+  },
+  knowsAbout: [
+    'Data Analysis',
+    'Data Cleaning',
+    'Python',
+    'SQL',
+    'MySQL',
+    'Microsoft Excel',
+    'Pandas',
+    'NumPy',
+    'Scikit-Learn',
+    'Sentiment Analysis',
+    'Streamlit',
+  ],
+};
+---
+
+<!doctype html>
+<html lang="id" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="author" content={profile.name} />
+    <meta name="theme-color" content="#FAF9F5" />
+
+    <!-- OpenGraph & Twitter Card -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={`${baseUrl}og-image.png`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={`${baseUrl}og-image.png`} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}images/itb-ad-logo.svg`} />
+
+    <!-- Google Fonts: Plus Jakarta Sans, Instrument Serif Italic, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Instant Theme Initialization before First Paint -->
+    <script is:inline>
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark =
+          window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme =
+          savedTheme || (prefersDark ? 'dark' : 'light');
+        const savedLang = localStorage.getItem('lang');
+        if (savedLang === 'en' || savedLang === 'id') {
+          document.documentElement.lang = savedLang;
+        }
+      } catch {}
+    </script>
+
+    <!-- Schema.org Person Structured Data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(personJsonLd)}
+    />
+  </head>
+  <body>
+    <PortfolioApp client:load baseUrl={baseUrl} />
+  </body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "name": "Muhammad Ravael Chessario Ramdoni",
+  "brand": "Ravael.",
+  "greeting": {
+    "id": "Hi, nama saya",
+    "en": "Hi, my name is"
+  },
+  "roles": [
+    {
+      "id": "Data Analyst dan Data Science Enthusiast",
+      "en": "Data Analyst and Data Science Enthusiast"
+    }
+  ],
+  "badgeRole": {
+    "id": "Data Enthusiast",
+    "en": "Data Enthusiast"
+  },
+  "quote": {
+    "id": "Data yang rapi dimulai dari pertanyaan yang tepat — mengubah puluhan ribu ulasan mentah menjadi keputusan produk yang terukur.",
+    "en": "Clean data starts with the right question — turning tens of thousands of raw reviews into measurable product decisions."
+  },
+  "photo": "images/ravael-portrait.webp",
+  "avatar": "images/ravael-avatar.webp",
+  "squarePhoto": "images/ravael-square.webp",
+  "cv": "files/CV_Muhammad_Ravael_Chessario_Ramdoni.pdf",
+  "email": "ravaelchessario@gmail.com",
+  "location": "Tangerang, Indonesia",
+  "languages": [
+    {
+      "id": "Bahasa Indonesia (Native)",
+      "en": "Indonesian (Native)"
+    },
+    {
+      "id": "Bahasa Inggris (Intermediate · TOEFL ITP 530)",
+      "en": "English (Intermediate · TOEFL ITP 530)"
+    }
+  ]
+}

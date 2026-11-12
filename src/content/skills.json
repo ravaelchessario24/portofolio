@@ -1,0 +1,217 @@
+[
+  {
+    "name": "Python",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Analisis Sentimen Mobile JKN & Python for Data Science",
+      "en": "Mobile JKN Sentiment Analysis & Python for Data Science"
+    },
+    "logo": "images/tools/python.svg"
+  },
+  {
+    "name": "SQL",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Data Analyst Bootcamp (DSAREA) & The Complete SQL Bootcamp",
+      "en": "Data Analyst Bootcamp (DSAREA) & The Complete SQL Bootcamp"
+    },
+    "logo": "images/tools/sql.svg"
+  },
+  {
+    "name": "MySQL",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Basis Data & Sistem CMS PAUD KB Flamboyan",
+      "en": "Database Systems & PAUD KB Flamboyan CMS"
+    },
+    "logo": "images/tools/mysql.svg"
+  },
+  {
+    "name": "Microsoft Excel",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Data Analyst Bootcamp (DSAREA) & Excel 101 NgulikData",
+      "en": "Data Analyst Bootcamp (DSAREA) & Excel 101 NgulikData"
+    },
+    "logo": "images/tools/excel.svg"
+  },
+  {
+    "name": "Google Sheets",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Pengolahan Data & Rekapitulasi Kolaboratif",
+      "en": "Data Processing & Collaborative Reporting"
+    },
+    "logo": "images/tools/sheets.svg"
+  },
+  {
+    "name": "Pandas",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Pipeline 63.766 Ulasan Mobile JKN & Python for Data Science",
+      "en": "63,766 Mobile JKN Reviews Pipeline & Python for Data Science"
+    },
+    "logo": "images/tools/pandas.svg"
+  },
+  {
+    "name": "NumPy",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "Analisis Sentimen Mobile JKN & Python for Data Science",
+      "en": "Mobile JKN Sentiment Analysis & Python for Data Science"
+    },
+    "logo": "images/tools/numpy.svg"
+  },
+  {
+    "name": "Scikit-Learn",
+    "group": "Data & Analitik",
+    "tool": true,
+    "usedIn": {
+      "id": "TF-IDF Bigram & Multinomial Naive Bayes Mobile JKN",
+      "en": "TF-IDF Bigram & Multinomial Naive Bayes (Mobile JKN)"
+    },
+    "logo": "images/tools/sklearn.svg"
+  },
+  {
+    "name": "Data Cleaning",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "Exploratory Data Analysis",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "Text Mining",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "Sentiment Analysis",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "TF-IDF",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "Naive Bayes",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "Matplotlib",
+    "group": "Visualisasi & Dashboard",
+    "tool": true,
+    "usedIn": {
+      "id": "Visualisasi Distribusi Sentimen Mobile JKN & Haltev Academy",
+      "en": "Mobile JKN Sentiment Distribution Visualization & Haltev Academy"
+    },
+    "logo": "images/tools/matplotlib.svg"
+  },
+  {
+    "name": "Seaborn",
+    "group": "Visualisasi & Dashboard",
+    "tool": true,
+    "usedIn": {
+      "id": "Evaluasi Confusion Matrix & EDA Mobile JKN",
+      "en": "Confusion Matrix Evaluation & EDA (Mobile JKN)"
+    },
+    "logo": "images/tools/seaborn.svg"
+  },
+  {
+    "name": "Streamlit",
+    "group": "Visualisasi & Dashboard",
+    "tool": true,
+    "usedIn": {
+      "id": "Dashboard Interaktif Analisis Sentimen Mobile JKN",
+      "en": "Interactive Mobile JKN Sentiment Analysis Dashboard"
+    },
+    "logo": "images/tools/streamlit.svg"
+  },
+  {
+    "name": "Data Visualization",
+    "group": "Visualisasi & Dashboard",
+    "tool": false
+  },
+  {
+    "name": "Jupyter Notebook",
+    "group": "Alat Kerja",
+    "tool": true,
+    "usedIn": {
+      "id": "Eksperimen Model & Praproses Teks Mobile JKN",
+      "en": "Model Experimentation & Text Preprocessing (Mobile JKN)"
+    },
+    "logo": "images/tools/jupyter.svg"
+  },
+  {
+    "name": "Google Colab",
+    "group": "Alat Kerja",
+    "tool": true,
+    "usedIn": {
+      "id": "Pelatihan Model NLP 63.766 Ulasan Mobile JKN",
+      "en": "NLP Model Training on 63,766 Mobile JKN Reviews"
+    },
+    "logo": "images/tools/colab.svg"
+  },
+  {
+    "name": "Microsoft Office",
+    "group": "Alat Kerja",
+    "tool": false
+  },
+  {
+    "name": "IT Troubleshooting",
+    "group": "Alat Kerja",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Berpikir Analitis",
+      "en": "Analytical Thinking"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Ketelitian Detail",
+      "en": "Attention to Detail"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Pemecahan Masalah",
+      "en": "Problem Solving"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Kerja Tim & Kolaborasi",
+      "en": "Teamwork & Collaboration"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Cepat Belajar",
+      "en": "Fast Learner"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  }
+]

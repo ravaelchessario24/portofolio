@@ -1,0 +1,98 @@
+[
+  {
+    "title": {
+      "id": "Data Analyst Bootcamp",
+      "en": "Data Analyst Bootcamp"
+    },
+    "issuer": "DSAREA",
+    "date": {
+      "id": "November 2026 – Sekarang (Dalam Proses Belajar)",
+      "en": "November 2026 – Present (In Progress)"
+    },
+    "summary": {
+      "id": "Alur analisis data end-to-end: pengolahan data dengan Excel dan SQL, analisis dengan Python, hingga visualisasi data dan pembuatan dashboard.",
+      "en": "End-to-end data analysis workflow: data processing with Excel and SQL, analysis in Python, data visualization, and dashboard creation."
+    },
+    "image": "images/certs/cert-dsarea.svg"
+  },
+  {
+    "title": {
+      "id": "Excel 101: Belajar Excel dari Nol",
+      "en": "Excel 101: Learning Excel from Scratch"
+    },
+    "issuer": "NgulikData",
+    "date": {
+      "id": "Oktober 2026",
+      "en": "October 2026"
+    },
+    "summary": {
+      "id": "Pengolahan data terstruktur, fungsi logika & pencarian, serta perancangan ringkasan data di Microsoft Excel.",
+      "en": "Structured data handling, logical & lookup functions, and summary reporting in Microsoft Excel."
+    },
+    "image": "images/certs/cert-ngulikdata.webp"
+  },
+  {
+    "title": {
+      "id": "Google IT Support Professional Certificate",
+      "en": "Google IT Support Professional Certificate"
+    },
+    "issuer": "Coursera",
+    "date": {
+      "id": "Januari 2025 – Maret 2025",
+      "en": "January 2025 – March 2025"
+    },
+    "summary": {
+      "id": "Troubleshooting hardware & software, jaringan komputer, sistem operasi, administrasi sistem, dan dasar keamanan IT.",
+      "en": "Hardware & software troubleshooting, computer networking, operating systems, system administration, and IT security fundamentals."
+    },
+    "image": "images/certs/cert-coursera.webp"
+  },
+  {
+    "title": {
+      "id": "TOEFL ITP (Skor 530)",
+      "en": "TOEFL ITP (Score 530)"
+    },
+    "issuer": "PT. Bahasa Inggris Net",
+    "date": {
+      "id": "Februari 2025",
+      "en": "February 2025"
+    },
+    "summary": {
+      "id": "Sertifikasi kemampuan Bahasa Inggris tingkat Intermediate dengan skor TOEFL ITP 530.",
+      "en": "Intermediate English proficiency certification with a TOEFL ITP score of 530."
+    },
+    "image": "images/certs/cert-toefl.webp"
+  },
+  {
+    "title": {
+      "id": "The Complete SQL Bootcamp",
+      "en": "The Complete SQL Bootcamp"
+    },
+    "issuer": "Udemy",
+    "date": {
+      "id": "Januari 2025",
+      "en": "January 2025"
+    },
+    "summary": {
+      "id": "Kueri basis data relasional, agregasi, join multi-tabel, dan ekstraksi data untuk kebutuhan analitik.",
+      "en": "Relational database querying, aggregations, multi-table joins, and data extraction for analytics."
+    },
+    "image": "images/certs/cert-udemy.webp"
+  },
+  {
+    "title": {
+      "id": "Python for Data Science",
+      "en": "Python for Data Science"
+    },
+    "issuer": "Haltev Academy",
+    "date": {
+      "id": "Agustus 2024 – September 2024",
+      "en": "August 2024 – September 2024"
+    },
+    "summary": {
+      "id": "Manipulasi data dengan Pandas & NumPy, visualisasi data, serta dasar machine learning menggunakan Python.",
+      "en": "Data manipulation with Pandas & NumPy, data visualization, and machine learning fundamentals in Python."
+    },
+    "image": "images/certs/cert-haltev.webp"
+  }
+]

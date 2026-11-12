@@ -1,0 +1,306 @@
+[
+  {
+    "slug": "mobile-jkn",
+    "template": "ml",
+    "title": {
+      "id": "Analisis Sentimen Ulasan Aplikasi Mobile JKN",
+      "en": "Mobile JKN App Review Sentiment Analysis"
+    },
+    "projectTypeLabel": {
+      "id": "Proyek latihan dengan dataset publik (63.766 ulasan Google Play Store)",
+      "en": "Practice project with public dataset (63,766 Google Play Store reviews)"
+    },
+    "categoryBadge": {
+      "id": "Machine Learning & NLP",
+      "en": "Machine Learning & NLP"
+    },
+    "period": {
+      "id": "Mei 2026 – Juli 2026",
+      "en": "May 2026 – July 2026"
+    },
+    "summary": {
+      "id": "Membangun pipeline klasifikasi sentimen end-to-end berbasis Python dengan kerangka Knowledge Discovery in Database (KDD) terhadap 63.766 ulasan Mobile JKN (Jan 2025 – Jan 2026). Menggabungkan Hybrid Labeling (Rating + InSet Lexicon), 15.000 fitur TF-IDF bigram, dan Multinomial Naive Bayes dengan akurasi 94,38% dan F1-score 94,86%, disajikan melalui dashboard interaktif.",
+      "en": "Built an end-to-end Python sentiment classification pipeline using the Knowledge Discovery in Database (KDD) framework on 63,766 Mobile JKN reviews (Jan 2025 – Jan 2026). Combined Hybrid Labeling (Rating + InSet Lexicon), 15,000 TF-IDF bigram features, and Multinomial Naive Bayes achieving 94.38% accuracy and 94.86% F1-score, presented via an interactive dashboard."
+    },
+    "cover": "images/projects/mobile-jkn-dashboard.webp",
+    "tags": [
+      "Akurasi 94,38%",
+      "F1-Score 94,86%",
+      "59.980 Data Berlabel",
+      "Python",
+      "Scikit-Learn",
+      "Pandas",
+      "Streamlit"
+    ],
+    "demo": "https://ravaelchessario24.github.io/mobile-jkn-landing-page/",
+    "caseStudy": "#/proyek/mobile-jkn",
+    "featured": true,
+    "cs": {
+      "eyebrow": {
+        "id": "Case Study · Machine Learning & NLP · Mei 2026 – Juli 2026",
+        "en": "Case Study · Machine Learning & NLP · May 2026 – July 2026"
+      },
+      "headline": {
+        "id": "Memilah 63.766 Ulasan Mobile JKN Menjadi Prioritas Perbaikan Produk dengan Akurasi 94,38%",
+        "en": "Sorting 63,766 Mobile JKN Reviews into Product Fix Priorities with 94.38% Accuracy"
+      },
+      "subheadline": {
+        "id": "Pendekatan Knowledge Discovery in Database (KDD) dan Hybrid Labeling (InSet Lexicon) untuk mengoreksi bias rating bintang serta memetakan keluhan spesifik pengguna.",
+        "en": "A Knowledge Discovery in Database (KDD) and Hybrid Labeling (InSet Lexicon) approach to correct star-rating bias and map specific user complaints."
+      },
+      "metrics": [
+        {
+          "v": "94,38%",
+          "l": {
+            "id": "Akurasi Data Uji",
+            "en": "Test Set Accuracy"
+          },
+          "note": {
+            "id": "Split 80:20 (11.996 data uji)",
+            "en": "80:20 Split (11,996 test samples)"
+          }
+        },
+        {
+          "v": "94,86%",
+          "l": {
+            "id": "F1-Score",
+            "en": "F1-Score"
+          },
+          "note": {
+            "id": "Presisi 91,15% · Recall 98,89%",
+            "en": "Precision 91.15% · Recall 98.89%"
+          }
+        },
+        {
+          "v": "63.766",
+          "l": {
+            "id": "Ulasan Awal (Raw)",
+            "en": "Initial Raw Reviews"
+          },
+          "note": {
+            "id": "Google Play (Jan 2025 – Jan 2026)",
+            "en": "Google Play (Jan 2025 – Jan 2026)"
+          }
+        },
+        {
+          "v": "62.878",
+          "l": {
+            "id": "Teks Setelah Cleaning",
+            "en": "Texts After Cleaning"
+          },
+          "note": {
+            "id": "Normalisasi kata baku + Sastrawi",
+            "en": "Slang normalization + Sastrawi"
+          }
+        },
+        {
+          "v": "59.980",
+          "l": {
+            "id": "Data Berlabel Seimbang",
+            "en": "Balanced Labeled Data"
+          },
+          "note": {
+            "id": "31.470 (52,5%) Positif · 28.510 (47,5%) Negatif",
+            "en": "31,470 (52.5%) Positive · 28,510 (47.5%) Negative"
+          }
+        },
+        {
+          "v": "15.000",
+          "l": {
+            "id": "Fitur TF-IDF Bigram",
+            "en": "TF-IDF Bigram Features"
+          },
+          "note": {
+            "id": "Multinomial Naive Bayes",
+            "en": "Multinomial Naive Bayes"
+          }
+        }
+      ],
+      "pipeline": [
+        {
+          "step": "01",
+          "title": {
+            "id": "Data Selection & Pengumpulan Dataset",
+            "en": "Data Selection & Dataset Collection"
+          },
+          "tools": ["Python", "Google Colab", "Pandas"],
+          "description": {
+            "id": "Mengumpulkan 63.766 ulasan pengguna aplikasi Mobile JKN dari Google Play Store untuk rentang periode Januari 2025 – Januari 2026 mengikuti tahapan awal Knowledge Discovery in Database (KDD).",
+            "en": "Collected 63,766 Mobile JKN user reviews from the Google Play Store spanning January 2025 – January 2026 following the initial stage of Knowledge Discovery in Database (KDD)."
+          },
+          "outputMetric": {
+            "id": "63.766 baris ulasan mentah",
+            "en": "63,766 raw review rows"
+          }
+        },
+        {
+          "step": "02",
+          "title": {
+            "id": "Text Preprocessing & Mereduksi Noise",
+            "en": "Text Preprocessing & Noise Reduction"
+          },
+          "tools": ["Python", "Pandas", "Sastrawi", "Jupyter Notebook"],
+          "description": {
+            "id": "Menjalankan data cleaning (hapus duplikat, angka, simbol, URL), normalisasi kata tidak baku/slang bahasa Indonesia, stopword removal kontekstual, dan stemming selektif dengan pustaka Sastrawi.",
+            "en": "Executed data cleaning (removing duplicates, numbers, symbols, URLs), Indonesian slang normalization, contextual stopword removal, and selective stemming using the Sastrawi library."
+          },
+          "outputMetric": {
+            "id": "62.878 teks ulasan bersih",
+            "en": "62,878 clean review texts"
+          }
+        },
+        {
+          "step": "03",
+          "title": {
+            "id": "Data Transformation: Hybrid Labeling (Rating + InSet Lexicon)",
+            "en": "Data Transformation: Hybrid Labeling (Rating + InSet Lexicon)"
+          },
+          "tools": ["Python", "InSet Lexicon", "Pandas", "NumPy"],
+          "description": {
+            "id": "Mengatasi ketidaksesuaian antara bintang rating dan isi teks ulasan. Kombinasi skor bintang dan kamus leksikon bahasa Indonesia (InSet Lexicon) mengungkap 89% ulasan rating 3 berisi keluhan, serta mengoreksi label negatif pada 41% ulasan rating 4 dan 8% ulasan rating 5.",
+            "en": "Resolved discrepancies between star ratings and review text. Combining star ratings with the Indonesian Sentiment Lexicon (InSet) revealed 89% of 3-star reviews were complaints, and corrected negative labels on 41% of 4-star and 8% of 5-star reviews."
+          },
+          "outputMetric": {
+            "id": "59.980 data berlabel (31.470 Positif : 28.510 Negatif)",
+            "en": "59,980 labeled rows (31,470 Positive : 28,510 Negative)"
+          }
+        },
+        {
+          "step": "04",
+          "title": {
+            "id": "Ekstraksi Fitur TF-IDF Bigram & Pemodelan Naive Bayes",
+            "en": "TF-IDF Bigram Feature Extraction & Naive Bayes Modeling"
+          },
+          "tools": ["Scikit-Learn", "TF-IDF", "Naive Bayes"],
+          "description": {
+            "id": "Mengekstraksi 15.000 fitur kata TF-IDF bigram agar pasangan kata bermakna (seperti 'kode otp', 'verifikasi wajah') tertangkap utuh. Melatih model Multinomial Naive Bayes dengan pembagian data 80:20 (47.984 latih : 11.996 uji).",
+            "en": "Extracted 15,000 TF-IDF bigram word features so meaningful phrase pairs (like 'otp code', 'face verification') were preserved. Trained a Multinomial Naive Bayes classifier using an 80:20 split (47,984 train : 11,996 test)."
+          },
+          "outputMetric": {
+            "id": "Akurasi 94,38% · F1 94,86% · Presisi 91,15% · Recall 98,89%",
+            "en": "94.38% Accuracy · 94.86% F1 · 91.15% Precision · 98.89% Recall"
+          }
+        },
+        {
+          "step": "05",
+          "title": {
+            "id": "Visualisasi & Interpretasi Dashboard Sentimen",
+            "en": "Sentiment Dashboard Visualization & Interpretation"
+          },
+          "tools": ["Streamlit", "Matplotlib", "Seaborn"],
+          "description": {
+            "id": "Menyajikan ringkasan eksekutif, tren sentimen bulanan sepanjang 13 bulan (Jan 2025 – Jan 2026), komposisi sentimen (52,5% positif vs 47,5% negatif), serta metrik evaluasi model pada dashboard interaktif.",
+            "en": "Presented executive summaries, 13-month monthly sentiment trends (Jan 2025 – Jan 2026), sentiment composition (52.5% positive vs 47.5% negative), and model evaluation metrics in an interactive dashboard."
+          },
+          "outputMetric": {
+            "id": "Identifikasi Login & Akun sebagai klaster keluhan #1",
+            "en": "Identified Login & Account as the #1 complaint cluster"
+          }
+        }
+      ],
+      "findings": [
+        {
+          "metric": "89% & 41%",
+          "title": {
+            "id": "Anomali Rating Bintang vs Isi Teks Ulasan",
+            "en": "Star Rating vs. Review Text Anomaly"
+          },
+          "sentence": {
+            "id": "Mengandalkan rating bintang semata menyesatkan analisis: 89% ulasan bintang 3 berisi keluhan nyata, bahkan 41% ulasan bintang 4 dan 8% ulasan bintang 5 menyampaikan kendala teknis yang berhasil dikoreksi oleh Hybrid Labeling.",
+            "en": "Relying solely on star ratings misleads analysis: 89% of 3-star reviews contain real complaints, while 41% of 4-star and 8% of 5-star reviews report technical issues that Hybrid Labeling successfully corrected."
+          },
+          "chartType": "bar-comparison",
+          "recommendation": {
+            "id": "Gunakan klasifikasi sentimen berbasis teks (Hybrid Labeling) sebagai metrik pemantauan rilis aplikasi, bukan sekadar rata-rata bintang Play Store.",
+            "en": "Use text-based sentiment classification (Hybrid Labeling) as the release health metric rather than raw Play Store star averages."
+          }
+        },
+        {
+          "metric": "Top #1",
+          "title": {
+            "id": "Login & Akun Mendominasi Keluhan Pengguna",
+            "en": "Login & Account Dominates User Complaints"
+          },
+          "sentence": {
+            "id": "Analisis 15.000 fitur TF-IDF bigram dan word cloud mengidentifikasi Login & Akun sebagai kategori keluhan spesifik tertinggi, didominasi oleh kegagalan kode OTP, verifikasi wajah, dan verifikasi nomor ponsel.",
+            "en": "Analysis of 15,000 TF-IDF bigram features and word clouds identified Login & Account as the highest specific complaint category, dominated by OTP failures, face verification, and phone number verification."
+          },
+          "chartType": "complaint-clusters",
+          "recommendation": {
+            "id": "Jadikan alur autentikasi (OTP, verifikasi wajah, dan nomor ponsel) sebagai prioritas utama perbaikan rekayasa produk.",
+            "en": "Make the authentication flow (OTP, face verification, and phone number validation) the top product engineering priority."
+          }
+        }
+      ],
+      "actionItems": [
+        {
+          "priority": "P1 · High Impact",
+          "target": {
+            "id": "Sistem Pengiriman & Validasi Kode OTP",
+            "en": "OTP Delivery & Validation System"
+          },
+          "action": {
+            "id": "Audit latensi gateway SMS OTP dan tambahkan opsi kanal cadangan (seperti WhatsApp/Email OTP atau jeda kirim ulang yang jelas) untuk menekan kegagalan login.",
+            "en": "Audit SMS OTP gateway latency and add fallback channels (such as WhatsApp/Email OTP or clearer retry timers) to reduce login failures."
+          },
+          "expectedImpact": {
+            "id": "Menurunkan porsi keluhan terbesar pada klaster Login & Akun.",
+            "en": "Directly reduces the largest complaint driver in the Login & Account cluster."
+          }
+        },
+        {
+          "priority": "P2 · UX & Biometrik",
+          "target": {
+            "id": "Alur Verifikasi Wajah & Nomor Ponsel",
+            "en": "Face & Phone Number Verification Flow"
+          },
+          "action": {
+            "id": "Perjelas panduan pencahayaan kamera saat verifikasi wajah serta sediakan alur pembaruan nomor ponsel mandiri yang tervalidasi tanpa mengharuskan pengguna mengulang dari awal.",
+            "en": "Improve camera lighting guidance during face verification and provide a validated self-service phone number update flow."
+          },
+          "expectedImpact": {
+            "id": "Mengurangi friksi aktivasi akun peserta JKN di perangkat mobile.",
+            "en": "Reduces account activation friction for JKN members on mobile devices."
+          }
+        },
+        {
+          "priority": "P3 · Data Monitoring",
+          "target": {
+            "id": "Pipeline Pemantauan Ulasan Berkala di Dashboard",
+            "en": "Automated Review Monitoring Pipeline in Dashboard"
+          },
+          "action": {
+            "id": "Integrasikan model Multinomial Naive Bayes (akurasi 94,38%, recall 98,89%) ke dashboard pemantauan bulanan agar lonjakan keluhan pasca-update aplikasi langsung terdeteksi.",
+            "en": "Integrate the Multinomial Naive Bayes model (94.38% accuracy, 98.89% recall) into monthly monitoring dashboards to detect complaint spikes immediately after app updates."
+          },
+          "expectedImpact": {
+            "id": "Deteksi dini regresi fitur dengan recall tinggi (98,89%).",
+            "en": "Early detection of feature regressions with high recall (98.89%)."
+          }
+        }
+      ],
+      "blocks": [
+        {
+          "title": {
+            "id": "Latar Belakang Masalah",
+            "en": "Problem Background"
+          },
+          "text": {
+            "id": "Aplikasi Mobile JKN menerima puluhan ribu ulasan pengguna yang tidak mungkin dibaca satu per satu secara manual. Selain itu, banyak pengguna memberikan rating bintang 3, 4, atau 5 tetapi menuliskan keluhan teknis di kolom komentar, sehingga rata-rata rating bintang tidak mencerminkan kepuasan sebenarnya.",
+            "en": "The Mobile JKN app receives tens of thousands of user reviews that are impossible to audit manually. Furthermore, many users leave 3-, 4-, or 5-star ratings while writing technical complaints in the text, making raw star averages an unreliable indicator of user satisfaction."
+          }
+        },
+        {
+          "title": {
+            "id": "Keunggulan Metodologi",
+            "en": "Methodological Advantage"
+          },
+          "text": {
+            "id": "Dengan kerangka Knowledge Discovery in Database (KDD), penerapan stemming selektif Sastrawi menjaga konteks kata, sementara Hybrid Labeling berbasis rating dan InSet Lexicon menghasilkan 59.980 data berlabel seimbang (31.470 positif / 52,5% dan 28.510 negatif / 47,5%) yang meningkatkan kualitas pelatihan Multinomial Naive Bayes.",
+            "en": "Using the Knowledge Discovery in Database (KDD) framework, selective Sastrawi stemming preserved word context while Hybrid Labeling (rating + InSet Lexicon) produced 59,980 balanced labeled samples (31,470 positive / 52.5% and 28,510 negative / 47.5%) that boosted Multinomial Naive Bayes training quality."
+          }
+        }
+      ]
+    }
+  }
+]
