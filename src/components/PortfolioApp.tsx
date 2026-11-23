@@ -1,656 +1,632 @@
-import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
 import { AnimatePresence, motion } from 'motion/react';
+import Lenis from 'lenis';
 import {
   profile,
-  about,
-  gallery,
   education,
-  experience,
-  projects,
+  experience as experiences,
   skills,
   certificates,
   contact,
   t,
   type Lang,
 } from '../lib/content';
-import { feedbackState, triggerHapticAndSound } from '../lib/feedback';
-import TypingRole from './TypingRole';
+import { isSoundEnabled, setSoundEnabled, triggerHapticAndSound } from '../lib/feedback';
 import CaseStudyView from './CaseStudyView';
+import { RavaelSignature, SayHelloSignature, FloralMeadowFooter } from './FloralFooter';
 
-const LazyLanyard = lazy(() => import('./Lanyard'));
+interface PortfolioAppProps {
+  baseUrl?: string;
+}
 
-type ThemeMode = 'light' | 'dark';
+export interface ShowcaseSlide {
+  kind: 'image' | 'visual-card';
+  src?: string;
+  alt: { id: string; en: string };
+  cardType?:
+    | 'jkn-hybrid'
+    | 'jkn-clusters'
+    | 'jkn-pipeline'
+    | 'coming-soon-da'
+    | 'coming-soon-ds';
+}
 
-const SECTION_META: Array<{
+export interface ShowcaseItem {
   id: string;
-  code: string;
-  nav: { id: string; en: string };
   title: { id: string; en: string };
-}> = [
+  category: { id: string; en: string };
+  year: string;
+  bgTone: string;
+  aspect: 'wide' | 'portrait' | 'square';
+  isComingSoon?: boolean;
+  p1: { id: string; en: string };
+  p2: { id: string; en: string };
+  demoUrl?: string;
+  caseStudySlug?: string;
+  slides: ShowcaseSlide[];
+}
+
+// "Things I do" is strictly dedicated to Projects Ravael has built or will build in the future
+const PROJECT_SHOWCASE_ITEMS: ShowcaseItem[] = [
   {
-    id: 'tentang',
-    code: '01',
-    nav: { id: 'Tentang', en: 'About' },
+    id: 'mobile-jkn',
     title: {
-      id: 'Lulusan Teknologi Informasi dengan fokus analisis data dan machine learning.',
-      en: 'Information Technology graduate focused on data analysis and machine learning.',
+      id: 'Analisis Sentimen & Dashboard Mobile JKN',
+      en: 'Mobile JKN Sentiment Analysis & Dashboard',
     },
+    category: {
+      id: 'Machine Learning, NLP & Dashboard Streamlit',
+      en: 'Machine Learning, NLP & Streamlit Dashboard',
+    },
+    year: '2026',
+    bgTone: 'tone-sky',
+    aspect: 'wide',
+    p1: {
+      id: 'Sistem klasifikasi sentimen end-to-end berbasis Python terhadap 63.766 ulasan pengguna aplikasi Mobile JKN di Google Play Store (Januari 2025 – Januari 2026) menggunakan kerangka kerja Knowledge Discovery in Database (KDD).',
+      en: 'End-to-end Python sentiment classification pipeline analyzing 63,766 Mobile JKN user reviews from Google Play Store (January 2025 – January 2026) using the Knowledge Discovery in Database (KDD) framework.',
+    },
+    p2: {
+      id: 'Menggabungkan Hybrid Labeling (rating bintang + InSet Lexicon) pada 59.980 ulasan berlabel seimbang, 15.000 fitur TF-IDF bigram, dan Multinomial Naive Bayes dengan akurasi 94,38% serta F1-score 94,86% ke dalam dashboard Streamlit interaktif.',
+      en: 'Combined Hybrid Labeling (star rating + InSet Lexicon) across 59,980 balanced reviews, 15,000 TF-IDF bigram features, and Multinomial Naive Bayes achieving 94.38% accuracy and 94.86% F1-score in an interactive Streamlit dashboard.',
+    },
+    demoUrl: 'https://ravaelchessario24.github.io/mobile-jkn-landing-page/',
+    caseStudySlug: 'mobile-jkn',
+    slides: [
+      {
+        kind: 'image',
+        src: 'images/projects/mobile-jkn-dashboard.webp',
+        alt: {
+          id: 'Dashboard Streamlit Analisis Sentimen Mobile JKN',
+          en: 'Mobile JKN Sentiment Analysis Streamlit Dashboard',
+        },
+      },
+      {
+        kind: 'visual-card',
+        cardType: 'jkn-hybrid',
+        alt: {
+          id: 'Temuan Hybrid Labeling: 89% Rating Bintang 3 Berisi Keluhan',
+          en: 'Hybrid Labeling Finding: 89% of 3-Star Reviews Contain Complaints',
+        },
+      },
+      {
+        kind: 'visual-card',
+        cardType: 'jkn-clusters',
+        alt: {
+          id: 'Klaster Keluhan Utama TF-IDF Bigram & Performa Model 94,38%',
+          en: 'Top TF-IDF Bigram Complaint Clusters & 94.38% Model Performance',
+        },
+      },
+      {
+        kind: 'visual-card',
+        cardType: 'jkn-pipeline',
+        alt: {
+          id: 'Arsitektur 5 Tahap Pipeline KDD (63.766 Ulasan)',
+          en: '5-Stage KDD Pipeline Architecture (63,766 Reviews)',
+        },
+      },
+    ],
   },
   {
-    id: 'galeri',
-    code: '02',
-    nav: { id: 'Galeri', en: 'Gallery' },
+    id: 'paud-flamboyan',
     title: {
-      id: 'Dokumentasi kegiatan lapangan.',
-      en: 'Field activity documentation.',
+      id: 'Website & CMS Sekolah — PAUD KB Flamboyan',
+      en: 'School Website & CMS — PAUD KB Flamboyan',
     },
+    category: {
+      id: 'Web Development & Sistem Basis Data MySQL',
+      en: 'Web Development & MySQL Database System',
+    },
+    year: '2025',
+    bgTone: 'tone-lavender',
+    aspect: 'wide',
+    p1: {
+      id: 'Merancang dan membangun website landing page serta Content Management System (CMS) untuk PAUD KB Flamboyan yang memusatkan informasi sekolah, manajemen konten dinamis, direktori guru, dan jadwal kurikulum.',
+      en: 'Designed and built a responsive landing page and Content Management System (CMS) for PAUD KB Flamboyan centralizing school information, dynamic content, teacher directory, and class schedules.',
+    },
+    p2: {
+      id: 'Meningkatkan efisiensi administrasi sekolah hingga 50% melalui digitalisasi pendataan profil guru dan silabus kegiatan ke dalam basis data MySQL yang terstruktur.',
+      en: 'Improved school administrative efficiency by up to 50% by digitizing teacher profiles and activity syllabi into a structured MySQL relational database.',
+    },
+    caseStudySlug: 'sistem-informasi-cms-paud-flamboyan',
+    slides: [
+      {
+        kind: 'image',
+        src: 'images/experience/paud-1.webp',
+        alt: {
+          id: 'Beranda Website PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Website Hero Page',
+        },
+      },
+      {
+        kind: 'image',
+        src: 'images/experience/paud-2.webp',
+        alt: {
+          id: 'Statistik Sekolah, Profil, Visi & Misi PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Statistics, Profile, Vision & Mission',
+        },
+      },
+      {
+        kind: 'image',
+        src: 'images/experience/paud-3.webp',
+        alt: {
+          id: 'Direktori Guru PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Teacher Directory',
+        },
+      },
+      {
+        kind: 'image',
+        src: 'images/experience/paud-4.webp',
+        alt: {
+          id: 'Jadwal Harian & Kurikulum Kelas PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Daily Class Schedule & Curriculum',
+        },
+      },
+      {
+        kind: 'image',
+        src: 'images/experience/paud-5.webp',
+        alt: {
+          id: 'Testimoni Wali Murid & Peta Lokasi PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Parent Testimonials & Location Map',
+        },
+      },
+    ],
   },
   {
-    id: 'pendidikan',
-    code: '03',
-    nav: { id: 'Pendidikan', en: 'Education' },
+    id: 'coming-soon-da',
     title: {
-      id: 'Latar belakang pendidikan dan capaian akademik.',
-      en: 'Educational background and academic achievements.',
+      id: 'Proyek Data Analytics & BI Dashboard Berikutnya',
+      en: 'Next Data Analytics & BI Dashboard Project',
     },
+    category: {
+      id: 'Segera Hadir · SQL, Python & Interactive Dashboard',
+      en: 'Coming Soon · SQL, Python & Interactive Dashboard',
+    },
+    year: '2026',
+    bgTone: 'tone-mint',
+    aspect: 'wide',
+    isComingSoon: true,
+    p1: {
+      id: 'Slot proyek portofolio berikutnya yang sedang disiapkan untuk studi kasus eksplorasi data (EDA), analisis metrik bisnis dengan SQL & Excel, serta visualisasi dashboard interaktif.',
+      en: 'Upcoming portfolio project slot reserved for an exploratory data analysis (EDA), business KPI querying with SQL & Excel, and interactive dashboard visualization case study.',
+    },
+    p2: {
+      id: 'Akan dilengkapi dengan dokumentasi tahapan pengolahan data, temuan utama (key insights), serta rekomendasi bisnis yang terukur.',
+      en: 'Will feature step-by-step data cleaning documentation, key visual findings, and measurable business recommendations.',
+    },
+    slides: [
+      {
+        kind: 'visual-card',
+        cardType: 'coming-soon-da',
+        alt: {
+          id: 'Proyek Data Analytics Berikutnya — Segera Hadir',
+          en: 'Next Data Analytics Project — Coming Soon',
+        },
+      },
+    ],
   },
   {
-    id: 'pengalaman',
-    code: '04',
-    nav: { id: 'Pengalaman', en: 'Experience' },
+    id: 'coming-soon-ds',
     title: {
-      id: 'Pengalaman kegiatan masyarakat dan magang.',
-      en: 'Community service and internship experience.',
+      id: 'Proyek Machine Learning & Data Science Berikutnya',
+      en: 'Next Machine Learning & Data Science Project',
     },
-  },
-  {
-    id: 'proyek',
-    code: '05',
-    nav: { id: 'Proyek', en: 'Projects' },
-    title: {
-      id: 'Proyek analisis data dan machine learning.',
-      en: 'Data analysis and machine learning projects.',
+    category: {
+      id: 'Segera Hadir · Python, Scikit-Learn & Predictive Modeling',
+      en: 'Coming Soon · Python, Scikit-Learn & Predictive Modeling',
     },
-  },
-  {
-    id: 'keterampilan',
-    code: '06',
-    nav: { id: 'Keterampilan', en: 'Skills' },
-    title: {
-      id: 'Tools dan teknologi yang digunakan.',
-      en: 'Tools and technologies I use.',
+    year: '2026',
+    bgTone: 'tone-slate',
+    aspect: 'wide',
+    isComingSoon: true,
+    p1: {
+      id: 'Slot proyek portofolio berikutnya untuk eksperimen pemodelan prediktif, feature engineering, dan evaluasi model Machine Learning berbasis Python.',
+      en: 'Upcoming portfolio project slot dedicated to predictive modeling experiments, feature engineering, and Python-based Machine Learning model evaluation.',
     },
-  },
-  {
-    id: 'sertifikasi',
-    code: '07',
-    nav: { id: 'Sertifikasi', en: 'Certifications' },
-    title: {
-      id: 'Sertifikasi dan pelatihan kompetensi.',
-      en: 'Certifications and competency training.',
+    p2: {
+      id: 'Segera hadir setelah tahap pengolahan dataset dan validasi metrik evaluasi model selesai.',
+      en: 'Coming soon once dataset preparation and model evaluation metric validation are completed.',
     },
-  },
-  {
-    id: 'kontak',
-    code: '08',
-    nav: { id: 'Kontak', en: 'Contact' },
-    title: {
-      id: 'Mari terhubung untuk peluang kerja dan diskusi.',
-      en: 'Let’s connect for opportunities and discussions.',
-    },
+    slides: [
+      {
+        kind: 'visual-card',
+        cardType: 'coming-soon-ds',
+        alt: {
+          id: 'Proyek Data Science Berikutnya — Segera Hadir',
+          en: 'Next Data Science Project — Coming Soon',
+        },
+      },
+    ],
   },
 ];
 
-const UI_COPY: Record<Lang, Record<string, string>> = {
+// Carousel cards in Row 1 and Row 2 of "Things I do" — all showcasing Ravael's current & upcoming projects!
+interface CarouselCardEntry {
+  projectIdx: number;
+  slideIdx: number;
+  bgTone: string;
+}
+
+const CAROUSEL_ROW_1: CarouselCardEntry[] = [
+  { projectIdx: 0, slideIdx: 0, bgTone: 'tone-sky' }, // Mobile JKN Streamlit Dashboard
+  { projectIdx: 1, slideIdx: 0, bgTone: 'tone-lavender' }, // PAUD KB Flamboyan Hero
+  { projectIdx: 0, slideIdx: 1, bgTone: 'tone-mint' }, // Mobile JKN Hybrid Labeling 89% & 41%
+  { projectIdx: 2, slideIdx: 0, bgTone: 'tone-amber' }, // Next Data Analytics Project (Coming Soon)
+];
+
+const CAROUSEL_ROW_2: CarouselCardEntry[] = [
+  { projectIdx: 1, slideIdx: 3, bgTone: 'tone-rose' }, // PAUD KB Flamboyan Schedule & Curriculum CMS
+  { projectIdx: 0, slideIdx: 2, bgTone: 'tone-sky' }, // Mobile JKN 94.38% Accuracy & Bigram Clusters
+  { projectIdx: 1, slideIdx: 1, bgTone: 'tone-lavender' }, // PAUD KB Flamboyan Stats & Profile
+  { projectIdx: 3, slideIdx: 0, bgTone: 'tone-slate' }, // Next Data Science Project (Coming Soon)
+];
+
+const UI_TEXT = {
   id: {
-    heroStatus: 'Tersedia untuk Peran Data Analyst & Data Science',
-    statGpaLabel: 'IPK · Peringkat 4 / 21',
-    statReviewsLabel: 'Ulasan Data Diolah',
-    statAccLabel: 'Akurasi Model ML',
-    statBootcampVal: 'Predikat A',
-    statBootcampLabel: 'Bootcamp DSAREA',
-    viewProjects: 'Lihat proyek',
-    downloadCv: 'Unduh CV',
-    menu: 'Menu',
-    close: 'Tutup',
-    mainNav: 'Navigasi utama',
-    langSwitch: 'Pilih bahasa',
-    themeSwitch: 'Pilih tema warna',
-    soundSwitch: 'Pengaturan bunyi',
-    lightMode: 'Mode terang',
-    darkMode: 'Mode gelap',
-    soundOn: 'Bunyi nyala',
-    soundOff: 'Bunyi mati',
-    lanyardHint: 'Tarik atau ketuk kartu untuk membalik',
-    lanyardFlipBack: 'Ketuk lagi untuk kembali ke sisi depan',
-    profileHeading: 'Profil',
-    techHeading: 'Teknologi yang saya pakai',
-    photoAlt: 'Foto Muhammad Ravael Chessario Ramdoni',
-    photoBadgeTitle: 'S.Kom. · Teknologi Informasi',
-    photoBadgeSub: 'ITB Ahmad Dahlan Jakarta · IPK 3,77 / 4,00',
-    filterLabel: 'Filter kategori dokumentasi',
-    allCategories: 'Semua',
+    openToWork: 'Terbuka untuk kerja',
+    letsTalk: 'Mari diskusi',
+    navOverview: 'Ringkasan',
+    navThings: 'Proyek',
+    navExperience: 'Pengalaman',
+    navEducation: 'Pendidikan',
+    navContact: 'Kontak',
+    overviewHeadline: 'Mengubah data mentah menjadi insight yang terukur',
+    overviewBio:
+      'Hai! Saya Muhammad Ravael Chessario Ramdoni — Fresh Graduate S1 Teknologi Informasi (IPK 3,77/4,00) yang berfokus pada Data Analysis dan Machine Learning. Berpengalaman membangun pipeline analisis sentimen end-to-end pada 63.766 ulasan Mobile JKN dengan akurasi 94,38% menggunakan Python, SQL, Excel, dan Streamlit.',
+    thingsHeading: 'Proyek yang saya buat',
     seeAll: 'Lihat semua',
-    showLess: 'Tampilkan ringkas',
-    prevPhoto: 'Sebelumnya',
-    nextPhoto: 'Berikutnya',
-    gpaLabel: 'IPK Kumulatif',
-    outOf: 'dari',
-    gpaDesc: 'Skala 4,00 · Program Studi S1 Teknologi Informasi',
-    favCourses: 'Mata kuliah favorit',
-    locationLabel: 'Lokasi',
-    seeDetails: 'Lihat detail',
-    tasksDone: 'Tugas & Tanggung Jawab',
-    resultAchieved: 'Hasil & Dampak',
-    docPhotos: 'Dokumentasi Kegiatan',
-    readCaseStudy: 'Baca case study',
+    allProjects: 'Semua proyek',
+    yearLabel: 'Tahun',
+    prevProject: 'Proyek sebelumnya',
+    nextProject: 'Proyek berikutnya',
     viewDemo: 'Lihat demo',
-    pipelineCardEyebrow: 'RINGKASAN PIPELINE KDD · MOBILE JKN',
-    pipelineCardTitle: 'Alur Pengolahan 63.766 Data Ulasan ke Model 94,38%',
-    pipelineStep1: 'Ulasan Mentah Google Play (Jan 2025 – Jan 2026)',
-    pipelineStep2: 'Text Preprocessing & Stemming Sastrawi',
-    pipelineStep3: 'Hybrid Labeling (Rating + InSet Lexicon)',
-    pipelineStep4: 'Multinomial Naive Bayes (15.000 TF-IDF Bigram)',
-    comingSoonEyebrow: 'DALAM EKSPLORASI',
-    comingSoonSlot: 'Proyek berikutnya — segera hadir',
-    comingSoonSub: 'Eksplorasi dashboard analitik & pemodelan dataset berikutnya.',
-    usedIn: 'dipakai di',
-    zoomCert: 'Perbesar gambar sertifikat',
-    verifiedCert: 'SERTIFIKAT TERVERIFIKASI',
-    availableFrom: 'Tersedia mulai',
-    copyBtn: 'Salin',
-    copiedBtn: 'Tersalin',
-    openBtn: 'Buka',
-    openMaps: 'Buka di Maps',
-    backToTop: 'Kembali ke atas',
-    groupData: 'Data & Analitik',
-    groupMethods: 'Metode',
-    groupViz: 'Visualisasi & Dashboard',
-    groupTools: 'Alat Kerja',
-    groupSoft: 'Kemampuan Personal',
+    readCaseStudy: 'Baca case study',
+    expHeading: 'Pengalaman',
+    eduHeading: 'Pendidikan & Sertifikasi',
+    contactTitle: 'Ingin berdiskusi lebih lanjut?',
+    contactSub:
+      'Terbuka untuk peluang Full-Time maupun Internship di bidang Data Analyst dan Data Science. Mari berdiskusi.',
+    resumeLabel: 'Unduh CV',
+    copiedToast: 'Email tersalin!',
+    copyEmailTitle: 'Salin email',
+    closeLabel: 'Tutup',
+    ofLabel: 'dari',
+    favCoursesLabel: 'Mata Kuliah Fokus Data',
+    grassHint: 'Sentuh atau geser kursor di atas rumput',
   },
   en: {
-    heroStatus: 'Available for Data Analyst & Data Science Roles',
-    statGpaLabel: 'GPA · Ranked 4th / 21',
-    statReviewsLabel: 'User Reviews Processed',
-    statAccLabel: 'ML Model Accuracy',
-    statBootcampVal: 'Grade A',
-    statBootcampLabel: 'DSAREA Bootcamp',
-    viewProjects: 'View projects',
-    downloadCv: 'Download CV',
-    menu: 'Menu',
-    close: 'Close',
-    mainNav: 'Main navigation',
-    langSwitch: 'Select language',
-    themeSwitch: 'Select color theme',
-    soundSwitch: 'Sound settings',
-    lightMode: 'Light mode',
-    darkMode: 'Dark mode',
-    soundOn: 'Sound on',
-    soundOff: 'Sound off',
-    lanyardHint: 'Drag or tap the card to flip',
-    lanyardFlipBack: 'Tap again to flip back to front',
-    profileHeading: 'Profile',
-    techHeading: 'Technologies I use',
-    photoAlt: 'Portrait of Muhammad Ravael Chessario Ramdoni',
-    photoBadgeTitle: 'B.Sc. in Information Technology',
-    photoBadgeSub: 'ITB Ahmad Dahlan Jakarta · GPA 3.77 / 4.00',
-    filterLabel: 'Filter documentation categories',
-    allCategories: 'All',
+    openToWork: 'Open to work',
+    letsTalk: "Let's talk",
+    navOverview: 'Overview',
+    navThings: 'Things I do',
+    navExperience: 'Experience',
+    navEducation: 'Education',
+    navContact: 'Contact',
+    overviewHeadline: 'Turning raw data into measurable decisions',
+    overviewBio:
+      "Hey! I'm Muhammad Ravael Chessario Ramdoni — an Information Technology graduate (GPA 3.77/4.00) focused on Data Analysis and Machine Learning. Experienced in building an end-to-end sentiment analysis pipeline on 63,766 Mobile JKN reviews with 94.38% accuracy using Python, SQL, Excel, and Streamlit.",
+    thingsHeading: 'Things I do',
     seeAll: 'See all',
-    showLess: 'Show less',
-    prevPhoto: 'Previous',
-    nextPhoto: 'Next',
-    gpaLabel: 'Cumulative GPA',
-    outOf: 'of',
-    gpaDesc: '4.00 Scale · B.Sc. in Information Technology',
-    favCourses: 'Favorite courses',
-    locationLabel: 'Location',
-    seeDetails: 'See details',
-    tasksDone: 'Tasks & Responsibilities',
-    resultAchieved: 'Results & Impact',
-    docPhotos: 'Activity Documentation',
-    readCaseStudy: 'Read case study',
-    viewDemo: 'View demo',
-    pipelineCardEyebrow: 'KDD PIPELINE SUMMARY · MOBILE JKN',
-    pipelineCardTitle: 'Processing 63,766 Reviews into a 94.38% Model',
-    pipelineStep1: 'Raw Google Play Reviews (Jan 2025 – Jan 2026)',
-    pipelineStep2: 'Text Preprocessing & Sastrawi Stemming',
-    pipelineStep3: 'Hybrid Labeling (Star Rating + InSet Lexicon)',
-    pipelineStep4: 'Multinomial Naive Bayes (15,000 TF-IDF Bigrams)',
-    comingSoonEyebrow: 'IN EXPLORATION',
-    comingSoonSlot: 'Next project — coming soon',
-    comingSoonSub: 'Upcoming analytics dashboard and dataset modeling exploration.',
-    usedIn: 'used in',
-    zoomCert: 'Enlarge certificate image',
-    verifiedCert: 'VERIFIED CREDENTIAL',
-    availableFrom: 'Available from',
-    copyBtn: 'Copy',
-    copiedBtn: 'Copied',
-    openBtn: 'Open',
-    openMaps: 'Open in Maps',
-    backToTop: 'Back to top',
-    groupData: 'Data & Analytics',
-    groupMethods: 'Methods',
-    groupViz: 'Visualization & Dashboards',
-    groupTools: 'Work Tools',
-    groupSoft: 'Personal Skills',
+    allProjects: 'All projects',
+    yearLabel: 'Year',
+    prevProject: 'Previous project',
+    nextProject: 'Next project',
+    viewDemo: 'View live demo',
+    readCaseStudy: 'Read full case study',
+    expHeading: 'Experience',
+    eduHeading: 'Education & Certifications',
+    contactTitle: 'What shall we create next?',
+    contactSub:
+      "Have an opportunity in Data Analysis or Data Science? Let's make it happen together.",
+    resumeLabel: 'Resume',
+    copiedToast: 'Email copied!',
+    copyEmailTitle: 'Copy email',
+    closeLabel: 'Close',
+    ofLabel: 'of',
+    favCoursesLabel: 'Core Data Coursework',
+    grassHint: 'Brush your mouse or finger across the grass',
   },
-};
+} as const;
 
-const GROUP_KEY_MAP: Record<string, string> = {
-  'Data & Analitik': 'groupData',
-  Metode: 'groupMethods',
-  'Visualisasi & Dashboard': 'groupViz',
-  'Alat Kerja': 'groupTools',
-  'Kemampuan Personal': 'groupSoft',
-};
-
-function readStorage(key: string): string | null {
-  try {
-    return typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeStorage(key: string, val: string): void {
-  try {
-    if (typeof window !== 'undefined') window.localStorage.setItem(key, val);
-  } catch {}
-}
-
-function SectionHeading({
-  id,
-  code,
-  eyebrow,
-  title,
-  alternate = false,
-  children,
+function SlideVisualCard({
+  cardType,
+  lang,
+  compact = false,
 }: {
-  id: string;
-  code: string;
-  eyebrow: string;
-  title: string;
-  alternate?: boolean;
-  children: React.ReactNode;
+  cardType: NonNullable<ShowcaseSlide['cardType']>;
+  lang: Lang;
+  compact?: boolean;
 }) {
-  const words = title.split(' ');
-  return (
-    <section id={id} className={`portfolio-section ${alternate ? 'is-alt' : ''}`}>
-      <div className="section-inner">
-        <div className="section-eyebrow-row">
-          <span className="section-index-badge">{code}</span>
-          <span className="eyebrow">{eyebrow}</span>
-          <span className="section-eyebrow-rule" aria-hidden="true" />
-        </div>
-        <h2 className="section-h2" aria-label={title}>
-          {words.map((word, idx) => (
-            <React.Fragment key={idx}>
-              <span className="word-mask" aria-hidden="true">
-                <span className="word-inner" style={{ ['--word-idx' as string]: idx }}>
-                  {word}
-                </span>
-              </span>{' '}
-            </React.Fragment>
-          ))}
-        </h2>
-        {children}
+  if (cardType === 'jkn-hybrid') {
+    return (
+      <div className={`b-visual-slide-card ${compact ? 'is-compact' : ''}`}>
+        <span className="b-vsc-tag">MOBILE JKN · HYBRID LABELING</span>
+        <strong className="b-vsc-big">89% & 41%</strong>
+        <p className="b-vsc-title">
+          {lang === 'id'
+            ? 'Ketidaksesuaian Rating Bintang vs Isi Komentar'
+            : 'Star Rating vs. Review Text Discrepancy'}
+        </p>
+        {!compact && (
+          <div className="b-vsc-bars">
+            <div className="b-vsc-bar-row">
+              <div className="b-vsc-bar-label">
+                <span>{lang === 'id' ? 'Bintang 3 berisi keluhan' : '3-Star with complaints'}</span>
+                <strong>89%</strong>
+              </div>
+              <div className="b-vsc-track">
+                <div className="b-vsc-fill" style={{ width: '89%' }} />
+              </div>
+            </div>
+            <div className="b-vsc-bar-row">
+              <div className="b-vsc-bar-label">
+                <span>{lang === 'id' ? 'Bintang 4 dikoreksi negatif' : '4-Star corrected negative'}</span>
+                <strong>41%</strong>
+              </div>
+              <div className="b-vsc-track">
+                <div className="b-vsc-fill" style={{ width: '41%' }} />
+              </div>
+            </div>
+            <div className="b-vsc-bar-row">
+              <div className="b-vsc-bar-label">
+                <span>{lang === 'id' ? 'Bintang 5 dikoreksi negatif' : '5-Star corrected negative'}</span>
+                <strong>8%</strong>
+              </div>
+              <div className="b-vsc-track">
+                <div className="b-vsc-fill" style={{ width: '8%' }} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </section>
+    );
+  }
+
+  if (cardType === 'jkn-clusters') {
+    return (
+      <div className={`b-visual-slide-card ${compact ? 'is-compact' : ''}`}>
+        <span className="b-vsc-tag">NAIVE BAYES · 15.000 FITUR BIGRAM</span>
+        <strong className="b-vsc-big">94,38%</strong>
+        <p className="b-vsc-title">
+          {lang === 'id'
+            ? 'Akurasi Model · F1-Score 94,86% · Recall 98,89%'
+            : 'Model Accuracy · 94.86% F1-Score · 98.89% Recall'}
+        </p>
+        {!compact && (
+          <div className="b-vsc-list">
+            <div className="b-vsc-pill-item">
+              <span>#1</span>
+              <strong>{lang === 'id' ? 'Kegagalan Kode OTP Login' : 'OTP Login Code Failures'}</strong>
+            </div>
+            <div className="b-vsc-pill-item">
+              <span>#2</span>
+              <strong>{lang === 'id' ? 'Verifikasi Wajah / Biometrik' : 'Face Biometric Verification'}</strong>
+            </div>
+            <div className="b-vsc-pill-item">
+              <span>#3</span>
+              <strong>{lang === 'id' ? 'Verifikasi Nomor Ponsel' : 'Phone Number Verification'}</strong>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (cardType === 'jkn-pipeline') {
+    return (
+      <div className={`b-visual-slide-card ${compact ? 'is-compact' : ''}`}>
+        <span className="b-vsc-tag">KNOWLEDGE DISCOVERY IN DATABASE (KDD)</span>
+        <strong className="b-vsc-big">63.766 → 59.980</strong>
+        <p className="b-vsc-title">
+          {lang === 'id'
+            ? 'Pipeline Pengolahan Ulasan Google Play Store'
+            : 'End-to-End Google Play Review Processing Pipeline'}
+        </p>
+        {!compact && (
+          <div className="b-vsc-list">
+            <div className="b-vsc-pill-item">
+              <span>01</span>
+              <strong>63.766 {lang === 'id' ? 'Ulasan Mentah (Jan 2025 – Jan 2026)' : 'Raw Reviews (Jan 2025 – Jan 2026)'}</strong>
+            </div>
+            <div className="b-vsc-pill-item">
+              <span>02</span>
+              <strong>62.878 {lang === 'id' ? 'Teks Bersih (Stemming Sastrawi)' : 'Cleaned Texts (Sastrawi Stemming)'}</strong>
+            </div>
+            <div className="b-vsc-pill-item">
+              <span>03</span>
+              <strong>59.980 {lang === 'id' ? 'Data Berlabel Seimbang (52,5% : 47,5%)' : 'Balanced Labeled Data (52.5% : 47.5%)'}</strong>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (cardType === 'coming-soon-da') {
+    return (
+      <div className={`b-visual-slide-card is-coming-soon ${compact ? 'is-compact' : ''}`}>
+        <span className="b-vsc-tag">
+          {lang === 'id' ? 'PROYEK BERIKUTNYA · SEGERA HADIR' : 'UPCOMING PROJECT · COMING SOON'}
+        </span>
+        <strong className="b-vsc-big">Data Analytics & BI</strong>
+        <p className="b-vsc-title">
+          {lang === 'id'
+            ? 'Eksplorasi Data (EDA), SQL Querying & Interactive Dashboard'
+            : 'Exploratory Data Analysis (EDA), SQL Querying & Interactive Dashboard'}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`b-visual-slide-card is-coming-soon ${compact ? 'is-compact' : ''}`}>
+      <span className="b-vsc-tag">
+        {lang === 'id' ? 'PROYEK BERIKUTNYA · SEGERA HADIR' : 'UPCOMING PROJECT · COMING SOON'}
+      </span>
+      <strong className="b-vsc-big">Machine Learning</strong>
+      <p className="b-vsc-title">
+        {lang === 'id'
+          ? 'Feature Engineering, Pemodelan Prediktif & Evaluasi Model'
+          : 'Feature Engineering, Predictive Modeling & Model Evaluation'}
+      </p>
+    </div>
   );
 }
 
-export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
+export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
   const [lang, setLang] = useState<Lang>('id');
-  const [theme, setTheme] = useState<ThemeMode>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [soundOn, setSoundOn] = useState<boolean>(true);
-  const [scrolled, setScrolled] = useState<boolean>(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<string>('tentang');
-  const [currentHash, setCurrentHash] = useState<string>('');
-  const [showFloatingCv, setShowFloatingCv] = useState<boolean>(false);
+  const [activeNav, setActiveNav] = useState<string>('overview');
 
-  // Gallery state
-  const [selectedCat, setSelectedCat] = useState<string>('all');
-  const [showAllGallery, setShowAllGallery] = useState<boolean>(false);
-  const [lightboxIdx, setLightboxIdx] = useState<number>(-1);
+  const [viewMode, setViewMode] = useState<'stream' | 'all-projects' | 'project-detail'>('stream');
+  const [activeItemIdx, setActiveItemIdx] = useState<number>(0);
+  const [activeSlideIdx, setActiveSlideIdx] = useState<number>(0);
 
-  // Education GPA counter state
-  const eduRef = useRef<HTMLDivElement>(null);
-  const [gpaAnimated, setGpaAnimated] = useState<number>(education.gpa);
-
-  // Experience detail modal state
-  const [expModalIdx, setExpModalIdx] = useState<number>(-1);
-  const [expZoomPhoto, setExpZoomPhoto] = useState<string>('');
-  const timelineRef = useRef<HTMLDivElement>(null);
-
-  // Certificate zoom modal state
-  const [certModalIdx, setCertModalIdx] = useState<number>(-1);
-
-  // Contact email copy state
+  const [caseStudySlug, setCaseStudySlug] = useState<string | null>(null);
+  const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>({});
+  const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
   const [emailCopied, setEmailCopied] = useState<boolean>(false);
 
-  // Lenis smooth scroll instance & main container ref for GSAP ScrollTrigger
   const lenisRef = useRef<Lenis | null>(null);
-  const mainRef = useRef<HTMLElement>(null);
 
-  // Hydrate persisted preferences on mount
   useEffect(() => {
-    const savedLang = readStorage('lang');
-    if (savedLang === 'en' || savedLang === 'id') setLang(savedLang);
+    try {
+      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+      const currentAttr = document.documentElement.dataset.theme as 'light' | 'dark' | undefined;
+      const initialTheme = savedTheme || currentAttr || 'light';
+      setTheme(initialTheme);
+      document.documentElement.dataset.theme = initialTheme;
 
-    const savedTheme =
-      (document.documentElement.dataset.theme as ThemeMode) ||
-      (readStorage('theme') as ThemeMode) ||
-      'light';
-    setTheme(savedTheme === 'dark' ? 'dark' : 'light');
+      const savedLang = localStorage.getItem('lang') as Lang | null;
+      if (savedLang === 'id' || savedLang === 'en') {
+        setLang(savedLang);
+        document.documentElement.lang = savedLang;
+      }
+      setSoundOn(isSoundEnabled());
+    } catch {}
 
-    const savedSound = readStorage('sound');
-    const isSoundEnabled = savedSound !== 'off';
-    setSoundOn(isSoundEnabled);
-    feedbackState.enabled = isSoundEnabled;
-
-    setCurrentHash(window.location.hash);
-    const onHashChange = () => setCurrentHash(window.location.hash);
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
-
-  // Cursor-tracking spotlight effect across surface cards
-  useEffect(() => {
-    const onPointerMove = (e: PointerEvent) => {
-      const target = (e.target as HTMLElement | null)?.closest?.('.surface-card') as HTMLElement | null;
-      if (!target) return;
-      const rect = target.getBoundingClientRect();
-      target.style.setProperty('--mouse-x', `${(e.clientX - rect.left).toFixed(0)}px`);
-      target.style.setProperty('--mouse-y', `${(e.clientY - rect.top).toFixed(0)}px`);
+    const syncHash = () => {
+      const h = window.location.hash || '';
+      if (h.startsWith('#/proyek/')) {
+        setCaseStudySlug(h.replace('#/proyek/', '').trim());
+      } else {
+        setCaseStudySlug(null);
+      }
     };
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    return () => window.removeEventListener('pointermove', onPointerMove);
+    syncHash();
+    window.addEventListener('hashchange', syncHash);
+    return () => window.removeEventListener('hashchange', syncHash);
   }, []);
 
   useEffect(() => {
-    document.documentElement.lang = lang;
-    writeStorage('lang', lang);
-  }, [lang]);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    writeStorage('theme', theme);
-  }, [theme]);
-
-  useEffect(() => {
-    feedbackState.enabled = soundOn;
-    writeStorage('sound', soundOn ? 'on' : 'off');
-  }, [soundOn]);
-
-  const caseStudySlug = currentHash.startsWith('#/proyek/')
-    ? currentHash.slice('#/proyek/'.length)
-    : '';
-
-  // Initialize Lenis Smooth Scroll + GSAP Ticker & ScrollTrigger sync
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
 
     const lenis = new Lenis({
-      autoRaf: false,
-      lerp: 0.15,
+      duration: 1.05,
       smoothWheel: true,
-      wheelMultiplier: 1.0,
+      wheelMultiplier: 0.95,
     });
     lenisRef.current = lenis;
 
-    lenis.on('scroll', ScrollTrigger.update);
-    const tickerRaf = (time: number) => {
-      lenis.raf(time * 1000);
+    let rafId = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
     };
-    gsap.ticker.add(tickerRaf);
-    gsap.ticker.lagSmoothing(0);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
-      gsap.ticker.remove(tickerRaf);
+      cancelAnimationFrame(rafId);
       lenis.destroy();
       lenisRef.current = null;
     };
   }, []);
 
-  // Pause Lenis when any Radix modal is open
   useEffect(() => {
-    const anyDialogOpen = mobileMenuOpen || lightboxIdx >= 0 || expModalIdx >= 0 || certModalIdx >= 0;
-    if (anyDialogOpen) {
-      lenisRef.current?.stop();
-    } else {
-      lenisRef.current?.start();
-    }
-  }, [mobileMenuOpen, lightboxIdx, expModalIdx, certModalIdx]);
-
-  // GSAP + ScrollTrigger narrative animations for section headings, cards, and timeline
-  useEffect(() => {
-    if (caseStudySlug) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    const ctx = gsap.context(() => {
-      const headings = gsap.utils.toArray<HTMLElement>('.section-h2');
-      headings.forEach((h2) => {
-        const words = h2.querySelectorAll('.word-inner');
-        if (!words.length) return;
-        gsap.fromTo(
-          words,
-          { yPercent: 45, opacity: 0 },
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.36,
-            stagger: 0.016,
-            ease: 'power3.out',
-            clearProps: 'transform,opacity',
-            scrollTrigger: {
-              trigger: h2,
-              start: 'top 92%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-      });
-
-      const sections = gsap.utils.toArray<HTMLElement>('.portfolio-section');
-      sections.forEach((sec) => {
-        const items = sec.querySelectorAll(
-          '.surface-card, .about-photo-frame, .bento-tile, .cert-card, .project-coming-slot, .contact-contrast-block, .city-map-card'
-        );
-        if (!items.length) return;
-        gsap.from(items, {
-          y: 16,
-          duration: 0.48,
-          stagger: 0.05,
-          ease: 'power2.out',
-          clearProps: 'transform',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: sec,
-            start: 'top 88%',
-            toggleActions: 'play none none none',
-          },
-        });
-      });
-
-      if (timelineRef.current) {
-        gsap.fromTo(
-          timelineRef.current,
-          { '--tl-progress': 0.14 },
-          {
-            '--tl-progress': 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: timelineRef.current,
-              start: 'top 78%',
-              end: 'bottom 58%',
-              scrub: 0.35,
-            },
-          }
-        );
-      }
-    }, mainRef);
-
-    return () => ctx.revert();
-  }, [caseStudySlug, lang]);
-
-  // Top scroll progress bar & navbar avatar morph
-  useEffect(() => {
-    let rafId = 0;
-    const updateScrollMetrics = () => {
-      rafId = 0;
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
-      document.documentElement.style.setProperty('--scroll-progress', progress.toFixed(4));
-      setScrolled(scrollTop > 56);
-    };
-
+    if (viewMode !== 'stream' || caseStudySlug) return;
+    const sectionIds = ['overview', 'things', 'experience', 'education', 'contact'];
     const onScroll = () => {
-      if (!rafId) rafId = requestAnimationFrame(updateScrollMetrics);
-    };
-    updateScrollMetrics();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [caseStudySlug]);
-
-  // Active section observer + Floating CV visibility observer
-  useEffect(() => {
-    if (caseStudySlug) {
-      if (lenisRef.current) {
-        lenisRef.current.scrollTo(0, { immediate: true });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'auto' });
-      }
-      setShowFloatingCv(false);
-      return;
-    }
-
-    const sectionIo = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+      const triggerY = window.innerHeight * 0.36;
+      let current = 'overview';
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= triggerY) {
+            current = id;
           }
-        });
-      },
-      { rootMargin: '-35% 0px -55% 0px' }
-    );
-
-    SECTION_META.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) sectionIo.observe(el);
-    });
-
-    const heroEl = document.querySelector('.hero-section');
-    const contactEl = document.getElementById('kontak');
-    let heroVisible = true;
-    let contactVisible = false;
-
-    const syncFloatingCv = () => {
-      setShowFloatingCv(!heroVisible && !contactVisible);
+        }
+      }
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) {
+        current = 'contact';
+      }
+      setActiveNav(current);
     };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [viewMode, caseStudySlug]);
 
-    const heroIo = new IntersectionObserver(([e]) => {
-      heroVisible = e.isIntersecting;
-      syncFloatingCv();
-    });
-    const contactIo = new IntersectionObserver(([e]) => {
-      contactVisible = e.isIntersecting;
-      syncFloatingCv();
-    });
-
-    if (heroEl) heroIo.observe(heroEl);
-    if (contactEl) contactIo.observe(contactEl);
-
-    return () => {
-      sectionIo.disconnect();
-      heroIo.disconnect();
-      contactIo.disconnect();
-    };
-  }, [caseStudySlug]);
-
-  // GPA Ring Count-Up Animation via GSAP
-  useEffect(() => {
-    if (caseStudySlug) return;
-    const el = eduRef.current;
-    if (!el) return;
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) {
-      setGpaAnimated(education.gpa);
+  const scrollToSection = (id: string) => {
+    triggerHapticAndSound('tap');
+    if (caseStudySlug) {
+      window.location.hash = '';
+      setCaseStudySlug(null);
+    }
+    if (viewMode !== 'stream') {
+      setViewMode('stream');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ behavior: 'smooth' });
+      }, 60);
       return;
     }
+    setActiveNav(id);
+    const el = document.getElementById(id);
+    if (el) {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(el, { offset: -64 });
+      } else {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
-    const counter = { val: 0 };
-    let tween: gsap.core.Tween | null = null;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        io.disconnect();
-        tween = gsap.to(counter, {
-          val: education.gpa,
-          duration: 1.35,
-          ease: 'power3.out',
-          onUpdate: () => setGpaAnimated(counter.val),
-        });
-      },
-      { threshold: 0.25 }
-    );
-
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      tween?.kill();
-    };
-  }, [caseStudySlug]);
-
-  // Circular expanding View Transition on theme switch
-  const handleThemeSwitch = (nextTheme: ThemeMode, e: React.MouseEvent<HTMLButtonElement>) => {
-    if (nextTheme === theme) return;
-    triggerHapticAndSound('tap');
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cx = rect.left + rect.width * 0.5;
-    const cy = rect.top + rect.height * 0.5;
+  const toggleThemeWithCircle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    triggerHapticAndSound('switch');
 
     const applyTheme = () => {
       document.documentElement.dataset.theme = nextTheme;
       setTheme(nextTheme);
+      try {
+        localStorage.setItem('theme', nextTheme);
+      } catch {}
     };
 
-    const docWithVT = document as Document & {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const docAny = document as unknown as {
       startViewTransition?: (cb: () => void) => { ready: Promise<void> };
     };
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (!docWithVT.startViewTransition || reduceMotion) {
+    if (!docAny.startViewTransition || reduceMotion) {
       applyTheme();
       return;
     }
 
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
     const maxRadius = Math.hypot(
       Math.max(cx, window.innerWidth - cx),
       Math.max(cy, window.innerHeight - cy)
     );
-    const transition = docWithVT.startViewTransition(() => {
+
+    const transition = docAny.startViewTransition(() => {
       applyTheme();
     });
 
@@ -664,7 +640,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             ],
           },
           {
-            duration: 620,
+            duration: 560,
             easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
             pseudoElement: '::view-transition-new(root)',
           }
@@ -673,67 +649,15 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
       .catch(() => {});
   };
 
-  const scrollToTarget = (selectorOrTop: string | number) => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (lenisRef.current && !reduceMotion) {
-      lenisRef.current.scrollTo(selectorOrTop, { offset: typeof selectorOrTop === 'string' ? -76 : 0 });
-    } else if (typeof selectorOrTop === 'number') {
-      window.scrollTo({ top: selectorOrTop, behavior: reduceMotion ? 'auto' : 'smooth' });
-    } else {
-      const el = document.querySelector(selectorOrTop);
-      el?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-    }
+  const selectLanguage = (next: Lang) => {
+    if (next === lang) return;
+    triggerHapticAndSound('switch');
+    setLang(next);
+    document.documentElement.lang = next;
+    try {
+      localStorage.setItem('lang', next);
+    } catch {}
   };
-
-  const navigateHash = (targetHash: string) => {
-    window.location.hash = targetHash;
-    setCurrentHash(targetHash);
-    if (!targetHash.startsWith('#/proyek/')) {
-      const id = targetHash.replace(/^#/, '');
-      requestAnimationFrame(() => {
-        scrollToTarget(`#${id}`);
-      });
-    }
-  };
-
-  const u = UI_COPY[lang];
-  const cvUrl = normalizedBase + profile.cv;
-
-  // Gallery filtering logic
-  const uniqueCatKeys = Array.from(new Set(gallery.map((g) => g.catKey)));
-  const filteredGallery = gallery.filter(
-    (g) => selectedCat === 'all' || g.catKey === selectedCat
-  );
-  const visibleGallery = showAllGallery ? filteredGallery : filteredGallery.slice(0, 6);
-  const activeLightboxItem = lightboxIdx >= 0 ? filteredGallery[lightboxIdx] : null;
-
-  useEffect(() => {
-    if (lightboxIdx < 0) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        setLightboxIdx((i) => (i - 1 + filteredGallery.length) % filteredGallery.length);
-      } else if (e.key === 'ArrowRight') {
-        setLightboxIdx((i) => (i + 1) % filteredGallery.length);
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [lightboxIdx, filteredGallery.length]);
-
-  // GPA Ring SVG math
-  const ringRadius = 52;
-  const ringCircumference = 2 * Math.PI * ringRadius;
-  const ringOffset = ringCircumference * (1 - gpaAnimated / education.gpaMax);
-  const formattedGpa =
-    lang === 'id' ? gpaAnimated.toFixed(2).replace('.', ',') : gpaAnimated.toFixed(2);
-  const formattedGpaMax =
-    lang === 'id' ? education.gpaMax.toFixed(2).replace('.', ',') : education.gpaMax.toFixed(2);
-
-  const skillGroups = Array.from(new Set(skills.map((s) => s.group)));
-  const toolLogos = skills.filter((s) => s.tool && s.logo);
-
-  const featuredProject = projects.find((p) => p.featured) || projects[0];
-  const secondaryProjects = projects.filter((p) => p.slug !== featuredProject.slug);
 
   const handleCopyEmail = () => {
     triggerHapticAndSound('copy');
@@ -744,1379 +668,921 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     window.setTimeout(() => setEmailCopied(false), 1800);
   };
 
-  const brandMorphed = scrolled || mobileMenuOpen;
+  const openProjectDetail = (projectIdx: number, slideIdx = 0) => {
+    triggerHapticAndSound('expand');
+    setActiveItemIdx(projectIdx);
+    setActiveSlideIdx(slideIdx);
+    setViewMode('project-detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const toggleAccordion = (key: string) => {
+    const willOpen = !openAccordions[key];
+    triggerHapticAndSound(willOpen ? 'expand' : 'collapse');
+    setOpenAccordions((prev) => ({ ...prev, [key]: willOpen }));
+  };
+
+  const u = UI_TEXT[lang];
+  const cvUrl = normalizedBase + profile.cv;
+  const activeItem = PROJECT_SHOWCASE_ITEMS[activeItemIdx] || PROJECT_SHOWCASE_ITEMS[0];
+  const activeSlide = activeItem.slides[activeSlideIdx] || activeItem.slides[0];
+
+  const coreTools = skills.filter(
+    (s) => s.group === 'Data & Analitik' || s.group === 'Visualisasi & Dashboard'
+  );
 
   return (
-    <>
-      {/* Thin Top Scroll Progress Line */}
-      <div className="scroll-progress-bar" aria-hidden="true" />
-
-      {/* Sticky Desktop Navbar / Mobile Floating Pill Navbar */}
-      <header className={`site-navbar ${scrolled ? 'is-scrolled' : ''}`}>
-        <div className="navbar-inner">
-          <a
-            href="#top"
-            className={`navbar-brand ${brandMorphed ? 'is-morphed' : ''}`}
-            aria-label={profile.name}
-            onClick={(e) => {
-              if (caseStudySlug) {
-                e.preventDefault();
-                navigateHash('#top');
-              } else {
-                e.preventDefault();
-                scrollToTarget(0);
-              }
-            }}
-          >
-            <span className="brand-text">{profile.brand}</span>
-            <span className="brand-avatar-ring">
-              <img
-                src={normalizedBase + profile.avatar}
-                alt={profile.name}
-                width={34}
-                height={34}
-                className="brand-avatar-img"
-              />
-            </span>
-          </a>
-
-          {/* Desktop Section Links */}
-          <nav className="navbar-links" aria-label={u.mainNav}>
-            {SECTION_META.map((sec) => {
-              const isActive = !caseStudySlug && activeSection === sec.id;
+    <div className="b-root">
+      {/* Fixed Left Sidebar Index (Desktop) */}
+      {viewMode === 'stream' && !caseStudySlug && (
+        <nav className="b-side-nav" aria-label="Section navigation">
+          <ul>
+            {[
+              { id: 'overview', label: u.navOverview },
+              { id: 'things', label: u.navThings },
+              { id: 'experience', label: u.navExperience },
+              { id: 'education', label: u.navEducation },
+              { id: 'contact', label: u.navContact },
+            ].map((item) => {
+              const isActive = activeNav === item.id;
               return (
-                <a
-                  key={sec.id}
-                  href={`#${sec.id}`}
-                  className={`nav-link ${isActive ? 'is-active' : ''}`}
-                  aria-current={isActive ? 'location' : undefined}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigateHash(`#${sec.id}`);
-                  }}
-                >
-                  {sec.nav[lang]}
-                </a>
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    className={`b-side-link ${isActive ? 'is-active' : ''}`}
+                    onMouseEnter={() => triggerHapticAndSound('hover')}
+                    onClick={() => scrollToSection(item.id)}
+                  >
+                    <span>{item.label}</span>
+                    {isActive && <span className="b-side-dot" aria-hidden="true" />}
+                  </button>
+                </li>
               );
             })}
-          </nav>
+          </ul>
+        </nav>
+      )}
 
-          {/* 3 Switches: Language (ID | EN), Theme (Light | Dark), Sound (On | Off) */}
-          <div className="navbar-controls">
-            <div className="segmented-pill" role="group" aria-label={u.langSwitch}>
-              <button
-                type="button"
-                className={`pill-option ${lang === 'id' ? 'is-active' : ''}`}
-                aria-pressed={lang === 'id'}
-                onClick={() => {
-                  if (lang !== 'id') {
-                    triggerHapticAndSound('tap');
-                    setLang('id');
-                  }
-                }}
-              >
-                ID
-              </button>
-              <button
-                type="button"
-                className={`pill-option ${lang === 'en' ? 'is-active' : ''}`}
-                aria-pressed={lang === 'en'}
-                onClick={() => {
-                  if (lang !== 'en') {
-                    triggerHapticAndSound('tap');
-                    setLang('en');
-                  }
-                }}
-              >
-                EN
-              </button>
-            </div>
-
-            <div className="segmented-pill" role="group" aria-label={u.themeSwitch}>
-              <button
-                type="button"
-                className={`pill-option ${theme === 'light' ? 'is-active' : ''}`}
-                aria-label={u.lightMode}
-                aria-pressed={theme === 'light'}
-                onClick={(e) => handleThemeSwitch('light', e)}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4.5" />
-                  <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className={`pill-option ${theme === 'dark' ? 'is-active' : ''}`}
-                aria-label={u.darkMode}
-                aria-pressed={theme === 'dark'}
-                onClick={(e) => handleThemeSwitch('dark', e)}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="segmented-pill sound-pill-desktop" role="group" aria-label={u.soundSwitch}>
-              <button
-                type="button"
-                className={`pill-option ${soundOn ? 'is-active' : ''}`}
-                aria-label={u.soundOn}
-                aria-pressed={soundOn}
-                onClick={() => {
-                  feedbackState.enabled = true;
-                  setSoundOn(true);
-                  triggerHapticAndSound('tap');
-                }}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className={`pill-option ${!soundOn ? 'is-active' : ''}`}
-                aria-label={u.soundOff}
-                aria-pressed={!soundOn}
-                onClick={() => {
-                  feedbackState.enabled = false;
-                  setSoundOn(false);
-                }}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <line x1="23" y1="9" x2="17" y2="15" />
-                  <line x1="17" y1="9" x2="23" y2="15" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Mobile/Tablet Menu Drawer Trigger */}
-            <Dialog.Root
-              open={mobileMenuOpen}
-              onOpenChange={(open) => {
-                triggerHapticAndSound('tap');
-                setMobileMenuOpen(open);
-              }}
-            >
-              <Dialog.Trigger asChild>
-                <button
-                  type="button"
-                  className="mobile-menu-trigger"
-                  aria-label={mobileMenuOpen ? u.close : u.menu}
-                >
-                  <span>{mobileMenuOpen ? u.close : u.menu}</span>
-                </button>
-              </Dialog.Trigger>
-              <Dialog.Portal>
-                <Dialog.Overlay className="radix-overlay" />
-                <Dialog.Content className="radix-mobile-sheet" aria-describedby={undefined}>
-                  <div className="mobile-sheet-head">
-                    <div className="mobile-sheet-identity">
-                      <img
-                        src={normalizedBase + profile.avatar}
-                        alt={profile.name}
-                        width={40}
-                        height={40}
-                        className="sheet-avatar"
-                      />
-                      <div>
-                        <Dialog.Title className="sheet-name">{profile.name}</Dialog.Title>
-                        <p className="sheet-role">{t(profile.badgeRole, lang)}</p>
-                      </div>
-                    </div>
-                    <Dialog.Close asChild>
-                      <button type="button" className="btn btn-outline btn-sm">
-                        {u.close}
-                      </button>
-                    </Dialog.Close>
-                  </div>
-
-                  <nav className="mobile-sheet-nav" aria-label={u.mainNav}>
-                    {SECTION_META.map((sec) => (
-                      <a
-                        key={sec.id}
-                        href={`#${sec.id}`}
-                        className={`sheet-nav-item ${activeSection === sec.id ? 'is-active' : ''}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setMobileMenuOpen(false);
-                          navigateHash(`#${sec.id}`);
-                        }}
-                      >
-                        <span>{sec.nav[lang]}</span>
-                      </a>
-                    ))}
-                  </nav>
-
-                  <div className="mobile-sheet-footer">
-                    <span className="sheet-footer-label">{u.soundSwitch}</span>
-                    <div className="segmented-pill" role="group" aria-label={u.soundSwitch}>
-                      <button
-                        type="button"
-                        className={`pill-option ${soundOn ? 'is-active' : ''}`}
-                        aria-pressed={soundOn}
-                        onClick={() => {
-                          feedbackState.enabled = true;
-                          setSoundOn(true);
-                          triggerHapticAndSound('tap');
-                        }}
-                      >
-                        {u.soundOn}
-                      </button>
-                      <button
-                        type="button"
-                        className={`pill-option ${!soundOn ? 'is-active' : ''}`}
-                        aria-pressed={!soundOn}
-                        onClick={() => {
-                          feedbackState.enabled = false;
-                          setSoundOn(false);
-                        }}
-                      >
-                        {u.soundOff}
-                      </button>
-                    </div>
-                  </div>
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog.Root>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content: Either Case Study View or Single-Page Scroll */}
+      {/* Full Case Study Route View */}
       {caseStudySlug ? (
-        <main id="top" ref={mainRef}>
+        <main>
           <CaseStudyView
             slug={caseStudySlug}
             lang={lang}
             baseUrl={normalizedBase}
-            onNavigate={navigateHash}
+            onNavigate={(hash) => {
+              if (hash.startsWith('#/proyek/')) {
+                window.location.hash = hash;
+                setCaseStudySlug(hash.replace('#/proyek/', ''));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                window.location.hash = '';
+                setCaseStudySlug(null);
+              }
+            }}
           />
         </main>
       ) : (
-        <main id="top" ref={mainRef}>
-          {/* HERO SECTION WITH ARCHITECTURAL BLUEPRINT CANVAS & IMPACT METRICS */}
-          <section className="hero-section">
-            <div className="hero-grid-backdrop" aria-hidden="true" />
-            <div className="section-inner hero-grid">
-              <motion.div
-                className="hero-copy"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="hero-top-row">
-                  <span className="hero-status-pill">
-                    <span className="hero-status-dot" aria-hidden="true" />
-                    <span>{u.heroStatus}</span>
-                  </span>
-                </div>
-
-                <p className="hero-greeting">{t(profile.greeting, lang)}</p>
-                <h1 className="hero-name">{profile.name}</h1>
-                <p className="hero-typing">
-                  <TypingRole text={t(profile.roles[0], lang)} />
-                </p>
-                <blockquote className="hero-quote">“{t(profile.quote, lang)}”</blockquote>
-
-                <div className="hero-actions">
-                  <a
-                    href="#proyek"
-                    className="btn btn-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      triggerHapticAndSound('tap');
-                      navigateHash('#proyek');
-                    }}
-                  >
-                    {u.viewProjects}
-                  </a>
-                  <a
-                    href={cvUrl}
-                    download="CV_Muhammad_Ravael_Chessario_Ramdoni.pdf"
-                    className="btn btn-outline"
-                    onClick={() => triggerHapticAndSound('tap')}
-                  >
-                    {u.downloadCv}
-                  </a>
-                </div>
-
-                {/* Live Key Impact Metrics Bar in Hero */}
-                <div className="hero-metrics-strip">
-                  <div className="hero-metric-item">
-                    <strong className="hero-metric-val">{lang === 'id' ? '3,77' : '3.77'}</strong>
-                    <span className="hero-metric-label">{u.statGpaLabel}</span>
-                  </div>
-                  <div className="hero-metric-item">
-                    <strong className="hero-metric-val">{lang === 'id' ? '63.766' : '63,766'}</strong>
-                    <span className="hero-metric-label">{u.statReviewsLabel}</span>
-                  </div>
-                  <div className="hero-metric-item">
-                    <strong className="hero-metric-val">{lang === 'id' ? '94,38%' : '94.38%'}</strong>
-                    <span className="hero-metric-label">{u.statAccLabel}</span>
-                  </div>
-                  <div className="hero-metric-item">
-                    <strong className="hero-metric-val">{u.statBootcampVal}</strong>
-                    <span className="hero-metric-label">{u.statBootcampLabel}</span>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Lazy-loaded Interactive Lanyard */}
-              <div className="hero-lanyard-col">
-                <Suspense
-                  fallback={
-                    <div className="lanyard-placeholder" aria-hidden="true">
-                      <div className="lanyard-placeholder-card" />
-                    </div>
-                  }
-                >
-                  <LazyLanyard
-                    name={profile.name}
-                    badgeRole={t(profile.badgeRole, lang)}
-                    photo={normalizedBase + profile.squarePhoto}
-                    summaryRole={t(profile.roles[0], lang)}
-                    email={profile.email}
-                    location={profile.location}
-                    hint={u.lanyardHint}
-                    flipBackLabel={u.lanyardFlipBack}
-                  />
-                </Suspense>
-              </div>
-            </div>
-          </section>
-
-          {/* 1. TENTANG */}
-          <SectionHeading
-            id="tentang"
-            code={SECTION_META[0].code}
-            eyebrow={SECTION_META[0].nav[lang]}
-            title={SECTION_META[0].title[lang]}
-          >
-            <div className="about-grid">
-              <div className="about-left-col">
-                <article className="surface-card">
-                  <div className="eyebrow" style={{ marginBottom: 10 }}>
-                    {u.profileHeading}
-                  </div>
-                  <p className="body-text">{t(about.profile, lang)}</p>
-                </article>
-
-                <article className="surface-card">
-                  <div className="tech-card-header">
-                    <h3 className="card-h3">{u.techHeading}</h3>
-                  </div>
-                  <div className="tech-groups-stack">
-                    {skillGroups.map((groupName) => {
-                      const groupLabelKey = GROUP_KEY_MAP[groupName];
-                      const translatedGroup = groupLabelKey ? u[groupLabelKey] : groupName;
-                      const groupItems = skills.filter((s) => s.group === groupName);
-                      const isCompactCol =
-                        groupName === 'Metode' ||
-                        groupName === 'Visualisasi & Dashboard' ||
-                        groupName === 'Alat Kerja';
-                      return (
-                        <div
-                          key={groupName}
-                          className={`tech-group-block ${isCompactCol ? 'is-compact-col' : 'is-full-col'}`}
-                        >
-                          <div className="eyebrow" style={{ marginBottom: 6 }}>
-                            {translatedGroup}
-                          </div>
-                          <div className="chip-row">
-                            {groupItems.map((item) => (
-                              <span key={t(item.name, 'id')} className="tech-chip">
-                                {t(item.name, lang)}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </article>
-              </div>
-
-              <div className="about-right-col">
-                <figure className="about-photo-frame">
-                  <img
-                    src={normalizedBase + about.photo}
-                    alt={u.photoAlt}
-                    className="about-photo-img"
-                    decoding="async"
-                  />
-                  <figcaption className="about-photo-caption">
-                    <span className="about-caption-dot" aria-hidden="true" />
-                    <div>
-                      <strong>{u.photoBadgeTitle}</strong>
-                      <span>{u.photoBadgeSub}</span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </div>
-            </div>
-          </SectionHeading>
-
-          {/* 2. GALERI */}
-          <SectionHeading
-            id="galeri"
-            code={SECTION_META[1].code}
-            eyebrow={SECTION_META[1].nav[lang]}
-            title={SECTION_META[1].title[lang]}
-            alternate
-          >
-            {uniqueCatKeys.length >= 2 && (
-              <div className="gallery-filters" role="group" aria-label={u.filterLabel}>
-                <button
-                  type="button"
-                  className={`filter-chip ${selectedCat === 'all' ? 'is-active' : ''}`}
-                  aria-pressed={selectedCat === 'all'}
-                  onClick={() => {
-                    triggerHapticAndSound('tap');
-                    setSelectedCat('all');
-                    setShowAllGallery(false);
+        <AnimatePresence mode="wait">
+          {/* VIEW 1: MAIN SINGLE-COLUMN STREAM */}
+          {viewMode === 'stream' && (
+            <motion.main
+              key="stream-view"
+              className="b-stream"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Top Header: Handwritten Signature on Left + Morphing "Open to work / Let's talk" Pill on Right */}
+              <header className="b-top-header">
+                <a
+                  href="#overview"
+                  className="b-brand-link"
+                  aria-label={profile.name}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('overview');
                   }}
                 >
-                  {u.allCategories}
+                  <RavaelSignature />
+                </a>
+
+                <div className="b-top-right">
+                  <button
+                    type="button"
+                    className="b-work-pill"
+                    onMouseEnter={() => triggerHapticAndSound('hover')}
+                    onClick={() => scrollToSection('contact')}
+                  >
+                    <span className="b-work-default">{u.openToWork}</span>
+                    <span className="b-work-hover">
+                      {u.letsTalk} <span aria-hidden="true">↗</span>
+                    </span>
+                  </button>
+                </div>
+              </header>
+
+              {/* 1. OVERVIEW */}
+              <section id="overview" className="b-section b-overview-section">
+                <h1 className="b-overview-title">{u.overviewHeadline}</h1>
+                <p className="b-overview-bio">{u.overviewBio}</p>
+
+                <div className="b-overview-chips" aria-label="Core technologies">
+                  {coreTools.map((tool) => (
+                    <span key={t(tool.name, 'id')} className="b-mini-chip">
+                      {t(tool.name, lang)}
+                    </span>
+                  ))}
+                </div>
+              </section>
+
+              {/* 2. THINGS I DO — Exclusively Projects Built & Upcoming Projects */}
+              <section id="things" className="b-section">
+                <div className="b-section-head">
+                  <h2 className="b-section-title">{u.thingsHeading}</h2>
+                  <button
+                    type="button"
+                    className="b-text-action"
+                    onMouseEnter={() => triggerHapticAndSound('hover')}
+                    onClick={() => {
+                      triggerHapticAndSound('expand');
+                      setViewMode('all-projects');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                  >
+                    {u.seeAll}
+                  </button>
+                </div>
+
+                <div className="b-carousel-rows">
+                  {/* Row 1 — Projects Only */}
+                  <div className="b-marquee-viewport">
+                    <div className="b-marquee-track">
+                      {[0, 1].map((dup) => (
+                        <div
+                          key={`r1-${dup}`}
+                          className="b-marquee-group"
+                          aria-hidden={dup > 0 ? 'true' : undefined}
+                        >
+                          {CAROUSEL_ROW_1.map((entry, eIdx) => {
+                            const proj = PROJECT_SHOWCASE_ITEMS[entry.projectIdx];
+                            const slide = proj.slides[entry.slideIdx] || proj.slides[0];
+                            return (
+                              <button
+                                key={`${dup}-r1-${eIdx}`}
+                                type="button"
+                                tabIndex={dup === 0 ? 0 : -1}
+                                className={`b-showcase-card ${entry.bgTone} is-${proj.aspect}`}
+                                onMouseEnter={() => triggerHapticAndSound('hover')}
+                                onClick={() =>
+                                  openProjectDetail(entry.projectIdx, entry.slideIdx)
+                                }
+                              >
+                                <div className="b-card-inner-frame">
+                                  {slide.kind === 'image' && slide.src ? (
+                                    <img
+                                      src={normalizedBase + slide.src}
+                                      alt={t(slide.alt, lang)}
+                                      className="b-card-img"
+                                      loading="lazy"
+                                    />
+                                  ) : (
+                                    <SlideVisualCard
+                                      cardType={slide.cardType!}
+                                      lang={lang}
+                                      compact
+                                    />
+                                  )}
+                                </div>
+                                <span className="b-card-count-pill">
+                                  {entry.slideIdx + 1} {u.ofLabel} {proj.slides.length}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Row 2 — Projects Only */}
+                  <div className="b-marquee-viewport">
+                    <div className="b-marquee-track is-reverse">
+                      {[0, 1].map((dup) => (
+                        <div
+                          key={`r2-${dup}`}
+                          className="b-marquee-group"
+                          aria-hidden={dup > 0 ? 'true' : undefined}
+                        >
+                          {CAROUSEL_ROW_2.map((entry, eIdx) => {
+                            const proj = PROJECT_SHOWCASE_ITEMS[entry.projectIdx];
+                            const slide = proj.slides[entry.slideIdx] || proj.slides[0];
+                            return (
+                              <button
+                                key={`${dup}-r2-${eIdx}`}
+                                type="button"
+                                tabIndex={dup === 0 ? 0 : -1}
+                                className={`b-showcase-card ${entry.bgTone} is-${proj.aspect}`}
+                                onMouseEnter={() => triggerHapticAndSound('hover')}
+                                onClick={() =>
+                                  openProjectDetail(entry.projectIdx, entry.slideIdx)
+                                }
+                              >
+                                <div className="b-card-inner-frame">
+                                  {slide.kind === 'image' && slide.src ? (
+                                    <img
+                                      src={normalizedBase + slide.src}
+                                      alt={t(slide.alt, lang)}
+                                      className="b-card-img"
+                                      loading="lazy"
+                                    />
+                                  ) : (
+                                    <SlideVisualCard
+                                      cardType={slide.cardType!}
+                                      lang={lang}
+                                      compact
+                                    />
+                                  )}
+                                </div>
+                                <span className="b-card-count-pill">
+                                  {entry.slideIdx + 1} {u.ofLabel} {proj.slides.length}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* 3. EXPERIENCE (Interactive Click-to-Expand Accordion Rows with Logos) */}
+              <section id="experience" className="b-section">
+                <div className="b-section-head">
+                  <h2 className="b-section-title">{u.expHeading}</h2>
+                </div>
+
+                <div className="b-accordion-list">
+                  {experiences.map((exp, idx) => {
+                    const accKey = `exp-${idx}`;
+                    const isOpen = !!openAccordions[accKey];
+                    const isKKN = exp.org.toLowerCase().includes('itb');
+                    const tasks = exp.detail.tasks.map((item) => t(item, lang));
+                    const resultLine = t(exp.detail.result, lang);
+                    const photos = exp.detail.photos || [];
+                    const expTitle = t(exp.title, lang);
+
+                    return (
+                      <div key={accKey} className={`b-acc-item ${isOpen ? 'is-open' : ''}`}>
+                        <button
+                          type="button"
+                          className="b-acc-trigger"
+                          aria-expanded={isOpen}
+                          onMouseEnter={() => triggerHapticAndSound('hover')}
+                          onClick={() => toggleAccordion(accKey)}
+                        >
+                          <div className="b-acc-left">
+                            {isKKN ? (
+                              <img
+                                src={
+                                  normalizedBase +
+                                  (theme === 'dark' && education.logoDark
+                                    ? education.logoDark
+                                    : education.logo)
+                                }
+                                alt={exp.org}
+                                className="b-acc-logo-img"
+                              />
+                            ) : (
+                              <span className="b-acc-logo tone-lavender-badge" aria-hidden="true">
+                                KB
+                              </span>
+                            )}
+                            <div className="b-acc-titles">
+                              <strong className="b-acc-role">{expTitle}</strong>
+                              <span className="b-acc-org">{exp.org}</span>
+                            </div>
+                          </div>
+                          <span className="b-acc-period">{t(exp.period, lang)}</span>
+                        </button>
+
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div
+                              className="b-acc-panel"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                            >
+                              <div className="b-acc-panel-inner">
+                                {[...tasks, resultLine].map((line, li) => (
+                                  <p key={li} className="b-acc-p">
+                                    {line}
+                                  </p>
+                                ))}
+                                {photos.length > 0 && (
+                                  <div className="b-acc-thumbs">
+                                    {photos.map((phSrc, pi) => (
+                                      <button
+                                        key={pi}
+                                        type="button"
+                                        className="b-acc-thumb-btn"
+                                        onClick={() => {
+                                          triggerHapticAndSound('tap');
+                                          setZoomImage({
+                                            src: normalizedBase + phSrc,
+                                            title: `${expTitle} — ${exp.org} (${pi + 1})`,
+                                          });
+                                        }}
+                                      >
+                                        <img
+                                          src={normalizedBase + phSrc}
+                                          alt={`${expTitle} (${pi + 1})`}
+                                          loading="lazy"
+                                        />
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {/* 4. EDUCATION & CERTIFICATIONS */}
+              <section id="education" className="b-section">
+                <div className="b-section-head">
+                  <h2 className="b-section-title">{u.eduHeading}</h2>
+                </div>
+
+                <div className="b-accordion-list">
+                  {/* ITB Ahmad Dahlan Jakarta Education Row */}
+                  {(() => {
+                    const accKey = 'edu-itbad';
+                    const isOpen = !!openAccordions[accKey];
+                    return (
+                      <div className={`b-acc-item ${isOpen ? 'is-open' : ''}`}>
+                        <button
+                          type="button"
+                          className="b-acc-trigger"
+                          aria-expanded={isOpen}
+                          onMouseEnter={() => triggerHapticAndSound('hover')}
+                          onClick={() => toggleAccordion(accKey)}
+                        >
+                          <div className="b-acc-left">
+                            <img
+                              src={
+                                normalizedBase +
+                                (theme === 'dark' && education.logoDark
+                                  ? education.logoDark
+                                  : education.logo)
+                              }
+                              alt={education.school}
+                              className="b-acc-logo-img"
+                            />
+                            <div className="b-acc-titles">
+                              <strong className="b-acc-role">{education.school}</strong>
+                              <span className="b-acc-org">
+                                {t(education.degree, lang)} ·{' '}
+                                {lang === 'id' ? 'IPK 3,77 / 4,00' : 'GPA 3.77 / 4.00'}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="b-acc-period">{education.period}</span>
+                        </button>
+
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div
+                              className="b-acc-panel"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                            >
+                              <div className="b-acc-panel-inner">
+                                <p className="b-acc-p">{t(education.nomination, lang)}</p>
+                                <div className="b-acc-sublabel">{u.favCoursesLabel}:</div>
+                                <div className="b-overview-chips">
+                                  {education.favorites.map((c, ci) => (
+                                    <span key={ci} className="b-mini-chip">
+                                      {t(c, lang)}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Certificates Rows (DSAREA & Coursera Google IT Support) */}
+                  {certificates.map((cert, idx) => {
+                    const accKey = `cert-${idx}`;
+                    const isOpen = !!openAccordions[accKey];
+                    const isDsarea = cert.issuer.toLowerCase().includes('dsarea');
+                    const certTitle = t(cert.title, lang);
+
+                    return (
+                      <div key={accKey} className={`b-acc-item ${isOpen ? 'is-open' : ''}`}>
+                        <button
+                          type="button"
+                          className="b-acc-trigger"
+                          aria-expanded={isOpen}
+                          onMouseEnter={() => triggerHapticAndSound('hover')}
+                          onClick={() => toggleAccordion(accKey)}
+                        >
+                          <div className="b-acc-left">
+                            <span
+                              className={`b-acc-logo ${
+                                isDsarea ? 'tone-mint-badge' : 'tone-slate-badge'
+                              }`}
+                              aria-hidden="true"
+                            >
+                              {isDsarea ? 'DA' : 'G'}
+                            </span>
+                            <div className="b-acc-titles">
+                              <strong className="b-acc-role">{certTitle}</strong>
+                              <span className="b-acc-org">{cert.issuer}</span>
+                            </div>
+                          </div>
+                          <span className="b-acc-period">{t(cert.date, lang)}</span>
+                        </button>
+
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div
+                              className="b-acc-panel"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                            >
+                              <div className="b-acc-panel-inner">
+                                {cert.summary && (
+                                  <p className="b-acc-p">{t(cert.summary, lang)}</p>
+                                )}
+                                <button
+                                  type="button"
+                                  className="b-cert-preview-btn"
+                                  onClick={() => {
+                                    triggerHapticAndSound('tap');
+                                    setZoomImage({
+                                      src: normalizedBase + cert.image,
+                                      title: `${certTitle} — ${cert.issuer}`,
+                                    });
+                                  }}
+                                >
+                                  <img
+                                    src={normalizedBase + cert.image}
+                                    alt={certTitle}
+                                    loading="lazy"
+                                  />
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {/* 5. CONTACT ("What shall we create next?" + Handwritten "say hello!") */}
+              <section id="contact" className="b-section b-contact-section">
+                <h2 className="b-contact-title">{u.contactTitle}</h2>
+                <p className="b-contact-sub">{u.contactSub}</p>
+
+                <div className="b-sayhello-row">
+                  <button
+                    type="button"
+                    className="b-sayhello-btn"
+                    onMouseEnter={() => triggerHapticAndSound('hover')}
+                    onClick={handleCopyEmail}
+                    title={`${u.copyEmailTitle}: ${profile.email}`}
+                  >
+                    <SayHelloSignature />
+                  </button>
+                  {emailCopied && <span className="b-copied-badge">{u.copiedToast}</span>}
+                </div>
+              </section>
+            </motion.main>
+          )}
+
+          {/* VIEW 2: "SEE ALL" ALL PROJECTS GRID (Exclusively Projects Built & Upcoming) */}
+          {viewMode === 'all-projects' && (
+            <motion.main
+              key="all-projects-view"
+              className="b-all-projects"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="b-all-header">
+                <h1 className="b-all-title">{u.allProjects}</h1>
+                <button
+                  type="button"
+                  className="b-icon-close"
+                  aria-label={u.closeLabel}
+                  onClick={() => {
+                    triggerHapticAndSound('collapse');
+                    setViewMode('stream');
+                  }}
+                >
+                  ×
                 </button>
-                {uniqueCatKeys.map((catKey) => {
-                  const sample = gallery.find((g) => g.catKey === catKey)!;
-                  const active = selectedCat === catKey;
+              </div>
+
+              <div className="b-all-grid">
+                {PROJECT_SHOWCASE_ITEMS.map((item, idx) => {
+                  const cover = item.slides[0];
                   return (
                     <button
-                      key={catKey}
+                      key={item.id}
                       type="button"
-                      className={`filter-chip ${active ? 'is-active' : ''}`}
-                      aria-pressed={active}
-                      onClick={() => {
-                        triggerHapticAndSound('tap');
-                        setSelectedCat(catKey);
-                        setShowAllGallery(false);
-                      }}
+                      className="b-all-card"
+                      onMouseEnter={() => triggerHapticAndSound('hover')}
+                      onClick={() => openProjectDetail(idx, 0)}
                     >
-                      {t(sample.cat, lang)}
+                      <div className={`b-all-thumb ${item.bgTone}`}>
+                        <div className="b-card-inner-frame">
+                          {cover.kind === 'image' && cover.src ? (
+                            <img
+                              src={normalizedBase + cover.src}
+                              alt={t(item.title, lang)}
+                              className="b-card-img"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <SlideVisualCard cardType={cover.cardType!} lang={lang} compact />
+                          )}
+                        </div>
+                      </div>
+                      <span className="b-all-card-label">{t(item.title, lang)}</span>
+                      <span className="b-all-card-sub">{t(item.category, lang)}</span>
                     </button>
                   );
                 })}
               </div>
-            )}
+            </motion.main>
+          )}
 
-            <motion.div layout className="bento-gallery-grid">
-              {visibleGallery.map((item, idx) => {
-                const spanClass =
-                  idx === 0 ? 'bento-featured' : idx === 3 || idx === 4 ? 'bento-wide' : '';
-                return (
-                  <motion.button
-                    layout
-                    key={item.id}
-                    type="button"
-                    className={`bento-tile ${spanClass}`}
-                    onClick={() => {
-                      triggerHapticAndSound('tap');
-                      setLightboxIdx(idx);
-                    }}
-                    aria-label={`${t(item.cat, lang)} (${item.date}): ${t(item.caption, lang)}`}
-                  >
-                    <img
-                      src={normalizedBase + item.src}
-                      alt={t(item.caption, lang)}
-                      className="bento-tile-img"
-                      decoding="async"
-                    />
-                    <span className="bento-top-pill">
-                      {t(item.cat, lang)} · {item.date}
-                    </span>
-                    <span className="bento-tile-overlay">
-                      <span className="bento-caption">{t(item.caption, lang)}</span>
-                    </span>
-                  </motion.button>
-                );
-              })}
-            </motion.div>
-
-            {filteredGallery.length > 6 && (
-              <div className="gallery-more-row">
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => {
-                    triggerHapticAndSound('tap');
-                    setShowAllGallery((v) => !v);
-                  }}
-                >
-                  {showAllGallery
-                    ? u.showLess
-                    : `${u.seeAll} (${filteredGallery.length})`}
-                </button>
-              </div>
-            )}
-
-            {/* Gallery Lightbox Modal */}
-            <Dialog.Root
-              open={lightboxIdx >= 0}
-              onOpenChange={(open) => {
-                if (!open) setLightboxIdx(-1);
-              }}
+          {/* VIEW 3: SPLIT-SCREEN PROJECT DETAIL VIEW */}
+          {viewMode === 'project-detail' && (
+            <motion.main
+              key={`detail-${activeItem.id}`}
+              className="b-detail-view"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Dialog.Portal>
-                <Dialog.Overlay className="radix-overlay" />
-                <Dialog.Content className="radix-dialog-content" aria-describedby={undefined}>
-                  {activeLightboxItem && (
-                    <div className="lightbox-inner">
-                      <div className="dialog-header">
-                        <div>
-                          <span className="eyebrow">
-                            {t(activeLightboxItem.cat, lang)} · {activeLightboxItem.date}
-                          </span>
-                          <Dialog.Title className="card-h3" style={{ marginTop: 4 }}>
-                            {t(activeLightboxItem.caption, lang)}
-                          </Dialog.Title>
-                        </div>
-                        <Dialog.Close asChild>
-                          <button type="button" className="btn btn-outline btn-sm">
-                            {u.close}
-                          </button>
-                        </Dialog.Close>
-                      </div>
+              <div className="b-detail-layout">
+                {/* Left Meta Column */}
+                <aside className="b-detail-meta">
+                  <h1 className="b-detail-title">{t(activeItem.title, lang)}</h1>
+                  <p className="b-detail-p">{t(activeItem.p1, lang)}</p>
+                  <p className="b-detail-p">{t(activeItem.p2, lang)}</p>
 
-                      <div className="lightbox-img-stage">
-                        <img
-                          src={normalizedBase + activeLightboxItem.src}
-                          alt={t(activeLightboxItem.caption, lang)}
-                          className="lightbox-img"
-                        />
-                      </div>
+                  <div className="b-detail-year">
+                    <span>{u.yearLabel}</span>
+                    <strong>{activeItem.year}</strong>
+                  </div>
 
-                      <div className="lightbox-nav-row">
+                  {(activeItem.demoUrl || activeItem.caseStudySlug) && (
+                    <div className="b-detail-links">
+                      {activeItem.demoUrl && (
+                        <a
+                          href={activeItem.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="b-inline-btn is-primary"
+                          onClick={() => triggerHapticAndSound('tap')}
+                        >
+                          {u.viewDemo} ↗
+                        </a>
+                      )}
+                      {activeItem.caseStudySlug && (
                         <button
                           type="button"
-                          className="btn btn-outline btn-sm"
+                          className="b-inline-btn"
                           onClick={() => {
-                            triggerHapticAndSound('tap');
-                            setLightboxIdx(
-                              (lightboxIdx - 1 + filteredGallery.length) % filteredGallery.length
-                            );
+                            triggerHapticAndSound('expand');
+                            window.location.hash = `#/proyek/${activeItem.caseStudySlug}`;
+                            setCaseStudySlug(activeItem.caseStudySlug!);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
                         >
-                          {u.prevPhoto}
+                          {u.readCaseStudy}
                         </button>
-                        <span className="lightbox-counter">
-                          {lightboxIdx + 1} / {filteredGallery.length}
-                        </span>
-                        <button
-                          type="button"
-                          className="btn btn-outline btn-sm"
-                          onClick={() => {
-                            triggerHapticAndSound('tap');
-                            setLightboxIdx((lightboxIdx + 1) % filteredGallery.length);
-                          }}
-                        >
-                          {u.nextPhoto}
-                        </button>
-                      </div>
+                      )}
                     </div>
                   )}
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog.Root>
-          </SectionHeading>
+                </aside>
 
-          {/* 3. PENDIDIKAN */}
-          <SectionHeading
-            id="pendidikan"
-            code={SECTION_META[2].code}
-            eyebrow={SECTION_META[2].nav[lang]}
-            title={SECTION_META[2].title[lang]}
-          >
-            <div ref={eduRef} className="surface-card edu-card">
-              <div className="edu-header">
-                <div className="edu-school-block">
-                  <img
-                    src={
-                      normalizedBase +
-                      (theme === 'dark' && education.logoDark
-                        ? education.logoDark
-                        : education.logo)
-                    }
-                    alt={education.school}
-                    width={88}
-                    height={88}
-                    className="edu-logo"
-                  />
-                  <div className="edu-school-text">
-                    <h3 className="edu-school-name">{education.school}</h3>
-                    <p className="edu-degree-line">
-                      {t(education.degree, lang)} · <span className="mono-num">{education.period}</span>
-                    </p>
+                {/* Right Showcase Stage + Thumbnail Switcher + Prev/Next */}
+                <section className="b-detail-stage-col">
+                  <div className="b-detail-topbar">
+                    <button
+                      type="button"
+                      className="b-icon-close"
+                      aria-label="Back"
+                      onClick={() => {
+                        triggerHapticAndSound('collapse');
+                        setViewMode('stream');
+                      }}
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      className="b-icon-close"
+                      aria-label={u.closeLabel}
+                      onClick={() => {
+                        triggerHapticAndSound('collapse');
+                        setViewMode('stream');
+                      }}
+                    >
+                      ×
+                    </button>
                   </div>
-                </div>
 
-                {/* Fixed-dimension GPA Ring */}
-                <div className="edu-gpa-box">
-                  <div className="gpa-ring-wrap" aria-label={`${u.gpaLabel}: ${formattedGpa} ${u.outOf} ${formattedGpaMax}`}>
-                    <svg className="gpa-ring-svg" viewBox="0 0 124 124" aria-hidden="true">
-                      <circle
-                        cx="62"
-                        cy="62"
-                        r={ringRadius}
-                        fill="none"
-                        className="gpa-ring-track"
-                        strokeWidth="8"
-                      />
-                      <circle
-                        cx="62"
-                        cy="62"
-                        r={ringRadius}
-                        fill="none"
-                        className="gpa-ring-progress"
-                        strokeWidth="8"
-                        strokeLinecap="round"
-                        strokeDasharray={`${ringCircumference} ${ringCircumference}`}
-                        strokeDashoffset={ringOffset}
-                      />
-                    </svg>
-                    <div className="gpa-ring-center">
-                      <strong className="gpa-ring-value">{formattedGpa}</strong>
-                      <span className="gpa-ring-max">
-                        {u.outOf} {formattedGpaMax}
-                      </span>
+                  {/* Main Preview Card */}
+                  <div className={`b-detail-hero-card ${activeItem.bgTone}`}>
+                    <div className="b-detail-hero-inner">
+                      {activeSlide.kind === 'image' && activeSlide.src ? (
+                        <img
+                          src={normalizedBase + activeSlide.src}
+                          alt={t(activeSlide.alt, lang)}
+                          className="b-detail-main-img"
+                          onClick={() => {
+                            triggerHapticAndSound('tap');
+                            setZoomImage({
+                              src: normalizedBase + activeSlide.src!,
+                              title: t(activeSlide.alt, lang),
+                            });
+                          }}
+                        />
+                      ) : (
+                        <SlideVisualCard cardType={activeSlide.cardType!} lang={lang} />
+                      )}
                     </div>
                   </div>
-                  <div className="edu-gpa-meta">
-                    <span className="eyebrow">{u.gpaLabel}</span>
-                    <p className="muted-text">{u.gpaDesc}</p>
-                  </div>
-                </div>
-              </div>
 
-              {/* Contrast Ribbon for Rank 4 out of 21 Graduates */}
-              <div className="edu-contrast-ribbon">
-                <span className="ribbon-medal" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="8" r="6" />
-                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                  </svg>
-                </span>
-                <div className="ribbon-copy">
-                  <strong className="ribbon-title">{t(education.nomination, lang)}</strong>
-                  <span className="ribbon-sub">{t(education.nominationNote, lang)}</span>
-                </div>
-              </div>
-
-              {/* Favorite Courses */}
-              <div className="edu-courses-block">
-                <div className="eyebrow" style={{ marginBottom: 10 }}>
-                  {u.favCourses}
-                </div>
-                <div className="chip-row">
-                  {education.favorites.map((course, idx) => (
-                    <span key={idx} className="tech-chip">
-                      {t(course, lang)}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </SectionHeading>
-
-          {/* 4. PENGALAMAN (Vertical timeline with inline documentation preview thumbnails & impact badges) */}
-          <SectionHeading
-            id="pengalaman"
-            code={SECTION_META[3].code}
-            eyebrow={SECTION_META[3].nav[lang]}
-            title={SECTION_META[3].title[lang]}
-            alternate
-          >
-            <div ref={timelineRef} className="experience-timeline">
-              {experience.map((item, idx) => (
-                <article key={item.id} className="timeline-item">
-                  <span className="timeline-node" aria-hidden="true" />
-                  <div className="surface-card timeline-card">
-                    <div className="timeline-card-head">
-                      <div>
-                        <h3 className="card-h3">
-                          {t(item.title, lang)}
-                          {item.org ? ` · ${item.org}` : ''}
-                        </h3>
-                        <p className="muted-text" style={{ marginTop: 4 }}>
-                          {t(item.location, lang)}
-                        </p>
-                      </div>
-                      <div className="timeline-badges-row">
-                        {item.impact && (
-                          <span className="badge-pill badge-honest">{t(item.impact, lang)}</span>
-                        )}
-                        <span className="badge-pill">{t(item.period, lang)}</span>
-                      </div>
-                    </div>
-
-                    <ul className="timeline-bullet-list">
-                      {item.lines.map((line, lIdx) => (
-                        <li key={lIdx} className="body-text">
-                          {t(line, lang)}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Inline Thumbnail Preview Strip of Documentation Photos */}
-                    {item.detail.photos.length > 0 && (
-                      <div className="timeline-photo-strip">
-                        {item.detail.photos.slice(0, 4).map((photoPath, pIdx) => (
+                  {/* Bottom Thumbnail Strip Switcher */}
+                  {activeItem.slides.length > 1 && (
+                    <div className="b-detail-thumbs" role="tablist">
+                      {activeItem.slides.map((sl, sIdx) => {
+                        const isSelected = sIdx === activeSlideIdx;
+                        return (
                           <button
-                            key={photoPath}
+                            key={sIdx}
                             type="button"
-                            className="timeline-thumb-btn"
+                            role="tab"
+                            aria-selected={isSelected}
+                            className={`b-detail-thumb-item ${isSelected ? 'is-active' : ''}`}
+                            onMouseEnter={() => triggerHapticAndSound('hover')}
                             onClick={() => {
                               triggerHapticAndSound('tap');
-                              setExpModalIdx(idx);
-                              setExpZoomPhoto(photoPath);
+                              setActiveSlideIdx(sIdx);
                             }}
-                            aria-label={`${u.docPhotos} ${pIdx + 1}`}
                           >
-                            <img
-                              src={normalizedBase + photoPath}
-                              alt={`${t(item.title, lang)} ${pIdx + 1}`}
-                              className="timeline-thumb-img"
-                              loading="lazy"
-                            />
-                            {pIdx === 3 && item.detail.photos.length > 4 && (
-                              <span className="timeline-thumb-more">
-                                +{item.detail.photos.length - 4}
-                              </span>
+                            {sl.kind === 'image' && sl.src ? (
+                              <img
+                                src={normalizedBase + sl.src}
+                                alt={t(sl.alt, lang)}
+                                loading="lazy"
+                              />
+                            ) : (
+                              <span className="b-thumb-card-num">0{sIdx + 1}</span>
                             )}
                           </button>
-                        ))}
-                      </div>
-                    )}
-
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-outline btn-sm"
-                        onClick={() => {
-                          triggerHapticAndSound('tap');
-                          setExpZoomPhoto('');
-                          setExpModalIdx(idx);
-                        }}
-                      >
-                        {u.seeDetails}
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            {/* Experience Detail Modal */}
-            <Dialog.Root
-              open={expModalIdx >= 0}
-              onOpenChange={(open) => {
-                if (!open) {
-                  setExpModalIdx(-1);
-                  setExpZoomPhoto('');
-                }
-              }}
-            >
-              <Dialog.Portal>
-                <Dialog.Overlay className="radix-overlay" />
-                <Dialog.Content className="radix-dialog-content" aria-describedby={undefined}>
-                  {expModalIdx >= 0 && experience[expModalIdx] && (
-                    <div className="exp-modal-inner">
-                      <div className="dialog-header">
-                        <div>
-                          <span className="eyebrow">
-                            {experience[expModalIdx].org} · {t(experience[expModalIdx].period, lang)}
-                          </span>
-                          <Dialog.Title className="card-h3" style={{ marginTop: 4 }}>
-                            {t(experience[expModalIdx].title, lang)}
-                          </Dialog.Title>
-                          <p className="muted-text" style={{ marginTop: 2 }}>
-                            {t(experience[expModalIdx].location, lang)}
-                          </p>
-                        </div>
-                        <Dialog.Close asChild>
-                          <button type="button" className="btn btn-outline btn-sm">
-                            {u.close}
-                          </button>
-                        </Dialog.Close>
-                      </div>
-
-                      {expZoomPhoto ? (
-                        <div className="lightbox-inner">
-                          <div className="lightbox-img-stage">
-                            <img
-                              src={normalizedBase + expZoomPhoto}
-                              alt={t(experience[expModalIdx].title, lang)}
-                              className="lightbox-img"
-                            />
-                          </div>
-                          <div>
-                            <button
-                              type="button"
-                              className="btn btn-outline btn-sm"
-                              onClick={() => {
-                                triggerHapticAndSound('tap');
-                                setExpZoomPhoto('');
-                              }}
-                            >
-                              {u.seeDetails}
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          <div>
-                            <div className="eyebrow" style={{ marginBottom: 8 }}>
-                              {u.tasksDone}
-                            </div>
-                            <ul className="modal-list">
-                              {experience[expModalIdx].detail.tasks.map((task, tIdx) => (
-                                <li key={tIdx}>{t(task, lang)}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div>
-                            <div className="eyebrow" style={{ marginBottom: 8 }}>
-                              {u.resultAchieved}
-                            </div>
-                            <p className="body-text">
-                              {t(experience[expModalIdx].detail.result, lang)}
-                            </p>
-                          </div>
-
-                          {experience[expModalIdx].detail.photos.length > 0 && (
-                            <div>
-                              <div className="eyebrow" style={{ marginBottom: 10 }}>
-                                {u.docPhotos}
-                              </div>
-                              <div className="exp-modal-photos">
-                                {experience[expModalIdx].detail.photos.map((photoPath) => (
-                                  <button
-                                    key={photoPath}
-                                    type="button"
-                                    className="exp-modal-photo-btn"
-                                    onClick={() => {
-                                      triggerHapticAndSound('tap');
-                                      setExpZoomPhoto(photoPath);
-                                    }}
-                                  >
-                                    <img
-                                      src={normalizedBase + photoPath}
-                                      alt={t(experience[expModalIdx].title, lang)}
-                                      className="exp-modal-img"
-                                      loading="lazy"
-                                    />
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      )}
+                        );
+                      })}
                     </div>
                   )}
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog.Root>
-          </SectionHeading>
 
-          {/* 5. PROYEK (Browser Window Mockup Frame + Interactive KDD Pipeline Funnel Card + Coming Soon Slot) */}
-          <SectionHeading
-            id="proyek"
-            code={SECTION_META[4].code}
-            eyebrow={SECTION_META[4].nav[lang]}
-            title={SECTION_META[4].title[lang]}
-          >
-            <div className="projects-bento">
-              {/* Primary Large Featured Project Card */}
-              <article className="surface-card project-featured-card">
-                <div className="project-cover-wrap">
-                  <div className="browser-mockup-window">
-                    <div className="browser-mockup-bar" aria-hidden="true">
-                      <div className="browser-dots">
-                        <span className="b-dot red" />
-                        <span className="b-dot yellow" />
-                        <span className="b-dot green" />
-                      </div>
-                      <div className="browser-url-pill">
-                        ravaelchessario24.github.io/mobile-jkn-landing-page
-                      </div>
-                    </div>
-                    <img
-                      src={normalizedBase + featuredProject.cover}
-                      alt={t(featuredProject.title, lang)}
-                      className="project-cover-img"
-                    />
-                  </div>
-                </div>
-
-                <div className="project-featured-body">
-                  <div className="project-meta-row">
-                    <div className="cs-badges">
-                      <span className="badge-pill badge-accent">
-                        {t(featuredProject.categoryBadge, lang)}
-                      </span>
-                      <span className="badge-pill badge-honest">
-                        {t(featuredProject.projectTypeLabel, lang)}
-                      </span>
-                    </div>
-                    <span className="mono-num muted-text">{t(featuredProject.period, lang)}</span>
-                  </div>
-
-                  <h3 className="project-title">{t(featuredProject.title, lang)}</h3>
-                  <p className="body-text">{t(featuredProject.summary, lang)}</p>
-
-                  <div className="chip-row">
-                    {featuredProject.tags.map((tag) => (
-                      <span key={tag} className="tech-chip">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="project-actions">
-                    <a
-                      href={featuredProject.caseStudy}
-                      className="btn btn-primary"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        triggerHapticAndSound('tap');
-                        navigateHash(featuredProject.caseStudy);
-                      }}
-                    >
-                      {u.readCaseStudy}
-                    </a>
-                    {featuredProject.demo && (
-                      <a
-                        href={featuredProject.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-outline"
-                      >
-                        {u.viewDemo}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </article>
-
-              {/* Right Column: Interactive KDD Data Pipeline Funnel Card + Coming Soon Blueprint Slot */}
-              <div className="projects-side-stack">
-                {secondaryProjects.map((secProj) => (
-                  <article key={secProj.slug} className="surface-card project-side-card">
-                    <div className="cs-badges">
-                      <span className="badge-pill badge-accent">
-                        {t(secProj.categoryBadge, lang)}
-                      </span>
-                      <span className="badge-pill">
-                        {t(secProj.projectTypeLabel, lang)}
-                      </span>
-                    </div>
-                    <h3 className="card-h3" style={{ marginTop: 8 }}>
-                      {t(secProj.title, lang)}
-                    </h3>
-                    <p className="muted-text" style={{ marginTop: 6, fontSize: 14 }}>
-                      {t(secProj.summary, lang)}
-                    </p>
-                    <div className="chip-row" style={{ marginTop: 10 }}>
-                      {secProj.tags.slice(0, 4).map((tag) => (
-                        <span key={tag} className="tech-chip">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div style={{ marginTop: 14 }}>
-                      <a
-                        href={secProj.caseStudy}
-                        className="btn btn-outline btn-sm"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          triggerHapticAndSound('tap');
-                          navigateHash(secProj.caseStudy);
-                        }}
-                      >
-                        {u.readCaseStudy}
-                      </a>
-                    </div>
-                  </article>
-                ))}
-
-                {secondaryProjects.length === 0 && (
-                  <article className="surface-card project-pipeline-card">
-                    <span className="eyebrow">{u.pipelineCardEyebrow}</span>
-                    <h3 className="card-h3" style={{ marginTop: 6 }}>
-                      {u.pipelineCardTitle}
-                    </h3>
-
-                    <div className="kdd-funnel-list">
-                      <div className="kdd-funnel-row">
-                        <div className="kdd-funnel-head">
-                          <span>01 · {u.pipelineStep1}</span>
-                          <strong className="mono-num">63.766</strong>
-                        </div>
-                        <div className="kdd-funnel-bar">
-                          <span style={{ width: '100%' }} />
-                        </div>
-                      </div>
-
-                      <div className="kdd-funnel-row">
-                        <div className="kdd-funnel-head">
-                          <span>02 · {u.pipelineStep2}</span>
-                          <strong className="mono-num">62.878</strong>
-                        </div>
-                        <div className="kdd-funnel-bar">
-                          <span style={{ width: '98%' }} />
-                        </div>
-                      </div>
-
-                      <div className="kdd-funnel-row">
-                        <div className="kdd-funnel-head">
-                          <span>03 · {u.pipelineStep3}</span>
-                          <strong className="mono-num">59.980</strong>
-                        </div>
-                        <div className="kdd-funnel-bar">
-                          <span style={{ width: '94%' }} />
-                        </div>
-                      </div>
-
-                      <div className="kdd-funnel-row">
-                        <div className="kdd-funnel-head">
-                          <span>04 · {u.pipelineStep4}</span>
-                          <strong className="mono-num accent-text">94,38%</strong>
-                        </div>
-                        <div className="kdd-funnel-bar is-emerald">
-                          <span style={{ width: '94.38%' }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ marginTop: 'auto', paddingTop: 14 }}>
-                      <a
-                        href={featuredProject.caseStudy}
-                        className="btn btn-outline btn-sm"
-                        style={{ width: '100%' }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          triggerHapticAndSound('tap');
-                          navigateHash(featuredProject.caseStudy);
-                        }}
-                      >
-                        {u.readCaseStudy}
-                      </a>
-                    </div>
-                  </article>
-                )}
-
-                <div className="project-coming-slot">
-                  <span className="eyebrow">{u.comingSoonEyebrow}</span>
-                  <strong className="coming-slot-title">{u.comingSoonSlot}</strong>
-                  <p className="muted-text" style={{ fontSize: 13.5 }}>
-                    {u.comingSoonSub}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </SectionHeading>
-
-          {/* 6. KETERAMPILAN */}
-          <SectionHeading
-            id="keterampilan"
-            code={SECTION_META[5].code}
-            eyebrow={SECTION_META[5].nav[lang]}
-            title={SECTION_META[5].title[lang]}
-            alternate
-          >
-            <div className="skills-marquee-viewport">
-              <div className="skills-marquee-track">
-                {[0, 1, 2].map((copyIdx) => (
-                  <div
-                    key={copyIdx}
-                    className="skills-marquee-group"
-                    aria-hidden={copyIdx > 0 ? 'true' : undefined}
-                  >
-                    {toolLogos.map((tool) => {
-                      const toolName = t(tool.name, lang);
-                      const usedInText = tool.usedIn ? t(tool.usedIn, lang) : '';
-                      const tooltipLabel = usedInText
-                        ? `${toolName} — ${u.usedIn}: ${usedInText}`
-                        : toolName;
-                      return (
-                        <div
-                          key={`${copyIdx}-${toolName}`}
-                          className="skill-logo-tile"
-                          tabIndex={copyIdx === 0 ? 0 : -1}
-                          aria-label={tooltipLabel}
-                        >
-                          <img
-                            src={normalizedBase + tool.logo!}
-                            alt={toolName}
-                            width={48}
-                            height={48}
-                            className="skill-logo-img"
-                          />
-                          <span className="skill-tooltip" role="tooltip">
-                            <strong>{toolName}</strong>
-                            {usedInText && (
-                              <span>
-                                {' '}
-                                · {u.usedIn}: {usedInText}
-                              </span>
-                            )}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </SectionHeading>
-
-          {/* 7. SERTIFIKASI */}
-          <SectionHeading
-            id="sertifikasi"
-            code={SECTION_META[6].code}
-            eyebrow={SECTION_META[6].nav[lang]}
-            title={SECTION_META[6].title[lang]}
-          >
-            <div className="certs-grid">
-              {certificates.map((cert, idx) => {
-                const certTitle = t(cert.title, lang);
-                const certDate = t(cert.date, lang);
-                const certSummary = cert.summary ? t(cert.summary, lang) : '';
-                return (
-                  <div key={certTitle} className="surface-card cert-card">
-                    <div className="cert-card-topbar">
-                      <span className="cert-verified-pill">
-                        <span className="cert-verified-dot" aria-hidden="true" />
-                        {u.verifiedCert}
-                      </span>
-                      <span className="badge-pill">{cert.issuer}</span>
-                    </div>
-
+                  {/* Previous project / Next project navigation */}
+                  <div className="b-detail-prevnext">
                     <button
                       type="button"
-                      className="cert-thumb-btn"
-                      aria-label={`${u.zoomCert}: ${certTitle}`}
+                      className="b-text-action"
+                      onMouseEnter={() => triggerHapticAndSound('hover')}
                       onClick={() => {
                         triggerHapticAndSound('tap');
-                        setCertModalIdx(idx);
+                        const prevIdx =
+                          (activeItemIdx - 1 + PROJECT_SHOWCASE_ITEMS.length) %
+                          PROJECT_SHOWCASE_ITEMS.length;
+                        setActiveItemIdx(prevIdx);
+                        setActiveSlideIdx(0);
                       }}
                     >
-                      <img
-                        src={normalizedBase + cert.image}
-                        alt={certTitle}
-                        className="cert-thumb-img"
-                      />
+                      {u.prevProject}
                     </button>
-                    <div className="cert-meta">
-                      <div className="cert-meta-top">
-                        <h3 className="cert-title">{certTitle}</h3>
-                        <span className="mono-num muted-text" style={{ fontSize: 13 }}>
-                          {certDate}
-                        </span>
-                      </div>
-                      {certSummary && (
-                        <p className="muted-text" style={{ marginTop: 6 }}>
-                          {certSummary}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Certificate Lightbox Modal */}
-            <Dialog.Root
-              open={certModalIdx >= 0}
-              onOpenChange={(open) => {
-                if (!open) setCertModalIdx(-1);
-              }}
-            >
-              <Dialog.Portal>
-                <Dialog.Overlay className="radix-overlay" />
-                <Dialog.Content className="radix-dialog-content" aria-describedby={undefined}>
-                  {certModalIdx >= 0 && certificates[certModalIdx] && (
-                    <div className="lightbox-inner">
-                      <div className="dialog-header">
-                        <div>
-                          <span className="eyebrow">
-                            {certificates[certModalIdx].issuer} ·{' '}
-                            {t(certificates[certModalIdx].date, lang)}
-                          </span>
-                          <Dialog.Title className="card-h3" style={{ marginTop: 4 }}>
-                            {t(certificates[certModalIdx].title, lang)}
-                          </Dialog.Title>
-                          {certificates[certModalIdx].summary && (
-                            <p className="muted-text" style={{ marginTop: 4 }}>
-                              {t(certificates[certModalIdx].summary, lang)}
-                            </p>
-                          )}
-                        </div>
-                        <Dialog.Close asChild>
-                          <button type="button" className="btn btn-outline btn-sm">
-                            {u.close}
-                          </button>
-                        </Dialog.Close>
-                      </div>
-
-                      <div className="lightbox-img-stage">
-                        <img
-                          src={normalizedBase + certificates[certModalIdx].image}
-                          alt={t(certificates[certModalIdx].title, lang)}
-                          className="lightbox-img"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog.Root>
-          </SectionHeading>
-
-          {/* 8. KONTAK */}
-          <section id="kontak" className="portfolio-section">
-            <div className="section-inner">
-              <div className="contact-contrast-block">
-                <div className="contact-copy-col">
-                  <span className="availability-pill">
-                    <span className="avail-dot" aria-hidden="true" />
-                    {u.availableFrom}: {t(contact.availableFrom, lang)}
-                  </span>
-                  <h2 className="contact-headline">{t(contact.headline, lang)}</h2>
-                  <p className="contact-sub">{t(contact.sub, lang)}</p>
-                </div>
-
-                <div className="contact-rows-col">
-                  <div className="contact-action-row">
-                    <span className="contact-row-icon" aria-hidden="true">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="5" width="18" height="14" rx="3" />
-                        <path d="m3 7 9 6 9-6" />
-                      </svg>
-                    </span>
-                    <div className="contact-row-text">
-                      <small>Email</small>
-                      <strong>{profile.email}</strong>
-                    </div>
                     <button
                       type="button"
-                      className="contact-row-btn"
-                      aria-live="polite"
-                      onClick={handleCopyEmail}
+                      className="b-text-action"
+                      onMouseEnter={() => triggerHapticAndSound('hover')}
+                      onClick={() => {
+                        triggerHapticAndSound('tap');
+                        const nextIdx = (activeItemIdx + 1) % PROJECT_SHOWCASE_ITEMS.length;
+                        setActiveItemIdx(nextIdx);
+                        setActiveSlideIdx(0);
+                      }}
                     >
-                      {emailCopied ? u.copiedBtn : u.copyBtn}
+                      {u.nextProject}
                     </button>
                   </div>
-
-                  <div className="contact-action-row">
-                    <span className="contact-row-icon" aria-hidden="true">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                        <rect x="2" y="9" width="4" height="12" />
-                        <circle cx="4" cy="4" r="2" />
-                      </svg>
-                    </span>
-                    <div className="contact-row-text">
-                      <small>LinkedIn</small>
-                      <strong>linkedin.com/in/ravaelchessario</strong>
-                    </div>
-                    <a
-                      href={contact.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="contact-row-btn"
-                      onClick={() => triggerHapticAndSound('tap')}
-                    >
-                      {u.openBtn}
-                    </a>
-                  </div>
-                </div>
+                </section>
               </div>
-
-              {/* Approximate City-Level Map Block */}
-              <div className="city-map-card">
-                <svg
-                  className="city-map-svg"
-                  viewBox="0 0 1200 320"
-                  preserveAspectRatio="xMidYMid slice"
-                  aria-hidden="true"
-                >
-                  <g className="map-grid-lines">
-                    <path d="M0 70H1200M0 150H1200M0 230H1200M180 0V320M420 0V320M680 0V320M920 0V320" strokeWidth="1.5" />
-                    <path d="M0 215C220 180 390 250 620 205S940 130 1200 175" strokeWidth="14" />
-                    <path d="M320 0C350 110 400 190 380 320" strokeWidth="10" />
-                    <path d="M760 0C745 95 810 175 790 320" strokeWidth="10" />
-                  </g>
-                  <circle cx="785" cy="162" r="88" className="map-radius-circle" />
-                  <circle cx="785" cy="162" r="8" className="map-center-pin" />
-                </svg>
-
-                <div className="city-map-overlay">
-                  <span className="eyebrow">{u.locationLabel}</span>
-                  <h3 className="card-h3">{contact.location}</h3>
-                  <a
-                    href={contact.mapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline btn-sm"
-                    style={{ marginTop: 8 }}
-                    onClick={() => triggerHapticAndSound('tap')}
-                  >
-                    {u.openMaps}
-                  </a>
-                </div>
-              </div>
-
-              <footer className="site-footer">
-                <span className="muted-text">© 2026 {profile.name}</span>
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  onClick={() => {
-                    triggerHapticAndSound('tap');
-                    scrollToTarget(0);
-                  }}
-                >
-                  {u.backToTop}
-                </button>
-              </footer>
-            </div>
-          </section>
-        </main>
+            </motion.main>
+          )}
+        </AnimatePresence>
       )}
 
-      {/* Floating Download CV Button */}
-      <AnimatePresence>
-        {!caseStudySlug && showFloatingCv && (
-          <motion.div
-            className="floating-cv-wrap is-visible"
-            initial={{ opacity: 0, y: 18, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 18, scale: 0.96 }}
-            transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+      {/* Interactive Physics Grass Meadow Footer across bottom edge */}
+      {viewMode === 'stream' && !caseStudySlug && <FloralMeadowFooter />}
+
+      {/* Floating Bottom Pill Dock with explicit ID | EN switch */}
+      <div className="b-bottom-dock" role="toolbar" aria-label="Quick actions and settings">
+        <a
+          href={cvUrl}
+          download="CV_Muhammad_Ravael_Chessario_Ramdoni.pdf"
+          className="b-dock-resume"
+          onMouseEnter={() => triggerHapticAndSound('hover')}
+          onClick={() => triggerHapticAndSound('tap')}
+        >
+          {u.resumeLabel}
+        </a>
+
+        <span className="b-dock-divider" aria-hidden="true" />
+
+        {/* Email Copy Button */}
+        <button
+          type="button"
+          className="b-dock-icon"
+          aria-label={u.copyEmailTitle}
+          title={`${u.copyEmailTitle}: ${profile.email}`}
+          onMouseEnter={() => triggerHapticAndSound('hover')}
+          onClick={handleCopyEmail}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2.5" />
+            <path d="m3 7 9 6 9-6" />
+          </svg>
+        </button>
+
+        {/* LinkedIn Button */}
+        <a
+          href={contact.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="b-dock-icon"
+          aria-label="LinkedIn"
+          title="LinkedIn"
+          onMouseEnter={() => triggerHapticAndSound('hover')}
+          onClick={() => triggerHapticAndSound('tap')}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+
+        {/* Location Maps (Tangerang) */}
+        <a
+          href={contact.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="b-dock-icon"
+          aria-label={contact.location}
+          title={contact.location}
+          onMouseEnter={() => triggerHapticAndSound('hover')}
+          onClick={() => triggerHapticAndSound('tap')}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </a>
+
+        <span className="b-dock-divider" aria-hidden="true" />
+
+        {/* Explicit Segmented ID | EN Switch */}
+        <div className="b-dock-lang-seg" role="group" aria-label="Language switch">
+          <button
+            type="button"
+            className={`b-lang-opt ${lang === 'id' ? 'is-active' : ''}`}
+            aria-pressed={lang === 'id'}
+            onClick={() => selectLanguage('id')}
           >
-            <a
-              href={cvUrl}
-              download="CV_Muhammad_Ravael_Chessario_Ramdoni.pdf"
-              className="floating-cv-btn"
-              onClick={() => triggerHapticAndSound('tap')}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              <span>{u.downloadCv}</span>
-            </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            ID
+          </button>
+          <button
+            type="button"
+            className={`b-lang-opt ${lang === 'en' ? 'is-active' : ''}`}
+            aria-pressed={lang === 'en'}
+            onClick={() => selectLanguage('en')}
+          >
+            EN
+          </button>
+        </div>
+
+        {/* Sound Toggle */}
+        <button
+          type="button"
+          className="b-dock-icon"
+          aria-label={soundOn ? 'Mute sound' : 'Enable sound'}
+          title={soundOn ? 'Sound: On' : 'Sound: Off'}
+          onMouseEnter={() => triggerHapticAndSound('hover')}
+          onClick={() => {
+            const next = !soundOn;
+            setSoundOn(next);
+            setSoundEnabled(next);
+            if (next) triggerHapticAndSound('switch');
+          }}
+        >
+          {soundOn ? (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+          ) : (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          )}
+        </button>
+
+        {/* Dark / Light Theme Toggle */}
+        <button
+          type="button"
+          className="b-dock-icon"
+          aria-label="Toggle theme"
+          title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+          onMouseEnter={() => triggerHapticAndSound('hover')}
+          onClick={toggleThemeWithCircle}
+        >
+          {theme === 'light' ? (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+            </svg>
+          ) : (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2m-7.07-14.93 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Lightbox Modal for Enlarged Certificates & Photos */}
+      <Dialog.Root
+        open={!!zoomImage}
+        onOpenChange={(open) => {
+          if (!open) setZoomImage(null);
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content" aria-describedby={undefined}>
+            {zoomImage && (
+              <div className="lightbox-inner">
+                <div className="dialog-header">
+                  <Dialog.Title className="card-h3">{zoomImage.title}</Dialog.Title>
+                  <Dialog.Close asChild>
+                    <button
+                      type="button"
+                      className="b-inline-btn"
+                      onClick={() => triggerHapticAndSound('collapse')}
+                    >
+                      {u.closeLabel}
+                    </button>
+                  </Dialog.Close>
+                </div>
+                <div className="lightbox-img-stage">
+                  <img src={zoomImage.src} alt={zoomImage.title} className="lightbox-img" />
+                </div>
+              </div>
+            )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 }

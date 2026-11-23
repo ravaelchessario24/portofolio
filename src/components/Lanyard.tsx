@@ -219,9 +219,6 @@ export default function Lanyard({
       ref={containerRef}
       style={{ height: totalHeight }}
     >
-      {/* Ambient Radial Glow behind Lanyard */}
-      <div className="lanyard-ambient-glow" aria-hidden="true" />
-
       <svg className="lanyard-svg" aria-hidden="true">
         <defs>
           <path id="lanyard-center-path" ref={centerPathRef} />
@@ -272,7 +269,6 @@ export default function Lanyard({
         }}
         onKeyDown={handleKeyDown}
       >
-        {/* Metallic Badge Clasp */}
         <div className="lanyard-clasp" aria-hidden="true">
           <span className="lanyard-clasp-slot" />
         </div>
@@ -280,24 +276,15 @@ export default function Lanyard({
         <div className="lanyard-card-inner">
           {/* FRONT FACE */}
           <div className="lanyard-face lanyard-front">
-            {/* Top VIP Pass Header Bar on Desktop */}
-            {!dims.isMobile && (
-              <div className="lanyard-pass-top" aria-hidden="true">
-                <span className="lanyard-pass-tag">DATA PORTFOLIO</span>
-                <span className="lanyard-pass-chip" />
-              </div>
-            )}
-
             <div className="lanyard-photo-wrap">
               <img
                 src={photo}
                 alt={name}
                 className="lanyard-photo-img"
                 width={dims.isMobile ? 140 : 212}
-                height={dims.isMobile ? 140 : 212}
+                height={dims.isMobile ? 140 : 220}
                 decoding="async"
               />
-              {!dims.isMobile && <span className="lanyard-status-dot" aria-hidden="true" />}
             </div>
 
             <div className="lanyard-front-meta">
@@ -317,7 +304,6 @@ export default function Lanyard({
           {/* BACK FACE */}
           <div className="lanyard-face lanyard-back">
             <div className="lanyard-back-top">
-              <span className="lanyard-back-eyebrow">ID PASS · VERIFIED</span>
               <strong className="lanyard-back-title">{summaryRole}</strong>
               <p className="lanyard-back-stack">Python · SQL · Excel · Scikit-Learn · Streamlit</p>
             </div>
