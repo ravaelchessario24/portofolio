@@ -27,11 +27,13 @@ type ThemeMode = 'light' | 'dark';
 
 const SECTION_META: Array<{
   id: string;
+  code: string;
   nav: { id: string; en: string };
   title: { id: string; en: string };
 }> = [
   {
     id: 'tentang',
+    code: '01',
     nav: { id: 'Tentang', en: 'About' },
     title: {
       id: 'Lulusan Teknologi Informasi dengan fokus analisis data dan machine learning.',
@@ -40,6 +42,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'galeri',
+    code: '02',
     nav: { id: 'Galeri', en: 'Gallery' },
     title: {
       id: 'Dokumentasi kegiatan lapangan.',
@@ -48,6 +51,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'pendidikan',
+    code: '03',
     nav: { id: 'Pendidikan', en: 'Education' },
     title: {
       id: 'Latar belakang pendidikan dan capaian akademik.',
@@ -56,6 +60,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'pengalaman',
+    code: '04',
     nav: { id: 'Pengalaman', en: 'Experience' },
     title: {
       id: 'Pengalaman kegiatan masyarakat dan magang.',
@@ -64,6 +69,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'proyek',
+    code: '05',
     nav: { id: 'Proyek', en: 'Projects' },
     title: {
       id: 'Proyek analisis data dan machine learning.',
@@ -72,6 +78,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'keterampilan',
+    code: '06',
     nav: { id: 'Keterampilan', en: 'Skills' },
     title: {
       id: 'Tools dan teknologi yang digunakan.',
@@ -80,6 +87,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'sertifikasi',
+    code: '07',
     nav: { id: 'Sertifikasi', en: 'Certifications' },
     title: {
       id: 'Sertifikasi dan pelatihan kompetensi.',
@@ -88,6 +96,7 @@ const SECTION_META: Array<{
   },
   {
     id: 'kontak',
+    code: '08',
     nav: { id: 'Kontak', en: 'Contact' },
     title: {
       id: 'Mari terhubung untuk peluang kerja dan diskusi.',
@@ -98,6 +107,12 @@ const SECTION_META: Array<{
 
 const UI_COPY: Record<Lang, Record<string, string>> = {
   id: {
+    heroStatus: 'Tersedia untuk Peran Data Analyst & Data Science',
+    statGpaLabel: 'IPK · Peringkat 4 / 21',
+    statReviewsLabel: 'Ulasan Data Diolah',
+    statAccLabel: 'Akurasi Model ML',
+    statBootcampVal: 'Predikat A',
+    statBootcampLabel: 'Bootcamp DSAREA',
     viewProjects: 'Lihat proyek',
     downloadCv: 'Unduh CV',
     menu: 'Menu',
@@ -115,6 +130,8 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     profileHeading: 'Profil',
     techHeading: 'Teknologi yang saya pakai',
     photoAlt: 'Foto Muhammad Ravael Chessario Ramdoni',
+    photoBadgeTitle: 'S.Kom. · Teknologi Informasi',
+    photoBadgeSub: 'ITB Ahmad Dahlan Jakarta · IPK 3,77 / 4,00',
     filterLabel: 'Filter kategori dokumentasi',
     allCategories: 'Semua',
     seeAll: 'Lihat semua',
@@ -132,14 +149,22 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     docPhotos: 'Dokumentasi Kegiatan',
     readCaseStudy: 'Baca case study',
     viewDemo: 'Lihat demo',
+    pipelineCardEyebrow: 'RINGKASAN PIPELINE KDD · MOBILE JKN',
+    pipelineCardTitle: 'Alur Pengolahan 63.766 Data Ulasan ke Model 94,38%',
+    pipelineStep1: 'Ulasan Mentah Google Play (Jan 2025 – Jan 2026)',
+    pipelineStep2: 'Text Preprocessing & Stemming Sastrawi',
+    pipelineStep3: 'Hybrid Labeling (Rating + InSet Lexicon)',
+    pipelineStep4: 'Multinomial Naive Bayes (15.000 TF-IDF Bigram)',
+    comingSoonEyebrow: 'DALAM EKSPLORASI',
     comingSoonSlot: 'Proyek berikutnya — segera hadir',
+    comingSoonSub: 'Eksplorasi dashboard analitik & pemodelan dataset berikutnya.',
     usedIn: 'dipakai di',
     zoomCert: 'Perbesar gambar sertifikat',
+    verifiedCert: 'SERTIFIKAT TERVERIFIKASI',
     availableFrom: 'Tersedia mulai',
     copyBtn: 'Salin',
     copiedBtn: 'Tersalin',
     openBtn: 'Buka',
-    approxArea: 'Area perkiraan (level kota)',
     openMaps: 'Buka di Maps',
     backToTop: 'Kembali ke atas',
     groupData: 'Data & Analitik',
@@ -149,6 +174,12 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     groupSoft: 'Kemampuan Personal',
   },
   en: {
+    heroStatus: 'Available for Data Analyst & Data Science Roles',
+    statGpaLabel: 'GPA · Ranked 4th / 21',
+    statReviewsLabel: 'User Reviews Processed',
+    statAccLabel: 'ML Model Accuracy',
+    statBootcampVal: 'Grade A',
+    statBootcampLabel: 'DSAREA Bootcamp',
     viewProjects: 'View projects',
     downloadCv: 'Download CV',
     menu: 'Menu',
@@ -166,6 +197,8 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     profileHeading: 'Profile',
     techHeading: 'Technologies I use',
     photoAlt: 'Portrait of Muhammad Ravael Chessario Ramdoni',
+    photoBadgeTitle: 'B.Sc. in Information Technology',
+    photoBadgeSub: 'ITB Ahmad Dahlan Jakarta · GPA 3.77 / 4.00',
     filterLabel: 'Filter documentation categories',
     allCategories: 'All',
     seeAll: 'See all',
@@ -183,14 +216,22 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     docPhotos: 'Activity Documentation',
     readCaseStudy: 'Read case study',
     viewDemo: 'View demo',
+    pipelineCardEyebrow: 'KDD PIPELINE SUMMARY · MOBILE JKN',
+    pipelineCardTitle: 'Processing 63,766 Reviews into a 94.38% Model',
+    pipelineStep1: 'Raw Google Play Reviews (Jan 2025 – Jan 2026)',
+    pipelineStep2: 'Text Preprocessing & Sastrawi Stemming',
+    pipelineStep3: 'Hybrid Labeling (Star Rating + InSet Lexicon)',
+    pipelineStep4: 'Multinomial Naive Bayes (15,000 TF-IDF Bigrams)',
+    comingSoonEyebrow: 'IN EXPLORATION',
     comingSoonSlot: 'Next project — coming soon',
+    comingSoonSub: 'Upcoming analytics dashboard and dataset modeling exploration.',
     usedIn: 'used in',
     zoomCert: 'Enlarge certificate image',
+    verifiedCert: 'VERIFIED CREDENTIAL',
     availableFrom: 'Available from',
     copyBtn: 'Copy',
     copiedBtn: 'Copied',
     openBtn: 'Open',
-    approxArea: 'Approximate area (city level)',
     openMaps: 'Open in Maps',
     backToTop: 'Back to top',
     groupData: 'Data & Analytics',
@@ -225,12 +266,14 @@ function writeStorage(key: string, val: string): void {
 
 function SectionHeading({
   id,
+  code,
   eyebrow,
   title,
   alternate = false,
   children,
 }: {
   id: string;
+  code: string;
   eyebrow: string;
   title: string;
   alternate?: boolean;
@@ -240,7 +283,11 @@ function SectionHeading({
   return (
     <section id={id} className={`portfolio-section ${alternate ? 'is-alt' : ''}`}>
       <div className="section-inner">
-        <div className="eyebrow">{eyebrow}</div>
+        <div className="section-eyebrow-row">
+          <span className="section-index-badge">{code}</span>
+          <span className="eyebrow">{eyebrow}</span>
+          <span className="section-eyebrow-rule" aria-hidden="true" />
+        </div>
         <h2 className="section-h2" aria-label={title}>
           {words.map((word, idx) => (
             <React.Fragment key={idx}>
@@ -316,6 +363,19 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  // Cursor-tracking spotlight effect across surface cards
+  useEffect(() => {
+    const onPointerMove = (e: PointerEvent) => {
+      const target = (e.target as HTMLElement | null)?.closest?.('.surface-card') as HTMLElement | null;
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      target.style.setProperty('--mouse-x', `${(e.clientX - rect.left).toFixed(0)}px`);
+      target.style.setProperty('--mouse-y', `${(e.clientY - rect.top).toFixed(0)}px`);
+    };
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    return () => window.removeEventListener('pointermove', onPointerMove);
+  }, []);
+
   useEffect(() => {
     document.documentElement.lang = lang;
     writeStorage('lang', lang);
@@ -381,7 +441,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
-      // 1. Word-by-word section heading reveals
       const headings = gsap.utils.toArray<HTMLElement>('.section-h2');
       headings.forEach((h2) => {
         const words = h2.querySelectorAll('.word-inner');
@@ -405,7 +464,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
         );
       });
 
-      // 2. Section cards and bento tiles gentle staggered reveal (no opacity flash when scrolling fast)
       const sections = gsap.utils.toArray<HTMLElement>('.portfolio-section');
       sections.forEach((sec) => {
         const items = sec.querySelectorAll(
@@ -427,7 +485,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
         });
       });
 
-      // 3. Experience timeline vertical line scrubbed via ScrollTrigger
       if (timelineRef.current) {
         gsap.fromTo(
           timelineRef.current,
@@ -530,7 +587,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     };
   }, [caseStudySlug]);
 
-  // GPA Ring Count-Up Animation via GSAP when Education section enters viewport
+  // GPA Ring Count-Up Animation via GSAP
   useEffect(() => {
     if (caseStudySlug) return;
     const el = eduRef.current;
@@ -642,7 +699,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
   const u = UI_COPY[lang];
   const cvUrl = normalizedBase + profile.cv;
 
-  // Gallery filtering logic: Filter buttons ONLY appear if there are photos from 2 or more categories
+  // Gallery filtering logic
   const uniqueCatKeys = Array.from(new Set(gallery.map((g) => g.catKey)));
   const filteredGallery = gallery.filter(
     (g) => selectedCat === 'all' || g.catKey === selectedCat
@@ -650,7 +707,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
   const visibleGallery = showAllGallery ? filteredGallery : filteredGallery.slice(0, 6);
   const activeLightboxItem = lightboxIdx >= 0 ? filteredGallery[lightboxIdx] : null;
 
-  // Lightbox keyboard Left/Right navigation
   useEffect(() => {
     if (lightboxIdx < 0) return;
     const onKey = (e: KeyboardEvent) => {
@@ -664,7 +720,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [lightboxIdx, filteredGallery.length]);
 
-  // GPA Ring SVG math (fixed size so it never shrinks or overflows on 360-430px screens)
+  // GPA Ring SVG math
   const ringRadius = 52;
   const ringCircumference = 2 * Math.PI * ringRadius;
   const ringOffset = ringCircumference * (1 - gpaAnimated / education.gpaMax);
@@ -673,11 +729,9 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
   const formattedGpaMax =
     lang === 'id' ? education.gpaMax.toFixed(2).replace('.', ',') : education.gpaMax.toFixed(2);
 
-  // Skills groups for About card & Tool logos for Marquee
   const skillGroups = Array.from(new Set(skills.map((s) => s.group)));
   const toolLogos = skills.filter((s) => s.tool && s.logo);
 
-  // Featured project + any additional projects
   const featuredProject = projects.find((p) => p.featured) || projects[0];
   const secondaryProjects = projects.filter((p) => p.slug !== featuredProject.slug);
 
@@ -700,7 +754,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
       {/* Sticky Desktop Navbar / Mobile Floating Pill Navbar */}
       <header className={`site-navbar ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="navbar-inner">
-          {/* Brand: "Ravael." morphs into circular framed photo on mobile/tablet when scrolled or menu open */}
           <a
             href="#top"
             className={`navbar-brand ${brandMorphed ? 'is-morphed' : ''}`}
@@ -750,7 +803,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
 
           {/* 3 Switches: Language (ID | EN), Theme (Light | Dark), Sound (On | Off) */}
           <div className="navbar-controls">
-            {/* 1. Language Switch (ID | EN) */}
             <div className="segmented-pill" role="group" aria-label={u.langSwitch}>
               <button
                 type="button"
@@ -780,7 +832,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </button>
             </div>
 
-            {/* 2. Theme Switch (Light | Dark) */}
             <div className="segmented-pill" role="group" aria-label={u.themeSwitch}>
               <button
                 type="button"
@@ -807,7 +858,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </button>
             </div>
 
-            {/* 3. Sound Switch (On | Off) */}
             <div className="segmented-pill sound-pill-desktop" role="group" aria-label={u.soundSwitch}>
               <button
                 type="button"
@@ -843,7 +893,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </button>
             </div>
 
-            {/* Mobile/Tablet Menu Drawer Trigger (44px+ tap target) */}
+            {/* Mobile/Tablet Menu Drawer Trigger */}
             <Dialog.Root
               open={mobileMenuOpen}
               onOpenChange={(open) => {
@@ -901,7 +951,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                     ))}
                   </nav>
 
-                  {/* Sound switch inside mobile drawer */}
                   <div className="mobile-sheet-footer">
                     <span className="sheet-footer-label">{u.soundSwitch}</span>
                     <div className="segmented-pill" role="group" aria-label={u.soundSwitch}>
@@ -949,8 +998,9 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
         </main>
       ) : (
         <main id="top" ref={mainRef}>
-          {/* HERO SECTION */}
+          {/* HERO SECTION WITH ARCHITECTURAL BLUEPRINT CANVAS & IMPACT METRICS */}
           <section className="hero-section">
+            <div className="hero-grid-backdrop" aria-hidden="true" />
             <div className="section-inner hero-grid">
               <motion.div
                 className="hero-copy"
@@ -958,12 +1008,20 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               >
+                <div className="hero-top-row">
+                  <span className="hero-status-pill">
+                    <span className="hero-status-dot" aria-hidden="true" />
+                    <span>{u.heroStatus}</span>
+                  </span>
+                </div>
+
                 <p className="hero-greeting">{t(profile.greeting, lang)}</p>
                 <h1 className="hero-name">{profile.name}</h1>
                 <p className="hero-typing">
                   <TypingRole text={t(profile.roles[0], lang)} />
                 </p>
                 <blockquote className="hero-quote">“{t(profile.quote, lang)}”</blockquote>
+
                 <div className="hero-actions">
                   <a
                     href="#proyek"
@@ -984,6 +1042,26 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                   >
                     {u.downloadCv}
                   </a>
+                </div>
+
+                {/* Live Key Impact Metrics Bar in Hero */}
+                <div className="hero-metrics-strip">
+                  <div className="hero-metric-item">
+                    <strong className="hero-metric-val">{lang === 'id' ? '3,77' : '3.77'}</strong>
+                    <span className="hero-metric-label">{u.statGpaLabel}</span>
+                  </div>
+                  <div className="hero-metric-item">
+                    <strong className="hero-metric-val">{lang === 'id' ? '63.766' : '63,766'}</strong>
+                    <span className="hero-metric-label">{u.statReviewsLabel}</span>
+                  </div>
+                  <div className="hero-metric-item">
+                    <strong className="hero-metric-val">{lang === 'id' ? '94,38%' : '94.38%'}</strong>
+                    <span className="hero-metric-label">{u.statAccLabel}</span>
+                  </div>
+                  <div className="hero-metric-item">
+                    <strong className="hero-metric-val">{u.statBootcampVal}</strong>
+                    <span className="hero-metric-label">{u.statBootcampLabel}</span>
+                  </div>
                 </div>
               </motion.div>
 
@@ -1011,9 +1089,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </section>
 
-          {/* 1. TENTANG (Profile + Technologies I Use on Left, 1 Portrait Photo on Right) */}
+          {/* 1. TENTANG */}
           <SectionHeading
             id="tentang"
+            code={SECTION_META[0].code}
             eyebrow={SECTION_META[0].nav[lang]}
             title={SECTION_META[0].title[lang]}
           >
@@ -1069,14 +1148,22 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                     className="about-photo-img"
                     decoding="async"
                   />
+                  <figcaption className="about-photo-caption">
+                    <span className="about-caption-dot" aria-hidden="true" />
+                    <div>
+                      <strong>{u.photoBadgeTitle}</strong>
+                      <span>{u.photoBadgeSub}</span>
+                    </div>
+                  </figcaption>
                 </figure>
               </div>
             </div>
           </SectionHeading>
 
-          {/* 2. GALERI (6 unblurred KKN photos in bento layout, category/date/caption, lightbox with Prev/Next) */}
+          {/* 2. GALERI */}
           <SectionHeading
             id="galeri"
+            code={SECTION_META[1].code}
             eyebrow={SECTION_META[1].nav[lang]}
             title={SECTION_META[1].title[lang]}
             alternate
@@ -1139,10 +1226,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       className="bento-tile-img"
                       decoding="async"
                     />
+                    <span className="bento-top-pill">
+                      {t(item.cat, lang)} · {item.date}
+                    </span>
                     <span className="bento-tile-overlay">
-                      <small className="bento-meta">
-                        {t(item.cat, lang)} · {item.date}
-                      </small>
                       <span className="bento-caption">{t(item.caption, lang)}</span>
                     </span>
                   </motion.button>
@@ -1167,7 +1254,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </div>
             )}
 
-            {/* Gallery Lightbox Modal (Radix Dialog) */}
+            {/* Gallery Lightbox Modal */}
             <Dialog.Root
               open={lightboxIdx >= 0}
               onOpenChange={(open) => {
@@ -1240,6 +1327,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
           {/* 3. PENDIDIKAN */}
           <SectionHeading
             id="pendidikan"
+            code={SECTION_META[2].code}
             eyebrow={SECTION_META[2].nav[lang]}
             title={SECTION_META[2].title[lang]}
           >
@@ -1334,9 +1422,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </SectionHeading>
 
-          {/* 4. PENGALAMAN (Clean vertical timeline; KKN first, then Internship; "Lihat detail" modal) */}
+          {/* 4. PENGALAMAN (Vertical timeline with inline documentation preview thumbnails & impact badges) */}
           <SectionHeading
             id="pengalaman"
+            code={SECTION_META[3].code}
             eyebrow={SECTION_META[3].nav[lang]}
             title={SECTION_META[3].title[lang]}
             alternate
@@ -1356,7 +1445,12 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                           {t(item.location, lang)}
                         </p>
                       </div>
-                      <span className="badge-pill">{t(item.period, lang)}</span>
+                      <div className="timeline-badges-row">
+                        {item.impact && (
+                          <span className="badge-pill badge-honest">{t(item.impact, lang)}</span>
+                        )}
+                        <span className="badge-pill">{t(item.period, lang)}</span>
+                      </div>
                     </div>
 
                     <ul className="timeline-bullet-list">
@@ -1367,12 +1461,44 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       ))}
                     </ul>
 
+                    {/* Inline Thumbnail Preview Strip of Documentation Photos */}
+                    {item.detail.photos.length > 0 && (
+                      <div className="timeline-photo-strip">
+                        {item.detail.photos.slice(0, 4).map((photoPath, pIdx) => (
+                          <button
+                            key={photoPath}
+                            type="button"
+                            className="timeline-thumb-btn"
+                            onClick={() => {
+                              triggerHapticAndSound('tap');
+                              setExpModalIdx(idx);
+                              setExpZoomPhoto(photoPath);
+                            }}
+                            aria-label={`${u.docPhotos} ${pIdx + 1}`}
+                          >
+                            <img
+                              src={normalizedBase + photoPath}
+                              alt={`${t(item.title, lang)} ${pIdx + 1}`}
+                              className="timeline-thumb-img"
+                              loading="lazy"
+                            />
+                            {pIdx === 3 && item.detail.photos.length > 4 && (
+                              <span className="timeline-thumb-more">
+                                +{item.detail.photos.length - 4}
+                              </span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
                     <div>
                       <button
                         type="button"
                         className="btn btn-outline btn-sm"
                         onClick={() => {
                           triggerHapticAndSound('tap');
+                          setExpZoomPhoto('');
                           setExpModalIdx(idx);
                         }}
                       >
@@ -1384,7 +1510,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               ))}
             </div>
 
-            {/* Experience Detail Modal (Radix Dialog) */}
+            {/* Experience Detail Modal */}
             <Dialog.Root
               open={expModalIdx >= 0}
               onOpenChange={(open) => {
@@ -1498,9 +1624,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </Dialog.Root>
           </SectionHeading>
 
-          {/* 5. PROYEK (1 large featured card + coming soon slots on right; no arrow symbols) */}
+          {/* 5. PROYEK (Browser Window Mockup Frame + Interactive KDD Pipeline Funnel Card + Coming Soon Slot) */}
           <SectionHeading
             id="proyek"
+            code={SECTION_META[4].code}
             eyebrow={SECTION_META[4].nav[lang]}
             title={SECTION_META[4].title[lang]}
           >
@@ -1508,21 +1635,35 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               {/* Primary Large Featured Project Card */}
               <article className="surface-card project-featured-card">
                 <div className="project-cover-wrap">
-                  <img
-                    src={normalizedBase + featuredProject.cover}
-                    alt={t(featuredProject.title, lang)}
-                    className="project-cover-img"
-                  />
-                  <div className="project-cover-badges">
-                    <span className="badge-pill badge-honest">
-                      {t(featuredProject.projectTypeLabel, lang)}
-                    </span>
+                  <div className="browser-mockup-window">
+                    <div className="browser-mockup-bar" aria-hidden="true">
+                      <div className="browser-dots">
+                        <span className="b-dot red" />
+                        <span className="b-dot yellow" />
+                        <span className="b-dot green" />
+                      </div>
+                      <div className="browser-url-pill">
+                        ravaelchessario24.github.io/mobile-jkn-landing-page
+                      </div>
+                    </div>
+                    <img
+                      src={normalizedBase + featuredProject.cover}
+                      alt={t(featuredProject.title, lang)}
+                      className="project-cover-img"
+                    />
                   </div>
                 </div>
 
                 <div className="project-featured-body">
                   <div className="project-meta-row">
-                    <span className="eyebrow">{t(featuredProject.categoryBadge, lang)}</span>
+                    <div className="cs-badges">
+                      <span className="badge-pill badge-accent">
+                        {t(featuredProject.categoryBadge, lang)}
+                      </span>
+                      <span className="badge-pill badge-honest">
+                        {t(featuredProject.projectTypeLabel, lang)}
+                      </span>
+                    </div>
                     <span className="mono-num muted-text">{t(featuredProject.period, lang)}</span>
                   </div>
 
@@ -1563,7 +1704,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 </div>
               </article>
 
-              {/* Right Column: Secondary Projects (if any) + Coming Soon Slots */}
+              {/* Right Column: Interactive KDD Data Pipeline Funnel Card + Coming Soon Blueprint Slot */}
               <div className="projects-side-stack">
                 {secondaryProjects.map((secProj) => (
                   <article key={secProj.slug} className="surface-card project-side-card">
@@ -1605,23 +1746,86 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 ))}
 
                 {secondaryProjects.length === 0 && (
-                  <div className="project-coming-slot">
-                    <span className="slot-dot" aria-hidden="true" />
-                    <p>{u.comingSoonSlot}</p>
-                  </div>
+                  <article className="surface-card project-pipeline-card">
+                    <span className="eyebrow">{u.pipelineCardEyebrow}</span>
+                    <h3 className="card-h3" style={{ marginTop: 6 }}>
+                      {u.pipelineCardTitle}
+                    </h3>
+
+                    <div className="kdd-funnel-list">
+                      <div className="kdd-funnel-row">
+                        <div className="kdd-funnel-head">
+                          <span>01 · {u.pipelineStep1}</span>
+                          <strong className="mono-num">63.766</strong>
+                        </div>
+                        <div className="kdd-funnel-bar">
+                          <span style={{ width: '100%' }} />
+                        </div>
+                      </div>
+
+                      <div className="kdd-funnel-row">
+                        <div className="kdd-funnel-head">
+                          <span>02 · {u.pipelineStep2}</span>
+                          <strong className="mono-num">62.878</strong>
+                        </div>
+                        <div className="kdd-funnel-bar">
+                          <span style={{ width: '98%' }} />
+                        </div>
+                      </div>
+
+                      <div className="kdd-funnel-row">
+                        <div className="kdd-funnel-head">
+                          <span>03 · {u.pipelineStep3}</span>
+                          <strong className="mono-num">59.980</strong>
+                        </div>
+                        <div className="kdd-funnel-bar">
+                          <span style={{ width: '94%' }} />
+                        </div>
+                      </div>
+
+                      <div className="kdd-funnel-row">
+                        <div className="kdd-funnel-head">
+                          <span>04 · {u.pipelineStep4}</span>
+                          <strong className="mono-num accent-text">94,38%</strong>
+                        </div>
+                        <div className="kdd-funnel-bar is-emerald">
+                          <span style={{ width: '94.38%' }} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: 'auto', paddingTop: 14 }}>
+                      <a
+                        href={featuredProject.caseStudy}
+                        className="btn btn-outline btn-sm"
+                        style={{ width: '100%' }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          triggerHapticAndSound('tap');
+                          navigateHash(featuredProject.caseStudy);
+                        }}
+                      >
+                        {u.readCaseStudy}
+                      </a>
+                    </div>
+                  </article>
                 )}
 
                 <div className="project-coming-slot">
-                  <span className="slot-dot" aria-hidden="true" />
-                  <p>{u.comingSoonSlot}</p>
+                  <span className="eyebrow">{u.comingSoonEyebrow}</span>
+                  <strong className="coming-slot-title">{u.comingSoonSlot}</strong>
+                  <p className="muted-text" style={{ fontSize: 13.5 }}>
+                    {u.comingSoonSub}
+                  </p>
                 </div>
               </div>
             </div>
           </SectionHeading>
 
-          {/* 6. KETERAMPILAN (Image-only tool logos marquee, pauses on hover/focus, tooltip "dipakai di: [proyek]") */}
+          {/* 6. KETERAMPILAN */}
           <SectionHeading
             id="keterampilan"
+            code={SECTION_META[5].code}
             eyebrow={SECTION_META[5].nav[lang]}
             title={SECTION_META[5].title[lang]}
             alternate
@@ -1672,9 +1876,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </SectionHeading>
 
-          {/* 7. SERTIFIKASI (Only CV certifications: DSAREA Grade A + Google IT Support Coursera, click to enlarge) */}
+          {/* 7. SERTIFIKASI */}
           <SectionHeading
             id="sertifikasi"
+            code={SECTION_META[6].code}
             eyebrow={SECTION_META[6].nav[lang]}
             title={SECTION_META[6].title[lang]}
           >
@@ -1685,6 +1890,14 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 const certSummary = cert.summary ? t(cert.summary, lang) : '';
                 return (
                   <div key={certTitle} className="surface-card cert-card">
+                    <div className="cert-card-topbar">
+                      <span className="cert-verified-pill">
+                        <span className="cert-verified-dot" aria-hidden="true" />
+                        {u.verifiedCert}
+                      </span>
+                      <span className="badge-pill">{cert.issuer}</span>
+                    </div>
+
                     <button
                       type="button"
                       className="cert-thumb-btn"
@@ -1702,12 +1915,11 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                     </button>
                     <div className="cert-meta">
                       <div className="cert-meta-top">
-                        <span className="eyebrow">{cert.issuer}</span>
+                        <h3 className="cert-title">{certTitle}</h3>
                         <span className="mono-num muted-text" style={{ fontSize: 13 }}>
                           {certDate}
                         </span>
                       </div>
-                      <h3 className="cert-title">{certTitle}</h3>
                       {certSummary && (
                         <p className="muted-text" style={{ marginTop: 6 }}>
                           {certSummary}
@@ -1719,7 +1931,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               })}
             </div>
 
-            {/* Certificate Lightbox Modal (Radix Dialog) */}
+            {/* Certificate Lightbox Modal */}
             <Dialog.Root
               open={certModalIdx >= 0}
               onOpenChange={(open) => {
@@ -1781,7 +1993,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 </div>
 
                 <div className="contact-rows-col">
-                  {/* Email Row */}
                   <div className="contact-action-row">
                     <span className="contact-row-icon" aria-hidden="true">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1803,7 +2014,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                     </button>
                   </div>
 
-                  {/* LinkedIn Row */}
                   <div className="contact-action-row">
                     <span className="contact-row-icon" aria-hidden="true">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1863,7 +2073,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 </div>
               </div>
 
-              {/* Footer with Back to Top (no arrow symbol) */}
               <footer className="site-footer">
                 <span className="muted-text">© 2026 {profile.name}</span>
                 <button
@@ -1882,7 +2091,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
         </main>
       )}
 
-      {/* Floating Download CV Button animated with Motion AnimatePresence */}
+      {/* Floating Download CV Button */}
       <AnimatePresence>
         {!caseStudySlug && showFloatingCv && (
           <motion.div

@@ -2439,6 +2439,518 @@ button {
   }
 }
 
+/* ==========================================================================
+   VISUAL ELEVATION: ARCHITECTURAL GRID, SPOTLIGHT CARDS & DATA UI SHOWCASE
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-grid-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.42;
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 35%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 35%, #000 35%, transparent 100%);
+}
+
+.lanyard-ambient-glow {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 340px;
+  height: 340px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 72%);
+  opacity: 0.7;
+  pointer-events: none;
+  filter: blur(22px);
+}
+
+[data-theme="dark"] .lanyard-ambient-glow {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.22) 0%, transparent 72%);
+}
+
+.hero-top-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: -4px;
+}
+
+.hero-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.hero-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 0 3px var(--emerald-soft);
+}
+
+.hero-metrics-strip {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 10px 28px -10px rgba(15, 23, 42, 0.07);
+}
+
+.hero-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 10px;
+  border-right: 1px solid var(--border);
+}
+
+.hero-metric-item:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.hero-metric-val {
+  font-family: var(--font-mono);
+  font-size: clamp(19px, 1.8vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero-metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  line-height: 1.3;
+}
+
+@media (max-width: 720px) {
+  .hero-metrics-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .hero-metric-item:nth-child(2) {
+    border-right: 0;
+  }
+}
+
+/* Lanyard VIP Pass Top Header */
+.lanyard-pass-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+.lanyard-pass-tag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+}
+
+.lanyard-pass-chip {
+  width: 22px;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--accent-soft), var(--border-strong));
+  border: 1px solid var(--border-strong);
+}
+
+/* Section Index Badge & Rule */
+.section-eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.section-index-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.section-eyebrow-rule {
+  height: 1px;
+  width: 48px;
+  background: var(--border-strong);
+}
+
+/* Interactive Cursor Spotlight & Tactile Surface Card Depth */
+.surface-card {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 12px 32px -12px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.26s var(--ease-out-expo),
+    border-color 0.26s var(--ease-out-expo),
+    box-shadow 0.26s var(--ease-out-expo);
+}
+
+.surface-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    460px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(29, 78, 216, 0.065),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+
+[data-theme="dark"] .surface-card::before {
+  background: radial-gradient(
+    460px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(96, 165, 250, 0.11),
+    transparent 45%
+  );
+}
+
+.surface-card:hover {
+  border-color: var(--border-strong);
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.05),
+    0 20px 40px -14px rgba(15, 23, 42, 0.1);
+}
+
+.surface-card:hover::before {
+  opacity: 1;
+}
+
+/* Editorial Caption Overlay on About Photo */
+.about-photo-frame {
+  position: relative;
+  box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.12);
+}
+
+.about-photo-caption {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: var(--navbar-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.about-caption-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.about-photo-caption div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.about-photo-caption strong {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.about-photo-caption span {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-muted);
+}
+
+/* Bento Gallery Floating Category Pill & Hover Zoom */
+.bento-top-pill {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #F8FAFC;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bento-tile-img {
+  transition: transform 0.45s var(--ease-out-expo);
+}
+
+.bento-tile:hover .bento-tile-img {
+  transform: scale(1.04);
+}
+
+/* Timeline Inline Documentation Preview Strip */
+.timeline-badges-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-photo-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.timeline-thumb-btn {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  cursor: zoom-in;
+  transition: transform 0.22s var(--ease-out-expo), border-color 0.22s var(--ease-out-expo);
+}
+
+.timeline-thumb-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.timeline-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.timeline-thumb-more {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.64);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .timeline-photo-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Browser Window Mockup Frame for Mobile JKN Dashboard */
+.project-cover-wrap {
+  padding: 22px 22px 18px;
+  background: linear-gradient(180deg, var(--surface-subtle) 0%, var(--surface-alt) 100%);
+}
+
+.browser-mockup-window {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  background: #FFFFFF;
+  box-shadow: 0 18px 40px -14px rgba(15, 23, 42, 0.16);
+}
+
+.browser-mockup-bar {
+  height: 36px;
+  padding: 0 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.browser-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.b-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.b-dot.red {
+  background: #EF4444;
+}
+.b-dot.yellow {
+  background: #F59E0B;
+}
+.b-dot.green {
+  background: #10B981;
+}
+
+.browser-url-pill {
+  flex: 1;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 3px 12px;
+  border-radius: 6px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.browser-mockup-window .project-cover-img {
+  border: 0;
+  border-radius: 0;
+}
+
+/* Interactive KDD Pipeline Funnel Card in Projects Right Column */
+.project-pipeline-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kdd-funnel-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kdd-funnel-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kdd-funnel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.kdd-funnel-head strong {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.accent-text {
+  color: var(--emerald);
+}
+
+.kdd-funnel-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.kdd-funnel-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.kdd-funnel-bar.is-emerald span {
+  background: var(--emerald);
+}
+
+.coming-slot-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Certificate Verified Topbar */
+.cert-card-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cert-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--emerald);
+}
+
+.cert-verified-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

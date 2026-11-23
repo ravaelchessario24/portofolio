@@ -184,7 +184,6 @@ export default function Lanyard({
       down.moved = true;
     }
 
-    // Only engage grab target after pointer actually moves >5px so pressing/holding still never jitters
     if (down.moved && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       grabRef.current = { x: p.x + offsetRef.current.x, y: p.y + offsetRef.current.y };
     }
@@ -220,6 +219,9 @@ export default function Lanyard({
       ref={containerRef}
       style={{ height: totalHeight }}
     >
+      {/* Ambient Radial Glow behind Lanyard */}
+      <div className="lanyard-ambient-glow" aria-hidden="true" />
+
       <svg className="lanyard-svg" aria-hidden="true">
         <defs>
           <path id="lanyard-center-path" ref={centerPathRef} />
@@ -232,10 +234,7 @@ export default function Lanyard({
         </defs>
 
         <g clipPath="url(#lanyard-top-ceiling-clip)">
-          {/* Uniform-width Woven Lanyard Strap anchored flush to top ceiling (y=0) */}
           <path ref={strapPathRef} className="lanyard-strap-fill" />
-
-          {/* Repeated Large Bold RAVAEL printed along the lanyard strap */}
           <g clipPath="url(#lanyard-strap-clip)">
             <text
               className="lanyard-strap-text"
@@ -273,7 +272,7 @@ export default function Lanyard({
         }}
         onKeyDown={handleKeyDown}
       >
-        {/* Clean Badge Clasp connecting strap directly into top of card */}
+        {/* Metallic Badge Clasp */}
         <div className="lanyard-clasp" aria-hidden="true">
           <span className="lanyard-clasp-slot" />
         </div>
@@ -281,13 +280,21 @@ export default function Lanyard({
         <div className="lanyard-card-inner">
           {/* FRONT FACE */}
           <div className="lanyard-face lanyard-front">
+            {/* Top VIP Pass Header Bar on Desktop */}
+            {!dims.isMobile && (
+              <div className="lanyard-pass-top" aria-hidden="true">
+                <span className="lanyard-pass-tag">DATA PORTFOLIO</span>
+                <span className="lanyard-pass-chip" />
+              </div>
+            )}
+
             <div className="lanyard-photo-wrap">
               <img
                 src={photo}
                 alt={name}
                 className="lanyard-photo-img"
                 width={dims.isMobile ? 140 : 212}
-                height={dims.isMobile ? 140 : 220}
+                height={dims.isMobile ? 140 : 212}
                 decoding="async"
               />
               {!dims.isMobile && <span className="lanyard-status-dot" aria-hidden="true" />}
