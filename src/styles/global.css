@@ -162,11 +162,12 @@ button {
 }
 
 .b-side-dot {
-  width: 4px;
-  height: 4px;
+  width: 4.5px;
+  height: 4.5px;
   border-radius: 50%;
   background: var(--ink);
   display: inline-block;
+  will-change: transform;
 }
 
 @media (max-width: 1120px) {
@@ -209,7 +210,7 @@ button {
 .b-signature-path {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
-  animation: b-sig-draw 0.9s var(--ease-out-expo) forwards;
+  animation: b-sig-draw 1.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 @keyframes b-sig-draw {
@@ -525,14 +526,19 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 10px 4px;
+  padding: 10px 6px;
   text-align: left;
   border-radius: 10px;
+  text-decoration: none;
+  transition: background-color 0.18s ease, opacity 0.18s ease;
+}
+
+.b-acc-trigger:hover {
+  background: var(--surface-alt);
 }
 
 .b-acc-trigger:hover .b-acc-role {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 .b-acc-left {

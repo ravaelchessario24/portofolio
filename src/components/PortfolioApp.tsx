@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
 import Lenis from 'lenis';
 import {
   profile,
@@ -12,7 +12,7 @@ import {
   t,
   type Lang,
 } from '../lib/content';
-import { isSoundEnabled, setSoundEnabled, triggerHapticAndSound } from '../lib/feedback';
+import { triggerHapticAndSound } from '../lib/feedback';
 import CaseStudyView from './CaseStudyView';
 import { RavaelSignature, SayHelloSignature, FloralMeadowFooter } from './FloralFooter';
 
@@ -24,12 +24,7 @@ export interface ShowcaseSlide {
   kind: 'image' | 'visual-card';
   src?: string;
   alt: { id: string; en: string };
-  cardType?:
-    | 'jkn-hybrid'
-    | 'jkn-clusters'
-    | 'jkn-pipeline'
-    | 'coming-soon-da'
-    | 'coming-soon-ds';
+  cardType?: 'coming-soon-da' | 'coming-soon-ds';
 }
 
 export interface ShowcaseItem {
@@ -47,7 +42,8 @@ export interface ShowcaseItem {
   slides: ShowcaseSlide[];
 }
 
-// "Things I do" is strictly dedicated to Projects Ravael has built or will build in the future
+// "Things I do" / "Proyek yang saya buat" — 1 cover image per project on the main page,
+// with full slide thumbnails inside the Split-Screen Detail View.
 const PROJECT_SHOWCASE_ITEMS: ShowcaseItem[] = [
   {
     id: 'mobile-jkn',
@@ -77,32 +73,40 @@ const PROJECT_SHOWCASE_ITEMS: ShowcaseItem[] = [
         kind: 'image',
         src: 'images/projects/mobile-jkn-dashboard.webp',
         alt: {
-          id: 'Dashboard Streamlit Analisis Sentimen Mobile JKN',
-          en: 'Mobile JKN Sentiment Analysis Streamlit Dashboard',
+          id: 'Ringkasan Eksekutif — Dashboard Analisis Sentimen Mobile JKN',
+          en: 'Executive Summary — Mobile JKN Sentiment Analysis Dashboard',
         },
       },
       {
-        kind: 'visual-card',
-        cardType: 'jkn-hybrid',
+        kind: 'image',
+        src: 'images/projects/mobile-jkn-2.webp',
         alt: {
-          id: 'Temuan Hybrid Labeling: 89% Rating Bintang 3 Berisi Keluhan',
-          en: 'Hybrid Labeling Finding: 89% of 3-Star Reviews Contain Complaints',
+          id: 'Statistik Dataset — Distribusi Sentimen (52,5% vs 47,5%) & Rating 1–5 Bintang',
+          en: 'Dataset Statistics — Sentiment Distribution (52.5% vs 47.5%) & 1–5 Star Ratings',
         },
       },
       {
-        kind: 'visual-card',
-        cardType: 'jkn-clusters',
+        kind: 'image',
+        src: 'images/projects/mobile-jkn-3.webp',
         alt: {
-          id: 'Klaster Keluhan Utama TF-IDF Bigram & Performa Model 94,38%',
-          en: 'Top TF-IDF Bigram Complaint Clusters & 94.38% Model Performance',
+          id: 'Pembobotan Kata TF-IDF — 20 Bigram Teratas & Word Cloud Sentimen Positif/Negatif',
+          en: 'TF-IDF Word Weighting — Top 20 Bigrams & Positive/Negative Sentiment Word Clouds',
         },
       },
       {
-        kind: 'visual-card',
-        cardType: 'jkn-pipeline',
+        kind: 'image',
+        src: 'images/projects/mobile-jkn-4.webp',
         alt: {
-          id: 'Arsitektur 5 Tahap Pipeline KDD (63.766 Ulasan)',
-          en: '5-Stage KDD Pipeline Architecture (63,766 Reviews)',
+          id: 'Evaluasi & Model — Confusion Matrix, Kurva ROC (AUC = 0,965) & Log-Probability',
+          en: 'Model Evaluation — Confusion Matrix, ROC Curve (AUC = 0.965) & Log-Probability',
+        },
+      },
+      {
+        kind: 'image',
+        src: 'images/projects/mobile-jkn-5.webp',
+        alt: {
+          id: 'Prediksi & Pelabelan Otomatis — Unggah Dataset Excel (.xlsx)',
+          en: 'Automated Prediction & Labeling — Excel (.xlsx) Dataset Upload',
         },
       },
     ],
@@ -128,7 +132,7 @@ const PROJECT_SHOWCASE_ITEMS: ShowcaseItem[] = [
       id: 'Meningkatkan efisiensi administrasi sekolah hingga 50% melalui digitalisasi pendataan profil guru dan silabus kegiatan ke dalam basis data MySQL yang terstruktur.',
       en: 'Improved school administrative efficiency by up to 50% by digitizing teacher profiles and activity syllabi into a structured MySQL relational database.',
     },
-    caseStudySlug: 'sistem-informasi-cms-paud-flamboyan',
+    // No caseStudySlug on PAUD internship project as requested by Ravael
     slides: [
       {
         kind: 'image',
@@ -240,27 +244,6 @@ const PROJECT_SHOWCASE_ITEMS: ShowcaseItem[] = [
   },
 ];
 
-// Carousel cards in Row 1 and Row 2 of "Things I do" — all showcasing Ravael's current & upcoming projects!
-interface CarouselCardEntry {
-  projectIdx: number;
-  slideIdx: number;
-  bgTone: string;
-}
-
-const CAROUSEL_ROW_1: CarouselCardEntry[] = [
-  { projectIdx: 0, slideIdx: 0, bgTone: 'tone-sky' }, // Mobile JKN Streamlit Dashboard
-  { projectIdx: 1, slideIdx: 0, bgTone: 'tone-lavender' }, // PAUD KB Flamboyan Hero
-  { projectIdx: 0, slideIdx: 1, bgTone: 'tone-mint' }, // Mobile JKN Hybrid Labeling 89% & 41%
-  { projectIdx: 2, slideIdx: 0, bgTone: 'tone-amber' }, // Next Data Analytics Project (Coming Soon)
-];
-
-const CAROUSEL_ROW_2: CarouselCardEntry[] = [
-  { projectIdx: 1, slideIdx: 3, bgTone: 'tone-rose' }, // PAUD KB Flamboyan Schedule & Curriculum CMS
-  { projectIdx: 0, slideIdx: 2, bgTone: 'tone-sky' }, // Mobile JKN 94.38% Accuracy & Bigram Clusters
-  { projectIdx: 1, slideIdx: 1, bgTone: 'tone-lavender' }, // PAUD KB Flamboyan Stats & Profile
-  { projectIdx: 3, slideIdx: 0, bgTone: 'tone-slate' }, // Next Data Science Project (Coming Soon)
-];
-
 const UI_TEXT = {
   id: {
     openToWork: 'Terbuka untuk kerja',
@@ -292,7 +275,6 @@ const UI_TEXT = {
     closeLabel: 'Tutup',
     ofLabel: 'dari',
     favCoursesLabel: 'Mata Kuliah Fokus Data',
-    grassHint: 'Sentuh atau geser kursor di atas rumput',
   },
   en: {
     openToWork: 'Open to work',
@@ -324,7 +306,6 @@ const UI_TEXT = {
     closeLabel: 'Close',
     ofLabel: 'of',
     favCoursesLabel: 'Core Data Coursework',
-    grassHint: 'Brush your mouse or finger across the grass',
   },
 } as const;
 
@@ -337,111 +318,6 @@ function SlideVisualCard({
   lang: Lang;
   compact?: boolean;
 }) {
-  if (cardType === 'jkn-hybrid') {
-    return (
-      <div className={`b-visual-slide-card ${compact ? 'is-compact' : ''}`}>
-        <span className="b-vsc-tag">MOBILE JKN · HYBRID LABELING</span>
-        <strong className="b-vsc-big">89% & 41%</strong>
-        <p className="b-vsc-title">
-          {lang === 'id'
-            ? 'Ketidaksesuaian Rating Bintang vs Isi Komentar'
-            : 'Star Rating vs. Review Text Discrepancy'}
-        </p>
-        {!compact && (
-          <div className="b-vsc-bars">
-            <div className="b-vsc-bar-row">
-              <div className="b-vsc-bar-label">
-                <span>{lang === 'id' ? 'Bintang 3 berisi keluhan' : '3-Star with complaints'}</span>
-                <strong>89%</strong>
-              </div>
-              <div className="b-vsc-track">
-                <div className="b-vsc-fill" style={{ width: '89%' }} />
-              </div>
-            </div>
-            <div className="b-vsc-bar-row">
-              <div className="b-vsc-bar-label">
-                <span>{lang === 'id' ? 'Bintang 4 dikoreksi negatif' : '4-Star corrected negative'}</span>
-                <strong>41%</strong>
-              </div>
-              <div className="b-vsc-track">
-                <div className="b-vsc-fill" style={{ width: '41%' }} />
-              </div>
-            </div>
-            <div className="b-vsc-bar-row">
-              <div className="b-vsc-bar-label">
-                <span>{lang === 'id' ? 'Bintang 5 dikoreksi negatif' : '5-Star corrected negative'}</span>
-                <strong>8%</strong>
-              </div>
-              <div className="b-vsc-track">
-                <div className="b-vsc-fill" style={{ width: '8%' }} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (cardType === 'jkn-clusters') {
-    return (
-      <div className={`b-visual-slide-card ${compact ? 'is-compact' : ''}`}>
-        <span className="b-vsc-tag">NAIVE BAYES · 15.000 FITUR BIGRAM</span>
-        <strong className="b-vsc-big">94,38%</strong>
-        <p className="b-vsc-title">
-          {lang === 'id'
-            ? 'Akurasi Model · F1-Score 94,86% · Recall 98,89%'
-            : 'Model Accuracy · 94.86% F1-Score · 98.89% Recall'}
-        </p>
-        {!compact && (
-          <div className="b-vsc-list">
-            <div className="b-vsc-pill-item">
-              <span>#1</span>
-              <strong>{lang === 'id' ? 'Kegagalan Kode OTP Login' : 'OTP Login Code Failures'}</strong>
-            </div>
-            <div className="b-vsc-pill-item">
-              <span>#2</span>
-              <strong>{lang === 'id' ? 'Verifikasi Wajah / Biometrik' : 'Face Biometric Verification'}</strong>
-            </div>
-            <div className="b-vsc-pill-item">
-              <span>#3</span>
-              <strong>{lang === 'id' ? 'Verifikasi Nomor Ponsel' : 'Phone Number Verification'}</strong>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (cardType === 'jkn-pipeline') {
-    return (
-      <div className={`b-visual-slide-card ${compact ? 'is-compact' : ''}`}>
-        <span className="b-vsc-tag">KNOWLEDGE DISCOVERY IN DATABASE (KDD)</span>
-        <strong className="b-vsc-big">63.766 → 59.980</strong>
-        <p className="b-vsc-title">
-          {lang === 'id'
-            ? 'Pipeline Pengolahan Ulasan Google Play Store'
-            : 'End-to-End Google Play Review Processing Pipeline'}
-        </p>
-        {!compact && (
-          <div className="b-vsc-list">
-            <div className="b-vsc-pill-item">
-              <span>01</span>
-              <strong>63.766 {lang === 'id' ? 'Ulasan Mentah (Jan 2025 – Jan 2026)' : 'Raw Reviews (Jan 2025 – Jan 2026)'}</strong>
-            </div>
-            <div className="b-vsc-pill-item">
-              <span>02</span>
-              <strong>62.878 {lang === 'id' ? 'Teks Bersih (Stemming Sastrawi)' : 'Cleaned Texts (Sastrawi Stemming)'}</strong>
-            </div>
-            <div className="b-vsc-pill-item">
-              <span>03</span>
-              <strong>59.980 {lang === 'id' ? 'Data Berlabel Seimbang (52,5% : 47,5%)' : 'Balanced Labeled Data (52.5% : 47.5%)'}</strong>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
   if (cardType === 'coming-soon-da') {
     return (
       <div className={`b-visual-slide-card is-coming-soon ${compact ? 'is-compact' : ''}`}>
@@ -478,7 +354,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
   const [lang, setLang] = useState<Lang>('id');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [soundOn, setSoundOn] = useState<boolean>(true);
   const [activeNav, setActiveNav] = useState<string>('overview');
 
   const [viewMode, setViewMode] = useState<'stream' | 'all-projects' | 'project-detail'>('stream');
@@ -505,7 +380,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
         setLang(savedLang);
         document.documentElement.lang = savedLang;
       }
-      setSoundOn(isSoundEnabled());
     } catch {}
 
     const syncHash = () => {
@@ -691,39 +565,57 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     (s) => s.group === 'Data & Analitik' || s.group === 'Visualisasi & Dashboard'
   );
 
+  // Built projects vs upcoming projects (strictly 1 cover image per project!)
+  const row1Projects = [PROJECT_SHOWCASE_ITEMS[0], PROJECT_SHOWCASE_ITEMS[1]];
+  const row2Projects = [PROJECT_SHOWCASE_ITEMS[2], PROJECT_SHOWCASE_ITEMS[3]];
+
   return (
     <div className="b-root">
-      {/* Fixed Left Sidebar Index (Desktop) */}
+      {/* Fixed Left Sidebar Index (Desktop) with Smooth Falling Dot Animation */}
       {viewMode === 'stream' && !caseStudySlug && (
         <nav className="b-side-nav" aria-label="Section navigation">
-          <ul>
-            {[
-              { id: 'overview', label: u.navOverview },
-              { id: 'things', label: u.navThings },
-              { id: 'experience', label: u.navExperience },
-              { id: 'education', label: u.navEducation },
-              { id: 'contact', label: u.navContact },
-            ].map((item) => {
-              const isActive = activeNav === item.id;
-              return (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    className={`b-side-link ${isActive ? 'is-active' : ''}`}
-                    onMouseEnter={() => triggerHapticAndSound('hover')}
-                    onClick={() => scrollToSection(item.id)}
-                  >
-                    <span>{item.label}</span>
-                    {isActive && <span className="b-side-dot" aria-hidden="true" />}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <LayoutGroup id="side-nav-dots">
+            <ul>
+              {[
+                { id: 'overview', label: u.navOverview },
+                { id: 'things', label: u.navThings },
+                { id: 'experience', label: u.navExperience },
+                { id: 'education', label: u.navEducation },
+                { id: 'contact', label: u.navContact },
+              ].map((item) => {
+                const isActive = activeNav === item.id;
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      className={`b-side-link ${isActive ? 'is-active' : ''}`}
+                      onMouseEnter={() => triggerHapticAndSound('hover')}
+                      onClick={() => scrollToSection(item.id)}
+                    >
+                      <span>{item.label}</span>
+                      {isActive && (
+                        <motion.span
+                          layoutId="b-falling-nav-dot"
+                          className="b-side-dot"
+                          aria-hidden="true"
+                          transition={{
+                            type: 'spring',
+                            stiffness: 170,
+                            damping: 18,
+                            mass: 0.95,
+                          }}
+                        />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </LayoutGroup>
         </nav>
       )}
 
-      {/* Full Case Study Route View */}
+      {/* Full Case Study Route View (only for Mobile JKN) */}
       {caseStudySlug ? (
         <main>
           <CaseStudyView
@@ -797,7 +689,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </div>
               </section>
 
-              {/* 2. THINGS I DO — Exclusively Projects Built & Upcoming Projects */}
+              {/* 2. THINGS I DO — Strictly 1 Cover Image per Project */}
               <section id="things" className="b-section">
                 <div className="b-section-head">
                   <h2 className="b-section-title">{u.thingsHeading}</h2>
@@ -816,7 +708,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </div>
 
                 <div className="b-carousel-rows">
-                  {/* Row 1 — Projects Only */}
+                  {/* Row 1 — 1 Cover Image per Built Project */}
                   <div className="b-marquee-viewport">
                     <div className="b-marquee-track">
                       {[0, 1].map((dup) => (
@@ -825,38 +717,38 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                           className="b-marquee-group"
                           aria-hidden={dup > 0 ? 'true' : undefined}
                         >
-                          {CAROUSEL_ROW_1.map((entry, eIdx) => {
-                            const proj = PROJECT_SHOWCASE_ITEMS[entry.projectIdx];
-                            const slide = proj.slides[entry.slideIdx] || proj.slides[0];
+                          {row1Projects.map((proj) => {
+                            const projIdx = PROJECT_SHOWCASE_ITEMS.findIndex(
+                              (x) => x.id === proj.id
+                            );
+                            const coverSlide = proj.slides[0];
                             return (
                               <button
-                                key={`${dup}-r1-${eIdx}`}
+                                key={`${dup}-${proj.id}`}
                                 type="button"
                                 tabIndex={dup === 0 ? 0 : -1}
-                                className={`b-showcase-card ${entry.bgTone} is-${proj.aspect}`}
+                                className={`b-showcase-card ${proj.bgTone} is-${proj.aspect}`}
                                 onMouseEnter={() => triggerHapticAndSound('hover')}
-                                onClick={() =>
-                                  openProjectDetail(entry.projectIdx, entry.slideIdx)
-                                }
+                                onClick={() => openProjectDetail(projIdx, 0)}
                               >
                                 <div className="b-card-inner-frame">
-                                  {slide.kind === 'image' && slide.src ? (
+                                  {coverSlide.kind === 'image' && coverSlide.src ? (
                                     <img
-                                      src={normalizedBase + slide.src}
-                                      alt={t(slide.alt, lang)}
+                                      src={normalizedBase + coverSlide.src}
+                                      alt={t(proj.title, lang)}
                                       className="b-card-img"
                                       loading="lazy"
                                     />
                                   ) : (
                                     <SlideVisualCard
-                                      cardType={slide.cardType!}
+                                      cardType={coverSlide.cardType!}
                                       lang={lang}
                                       compact
                                     />
                                   )}
                                 </div>
                                 <span className="b-card-count-pill">
-                                  {entry.slideIdx + 1} {u.ofLabel} {proj.slides.length}
+                                  1 {u.ofLabel} {proj.slides.length}
                                 </span>
                               </button>
                             );
@@ -866,7 +758,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     </div>
                   </div>
 
-                  {/* Row 2 — Projects Only */}
+                  {/* Row 2 — 1 Cover Image per Upcoming Project Slot */}
                   <div className="b-marquee-viewport">
                     <div className="b-marquee-track is-reverse">
                       {[0, 1].map((dup) => (
@@ -875,38 +767,38 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                           className="b-marquee-group"
                           aria-hidden={dup > 0 ? 'true' : undefined}
                         >
-                          {CAROUSEL_ROW_2.map((entry, eIdx) => {
-                            const proj = PROJECT_SHOWCASE_ITEMS[entry.projectIdx];
-                            const slide = proj.slides[entry.slideIdx] || proj.slides[0];
+                          {row2Projects.map((proj) => {
+                            const projIdx = PROJECT_SHOWCASE_ITEMS.findIndex(
+                              (x) => x.id === proj.id
+                            );
+                            const coverSlide = proj.slides[0];
                             return (
                               <button
-                                key={`${dup}-r2-${eIdx}`}
+                                key={`${dup}-${proj.id}`}
                                 type="button"
                                 tabIndex={dup === 0 ? 0 : -1}
-                                className={`b-showcase-card ${entry.bgTone} is-${proj.aspect}`}
+                                className={`b-showcase-card ${proj.bgTone} is-${proj.aspect}`}
                                 onMouseEnter={() => triggerHapticAndSound('hover')}
-                                onClick={() =>
-                                  openProjectDetail(entry.projectIdx, entry.slideIdx)
-                                }
+                                onClick={() => openProjectDetail(projIdx, 0)}
                               >
                                 <div className="b-card-inner-frame">
-                                  {slide.kind === 'image' && slide.src ? (
+                                  {coverSlide.kind === 'image' && coverSlide.src ? (
                                     <img
-                                      src={normalizedBase + slide.src}
-                                      alt={t(slide.alt, lang)}
+                                      src={normalizedBase + coverSlide.src}
+                                      alt={t(proj.title, lang)}
                                       className="b-card-img"
                                       loading="lazy"
                                     />
                                   ) : (
                                     <SlideVisualCard
-                                      cardType={slide.cardType!}
+                                      cardType={coverSlide.cardType!}
                                       lang={lang}
                                       compact
                                     />
                                   )}
                                 </div>
                                 <span className="b-card-count-pill">
-                                  {entry.slideIdx + 1} {u.ofLabel} {proj.slides.length}
+                                  1 {u.ofLabel} {proj.slides.length}
                                 </span>
                               </button>
                             );
@@ -918,7 +810,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </div>
               </section>
 
-              {/* 3. EXPERIENCE (Interactive Click-to-Expand Accordion Rows with Logos) */}
+              {/* 3. EXPERIENCE (Interactive Click-to-Expand Accordion Rows with Logos, No Underline) */}
               <section id="experience" className="b-section">
                 <div className="b-section-head">
                   <h2 className="b-section-title">{u.expHeading}</h2>
@@ -1180,7 +1072,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             </motion.main>
           )}
 
-          {/* VIEW 2: "SEE ALL" ALL PROJECTS GRID (Exclusively Projects Built & Upcoming) */}
+          {/* VIEW 2: "SEE ALL" ALL PROJECTS GRID (1 Cover Image per Project) */}
           {viewMode === 'all-projects' && (
             <motion.main
               key="all-projects-view"
@@ -1415,7 +1307,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
       {/* Interactive Physics Grass Meadow Footer across bottom edge */}
       {viewMode === 'stream' && !caseStudySlug && <FloralMeadowFooter />}
 
-      {/* Floating Bottom Pill Dock with explicit ID | EN switch */}
+      {/* Floating Bottom Pill Dock (Sound toggle removed — sound is active by default) */}
       <div className="b-bottom-dock" role="toolbar" aria-label="Quick actions and settings">
         <a
           href={cvUrl}
@@ -1500,34 +1392,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             EN
           </button>
         </div>
-
-        {/* Sound Toggle */}
-        <button
-          type="button"
-          className="b-dock-icon"
-          aria-label={soundOn ? 'Mute sound' : 'Enable sound'}
-          title={soundOn ? 'Sound: On' : 'Sound: Off'}
-          onMouseEnter={() => triggerHapticAndSound('hover')}
-          onClick={() => {
-            const next = !soundOn;
-            setSoundOn(next);
-            setSoundEnabled(next);
-            if (next) triggerHapticAndSound('switch');
-          }}
-        >
-          {soundOn ? (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-            </svg>
-          ) : (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <line x1="23" y1="9" x2="17" y2="15" />
-              <line x1="17" y1="9" x2="23" y2="15" />
-            </svg>
-          )}
-        </button>
 
         {/* Dark / Light Theme Toggle */}
         <button
