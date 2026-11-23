@@ -355,6 +355,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   const [lang, setLang] = useState<Lang>('id');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [activeNav, setActiveNav] = useState<string>('overview');
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
 
   const [viewMode, setViewMode] = useState<'stream' | 'all-projects' | 'project-detail'>('stream');
   const [activeItemIdx, setActiveItemIdx] = useState<number>(0);
@@ -424,6 +425,13 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     if (viewMode !== 'stream' || caseStudySlug) return;
     const sectionIds = ['overview', 'things', 'experience', 'education', 'contact'];
     const onScroll = () => {
+      const maxScroll = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+      const progress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+      setScrollProgress(progress);
+
       const triggerY = window.innerHeight * 0.36;
       let current = 'overview';
       for (const id of sectionIds) {
@@ -444,6 +452,16 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, [viewMode, caseStudySlug]);
+
+  const scrollToTop = () => {
+    triggerHapticAndSound('tap');
+    setActiveNav('overview');
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const scrollToSection = (id: string) => {
     triggerHapticAndSound('tap');
@@ -1304,10 +1322,18 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
         </AnimatePresence>
       )}
 
+      {/* Progressive Bottom Viewport Blur Veil (blurs content at bottom edge before it is scrolled into view, fades out at bottom) */}
+      {viewMode === 'stream' && !caseStudySlug && (
+        <div
+          className={`b-bottom-blur-veil ${scrollProgress >= 0.92 ? 'is-hidden' : ''}`}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Interactive Physics Grass Meadow Footer across bottom edge */}
       {viewMode === 'stream' && !caseStudySlug && <FloralMeadowFooter />}
 
-      {/* Floating Bottom Pill Dock (Sound toggle removed — sound is active by default) */}
+      {/* Floating Bottom Pill Dock */}
       <div className="b-bottom-dock" role="toolbar" aria-label="Quick actions and settings">
         <a
           href={cvUrl}
@@ -1413,6 +1439,69 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             </svg>
           )}
         </button>
+
+        {/* Scroll Progress Ring -> Back to Top Arrow Button (right of Theme Toggle, matches video 00:59 - 01:12) */}
+        {(() => {
+          const isAtBottom = scrollProgress >= 0.93;
+          const radius = 8;
+          const circumference = 2 * Math.PI * radius;
+          const dashOffset = circumference * (1 - scrollProgress);
+          return (
+            <button
+              type="button"
+              className={`b-dock-icon b-dock-scroll-btn ${isAtBottom ? 'is-at-bottom' : ''}`}
+              aria-label={lang === 'id' ? 'Kembali ke atas' : 'Back to top'}
+              title={lang === 'id' ? 'Kembali ke atas' : 'Back to top'}
+              onMouseEnter={() => triggerHapticAndSound('hover')}
+              onClick={scrollToTop}
+            >
+              {isAtBottom ? (
+                <svg
+                  className="b-scroll-arrow-svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 19V5" />
+                  <path d="m5 12 7-7 7 7" />
+                </svg>
+              ) : (
+                <svg
+                  className="b-scroll-ring-svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                >
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r={radius}
+                    stroke="currentColor"
+                    strokeOpacity="0.22"
+                    strokeWidth="2.1"
+                  />
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r={radius}
+                    stroke="currentColor"
+                    strokeWidth="2.1"
+                    strokeLinecap="round"
+                    strokeDasharray={`${circumference} ${circumference}`}
+                    strokeDashoffset={dashOffset}
+                    transform="rotate(-90 11 11)"
+                  />
+                </svg>
+              )}
+            </button>
+          );
+        })()}
       </div>
 
       {/* Lightbox Modal for Enlarged Certificates & Photos */}
