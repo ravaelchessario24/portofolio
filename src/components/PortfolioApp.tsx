@@ -281,6 +281,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
 
   // Experience detail modal state
   const [expModalIdx, setExpModalIdx] = useState<number>(-1);
+  const [expZoomPhoto, setExpZoomPhoto] = useState<string>('');
   const timelineRef = useRef<HTMLDivElement>(null);
 
   // Certificate zoom modal state
@@ -342,9 +343,9 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
 
     const lenis = new Lenis({
       autoRaf: false,
-      lerp: 0.1,
+      lerp: 0.15,
       smoothWheel: true,
-      wheelMultiplier: 0.95,
+      wheelMultiplier: 1.0,
     });
     lenisRef.current = lenis;
 
@@ -404,30 +405,26 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
         );
       });
 
-      // 2. Section cards and bento tiles gentle staggered reveal
+      // 2. Section cards and bento tiles gentle staggered reveal (no opacity flash when scrolling fast)
       const sections = gsap.utils.toArray<HTMLElement>('.portfolio-section');
       sections.forEach((sec) => {
         const items = sec.querySelectorAll(
           '.surface-card, .about-photo-frame, .bento-tile, .cert-card, .project-coming-slot, .contact-contrast-block, .city-map-card'
         );
         if (!items.length) return;
-        gsap.fromTo(
-          items,
-          { y: 24, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.62,
-            stagger: 0.075,
-            ease: 'power3.out',
-            clearProps: 'transform,opacity',
-            scrollTrigger: {
-              trigger: sec,
-              start: 'top 86%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
+        gsap.from(items, {
+          y: 16,
+          duration: 0.48,
+          stagger: 0.05,
+          ease: 'power2.out',
+          clearProps: 'transform',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sec,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+          },
+        });
       });
 
       // 3. Experience timeline vertical line scrubbed via ScrollTrigger
@@ -1038,9 +1035,16 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       const groupLabelKey = GROUP_KEY_MAP[groupName];
                       const translatedGroup = groupLabelKey ? u[groupLabelKey] : groupName;
                       const groupItems = skills.filter((s) => s.group === groupName);
+                      const isCompactCol =
+                        groupName === 'Metode' ||
+                        groupName === 'Visualisasi & Dashboard' ||
+                        groupName === 'Alat Kerja';
                       return (
-                        <div key={groupName} className="tech-group-block">
-                          <div className="eyebrow" style={{ marginBottom: 8 }}>
+                        <div
+                          key={groupName}
+                          className={`tech-group-block ${isCompactCol ? 'is-compact-col' : 'is-full-col'}`}
+                        >
+                          <div className="eyebrow" style={{ marginBottom: 6 }}>
                             {translatedGroup}
                           </div>
                           <div className="chip-row">
@@ -1384,7 +1388,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             <Dialog.Root
               open={expModalIdx >= 0}
               onOpenChange={(open) => {
-                if (!open) setExpModalIdx(-1);
+                if (!open) {
+                  setExpModalIdx(-1);
+                  setExpZoomPhoto('');
+                }
               }}
             >
               <Dialog.Portal>
@@ -1411,43 +1418,78 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                         </Dialog.Close>
                       </div>
 
-                      <div>
-                        <div className="eyebrow" style={{ marginBottom: 8 }}>
-                          {u.tasksDone}
-                        </div>
-                        <ul className="modal-list">
-                          {experience[expModalIdx].detail.tasks.map((task, tIdx) => (
-                            <li key={tIdx}>{t(task, lang)}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <div className="eyebrow" style={{ marginBottom: 8 }}>
-                          {u.resultAchieved}
-                        </div>
-                        <p className="body-text">
-                          {t(experience[expModalIdx].detail.result, lang)}
-                        </p>
-                      </div>
-
-                      {experience[expModalIdx].detail.photos.length > 0 && (
-                        <div>
-                          <div className="eyebrow" style={{ marginBottom: 10 }}>
-                            {u.docPhotos}
+                      {expZoomPhoto ? (
+                        <div className="lightbox-inner">
+                          <div className="lightbox-img-stage">
+                            <img
+                              src={normalizedBase + expZoomPhoto}
+                              alt={t(experience[expModalIdx].title, lang)}
+                              className="lightbox-img"
+                            />
                           </div>
-                          <div className="exp-modal-photos">
-                            {experience[expModalIdx].detail.photos.map((photoPath) => (
-                              <img
-                                key={photoPath}
-                                src={normalizedBase + photoPath}
-                                alt={t(experience[expModalIdx].title, lang)}
-                                className="exp-modal-img"
-                                loading="lazy"
-                              />
-                            ))}
+                          <div>
+                            <button
+                              type="button"
+                              className="btn btn-outline btn-sm"
+                              onClick={() => {
+                                triggerHapticAndSound('tap');
+                                setExpZoomPhoto('');
+                              }}
+                            >
+                              {u.seeDetails}
+                            </button>
                           </div>
                         </div>
+                      ) : (
+                        <>
+                          <div>
+                            <div className="eyebrow" style={{ marginBottom: 8 }}>
+                              {u.tasksDone}
+                            </div>
+                            <ul className="modal-list">
+                              {experience[expModalIdx].detail.tasks.map((task, tIdx) => (
+                                <li key={tIdx}>{t(task, lang)}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div>
+                            <div className="eyebrow" style={{ marginBottom: 8 }}>
+                              {u.resultAchieved}
+                            </div>
+                            <p className="body-text">
+                              {t(experience[expModalIdx].detail.result, lang)}
+                            </p>
+                          </div>
+
+                          {experience[expModalIdx].detail.photos.length > 0 && (
+                            <div>
+                              <div className="eyebrow" style={{ marginBottom: 10 }}>
+                                {u.docPhotos}
+                              </div>
+                              <div className="exp-modal-photos">
+                                {experience[expModalIdx].detail.photos.map((photoPath) => (
+                                  <button
+                                    key={photoPath}
+                                    type="button"
+                                    className="exp-modal-photo-btn"
+                                    onClick={() => {
+                                      triggerHapticAndSound('tap');
+                                      setExpZoomPhoto(photoPath);
+                                    }}
+                                  >
+                                    <img
+                                      src={normalizedBase + photoPath}
+                                      alt={t(experience[expModalIdx].title, lang)}
+                                      className="exp-modal-img"
+                                      loading="lazy"
+                                    />
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   )}
@@ -1808,9 +1850,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 <div className="city-map-overlay">
                   <span className="eyebrow">{u.locationLabel}</span>
                   <h3 className="card-h3">{contact.location}</h3>
-                  <p className="muted-text" style={{ fontSize: 13 }}>
-                    {u.approxArea}
-                  </p>
                   <a
                     href={contact.mapsUrl}
                     target="_blank"

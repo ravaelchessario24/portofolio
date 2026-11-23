@@ -30,7 +30,7 @@
     "logo": "images/tools/mysql.svg"
   },
   {
-    "name": "Microsoft Excel",
+    "name": "Excel",
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
@@ -85,22 +85,12 @@
     "tool": false
   },
   {
-    "name": "Machine Learning",
-    "group": "Metode",
-    "tool": false
-  },
-  {
     "name": "Data Cleaning",
     "group": "Metode",
     "tool": false
   },
   {
-    "name": "Sentiment Analysis",
-    "group": "Metode",
-    "tool": false
-  },
-  {
-    "name": "TF-IDF & Naive Bayes",
+    "name": "Machine Learning",
     "group": "Metode",
     "tool": false
   },
@@ -155,16 +145,6 @@
     "logo": "images/tools/colab.svg"
   },
   {
-    "name": "Microsoft Office",
-    "group": "Alat Kerja",
-    "tool": false
-  },
-  {
-    "name": "IT Troubleshooting",
-    "group": "Alat Kerja",
-    "tool": false
-  },
-  {
     "name": {
       "id": "Komunikasi",
       "en": "Communication"
@@ -174,8 +154,8 @@
   },
   {
     "name": {
-      "id": "Kerja Sama Tim & Kolaborasi",
-      "en": "Teamwork & Collaboration"
+      "id": "Kolaborasi Tim",
+      "en": "Team Collaboration"
     },
     "group": "Kemampuan Personal",
     "tool": false
@@ -198,7 +178,7 @@
   },
   {
     "name": {
-      "id": "Perhatian terhadap Detail",
+      "id": "Teliti",
       "en": "Attention to Detail"
     },
     "group": "Kemampuan Personal",

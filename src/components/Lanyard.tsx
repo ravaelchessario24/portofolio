@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { VerletRope, getLanyardDims, type LanyardDims, type GrabState } from './lanyardPhysics';
+import { VerletRope, getLanyardDims, type LanyardDims } from './lanyardPhysics';
 import { triggerHapticAndSound } from '../lib/feedback';
 
 export interface LanyardProps {
@@ -30,15 +30,8 @@ export default function Lanyard({
   const centerPathRef = useRef<SVGPathElement>(null);
   const ropeRef = useRef<VerletRope | null>(null);
 
-  const grabRef = useRef<GrabState | null>(null);
-  const grabLocalRef = useRef<{ rx: number; ry: number }>({ rx: 0, ry: 0.35 });
-  const pointerVelocityRef = useRef<{ vx: number; vy: number; lastX: number; lastY: number; lastT: number }>({
-    vx: 0,
-    vy: 0,
-    lastX: 0,
-    lastY: 0,
-    lastT: 0,
-  });
+  const grabRef = useRef<{ x: number; y: number } | null>(null);
+  const offsetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const pointerDownRef = useRef<{
     x: number;
     y: number;
@@ -50,7 +43,7 @@ export default function Lanyard({
 
   const [flipped, setFlipped] = useState(false);
   const [dims, setDims] = useState<LanyardDims>(() =>
-    getLanyardDims(typeof window !== 'undefined' ? window.innerWidth : 1280)
+    getLanyardDims(typeof window !== 'undefined' ? window.innerWidth : 1920)
   );
 
   useEffect(() => {
@@ -68,15 +61,13 @@ export default function Lanyard({
     let isVisible = true;
     let boxWidth = 0;
     let currentDims = getLanyardDims(window.innerWidth);
-    let lastScrollY = window.scrollY;
 
     const renderFrame = () => {
       const r = ropeRef.current;
       if (!r) return;
       const attachPt = r.pts[r.segments - 1];
       const angle = r.cardAngle();
-      const cardOffsetY = r.dims.isMobile ? 16 : 22;
-      card.style.transform = `translate3d(${(attachPt.x - r.dims.cw * 0.5).toFixed(2)}px, ${(attachPt.y + cardOffsetY).toFixed(2)}px, 0) rotate(${angle.toFixed(4)}rad)`;
+      card.style.transform = `translate3d(${(attachPt.x - r.dims.cw * 0.5).toFixed(2)}px, ${attachPt.y.toFixed(2)}px, 0) rotate(${angle.toFixed(4)}rad)`;
       const polyD = r.strapPolygonPath(r.dims.strapWidth);
       strap.setAttribute('d', polyD);
       strapClip.setAttribute('d', polyD);
@@ -112,20 +103,6 @@ export default function Lanyard({
       renderFrame();
     };
 
-    // Subtle pendulum reaction when scrolling the page
-    const handleWindowScroll = () => {
-      if (prefersReducedMotion || !isVisible || grabRef.current) {
-        lastScrollY = window.scrollY;
-        return;
-      }
-      const dy = window.scrollY - lastScrollY;
-      lastScrollY = window.scrollY;
-      if (Math.abs(dy) > 1 && ropeRef.current) {
-        const clamped = Math.max(-18, Math.min(18, dy));
-        ropeRef.current.applyImpulse(clamped * 0.08, -clamped * 0.04);
-      }
-    };
-
     const io = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
@@ -144,7 +121,6 @@ export default function Lanyard({
     const ro = new ResizeObserver(handleResize);
     ro.observe(box);
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleWindowScroll, { passive: true });
 
     initializePhysics();
     if (!prefersReducedMotion) {
@@ -159,7 +135,6 @@ export default function Lanyard({
       io.disconnect();
       ro.disconnect();
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleWindowScroll);
     };
   }, []);
 
@@ -170,32 +145,19 @@ export default function Lanyard({
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const p = getLocalCoords(e);
-    const now = performance.now();
-    const r = ropeRef.current;
-    const topAttach = r?.cardTopAttach() ?? { x: p.x, y: p.y };
-    const cardOffsetY = (r?.dims.isMobile ? 16 : 22);
-    const cw = r?.dims.cw ?? dims.cw;
-    const ch = r?.dims.ch ?? dims.ch;
-
-    const rx = Math.max(-0.5, Math.min(0.5, (p.x - topAttach.x) / cw));
-    const ry = Math.max(0.05, Math.min(0.95, (p.y - (topAttach.y + cardOffsetY)) / ch));
-    grabLocalRef.current = { rx, ry };
-
-    pointerVelocityRef.current = { vx: 0, vy: 0, lastX: p.x, lastY: p.y, lastT: now };
+    const center = ropeRef.current?.cardCenter() ?? p;
     pointerDownRef.current = {
       x: p.x,
       y: p.y,
-      time: now,
+      time: performance.now(),
       moved: false,
       pointerId: e.pointerId,
       pointerType: e.pointerType,
     };
+    offsetRef.current = { x: center.x - p.x, y: center.y - p.y };
 
     if (e.pointerType !== 'touch') {
       e.currentTarget.setPointerCapture(e.pointerId);
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        grabRef.current = { x: p.x, y: p.y, rx, ry };
-      }
     }
   };
 
@@ -203,17 +165,8 @@ export default function Lanyard({
     const down = pointerDownRef.current;
     if (down.pointerId !== e.pointerId) return;
     const p = getLocalCoords(e);
-    const now = performance.now();
     const dx = p.x - down.x;
     const dy = p.y - down.y;
-
-    const pv = pointerVelocityRef.current;
-    const dt = Math.max(8, now - pv.lastT);
-    pv.vx = ((p.x - pv.lastX) / dt) * 16;
-    pv.vy = ((p.y - pv.lastY) / dt) * 16;
-    pv.lastX = p.x;
-    pv.lastY = p.y;
-    pv.lastT = now;
 
     if (e.pointerType === 'touch') {
       if (!down.moved && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) {
@@ -226,48 +179,24 @@ export default function Lanyard({
         try {
           e.currentTarget.setPointerCapture(e.pointerId);
         } catch {}
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          grabRef.current = {
-            x: p.x,
-            y: p.y,
-            rx: grabLocalRef.current.rx,
-            ry: grabLocalRef.current.ry,
-          };
-        }
       }
-    }
-
-    if (Math.hypot(dx, dy) > 6) {
+    } else if (!down.moved && Math.hypot(dx, dy) > 5) {
       down.moved = true;
     }
-    if (grabRef.current) {
-      grabRef.current = {
-        x: p.x,
-        y: p.y,
-        rx: grabLocalRef.current.rx,
-        ry: grabLocalRef.current.ry,
-      };
+
+    // Only engage grab target after pointer actually moves >5px so pressing/holding still never jitters
+    if (down.moved && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      grabRef.current = { x: p.x + offsetRef.current.x, y: p.y + offsetRef.current.y };
     }
   };
 
   const handlePointerUp = () => {
     const wasTap =
-      !pointerDownRef.current.moved && performance.now() - pointerDownRef.current.time < 420;
-    const hadGrab = Boolean(grabRef.current);
+      !pointerDownRef.current.moved && performance.now() - pointerDownRef.current.time < 500;
     grabRef.current = null;
     pointerDownRef.current.pointerId = -1;
-
     if (wasTap) {
       toggleFlip();
-      if (ropeRef.current && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        ropeRef.current.applyImpulse(2.4, -0.8);
-      }
-    } else if (hadGrab && ropeRef.current) {
-      // Impart flick/throw momentum upon releasing the card
-      const pv = pointerVelocityRef.current;
-      const throwVx = Math.max(-22, Math.min(22, pv.vx * 0.45));
-      const throwVy = Math.max(-14, Math.min(14, pv.vy * 0.3));
-      ropeRef.current.applyImpulse(throwVx, throwVy);
     }
   };
 
@@ -283,7 +212,7 @@ export default function Lanyard({
     }
   };
 
-  const totalHeight = dims.rope + dims.ch + (dims.isMobile ? 28 : 44);
+  const totalHeight = dims.rope + dims.ch + (dims.isMobile ? 20 : 28);
 
   return (
     <div
@@ -313,7 +242,7 @@ export default function Lanyard({
               dominantBaseline="central"
               dy={dims.isMobile ? '0.5' : '1'}
             >
-              <textPath href="#lanyard-center-path" startOffset="-6%">
+              <textPath href="#lanyard-center-path" startOffset="-4%">
                 {'RAVAEL\u00A0\u00A0\u00A0RAVAEL\u00A0\u00A0\u00A0RAVAEL'}
               </textPath>
             </text>
@@ -344,13 +273,9 @@ export default function Lanyard({
         }}
         onKeyDown={handleKeyDown}
       >
-        {/* Metallic D-Ring + Swivel Clasp connecting uniform strap to card */}
-        <div className="lanyard-hardware" aria-hidden="true">
-          <div className="lanyard-dring" />
-          <div className="lanyard-swivel" />
-          <div className="lanyard-clasp">
-            <span className="lanyard-clasp-slot" />
-          </div>
+        {/* Clean Badge Clasp connecting strap directly into top of card */}
+        <div className="lanyard-clasp" aria-hidden="true">
+          <span className="lanyard-clasp-slot" />
         </div>
 
         <div className="lanyard-card-inner">
@@ -361,8 +286,8 @@ export default function Lanyard({
                 src={photo}
                 alt={name}
                 className="lanyard-photo-img"
-                width={dims.isMobile ? 140 : 208}
-                height={dims.isMobile ? 140 : 216}
+                width={dims.isMobile ? 140 : 212}
+                height={dims.isMobile ? 140 : 220}
                 decoding="async"
               />
               {!dims.isMobile && <span className="lanyard-status-dot" aria-hidden="true" />}
