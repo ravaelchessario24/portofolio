@@ -1,5 +1,9 @@
 import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   profile,
   about,
@@ -30,7 +34,7 @@ const SECTION_META: Array<{
     id: 'tentang',
     nav: { id: 'Tentang', en: 'About' },
     title: {
-      id: 'Lulusan Teknologi Informasi yang berfokus pada analisis data dan machine learning.',
+      id: 'Lulusan Teknologi Informasi dengan fokus analisis data dan machine learning.',
       en: 'Information Technology graduate focused on data analysis and machine learning.',
     },
   },
@@ -38,56 +42,56 @@ const SECTION_META: Array<{
     id: 'galeri',
     nav: { id: 'Galeri', en: 'Gallery' },
     title: {
-      id: 'Dokumentasi kegiatan dan kontribusi lapangan.',
-      en: 'Activity documentation and field contributions.',
+      id: 'Dokumentasi kegiatan lapangan.',
+      en: 'Field activity documentation.',
     },
   },
   {
     id: 'pendidikan',
     nav: { id: 'Pendidikan', en: 'Education' },
     title: {
-      id: 'Latar belakang akademik dan capaian studi.',
-      en: 'Academic background and study achievements.',
+      id: 'Latar belakang pendidikan dan capaian akademik.',
+      en: 'Educational background and academic achievements.',
     },
   },
   {
     id: 'pengalaman',
     nav: { id: 'Pengalaman', en: 'Experience' },
     title: {
-      id: 'Pengalaman organisasi masyarakat dan magang industri.',
-      en: 'Community engagement and industry internship experience.',
+      id: 'Pengalaman kegiatan masyarakat dan magang.',
+      en: 'Community service and internship experience.',
     },
   },
   {
     id: 'proyek',
     nav: { id: 'Proyek', en: 'Projects' },
     title: {
-      id: 'Karya terpilih dan studi kasus pengolahan data.',
-      en: 'Selected work and data processing case studies.',
+      id: 'Proyek analisis data dan machine learning.',
+      en: 'Data analysis and machine learning projects.',
     },
   },
   {
     id: 'keterampilan',
     nav: { id: 'Keterampilan', en: 'Skills' },
     title: {
-      id: 'Alat kerja dan pustaka yang digunakan.',
-      en: 'Tools and libraries I work with.',
+      id: 'Tools dan teknologi yang digunakan.',
+      en: 'Tools and technologies I use.',
     },
   },
   {
     id: 'sertifikasi',
     nav: { id: 'Sertifikasi', en: 'Certifications' },
     title: {
-      id: 'Bukti pelatihan dan sertifikasi kompetensi.',
-      en: 'Proof of training and competency certifications.',
+      id: 'Sertifikasi dan pelatihan kompetensi.',
+      en: 'Certifications and competency training.',
     },
   },
   {
     id: 'kontak',
     nav: { id: 'Kontak', en: 'Contact' },
     title: {
-      id: 'Terbuka untuk berdiskusi dan berkolaborasi.',
-      en: 'Open for discussion and collaboration.',
+      id: 'Mari terhubung untuk peluang kerja dan diskusi.',
+      en: 'Let’s connect for opportunities and discussions.',
     },
   },
 ];
@@ -110,7 +114,7 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     lanyardFlipBack: 'Ketuk lagi untuk kembali ke sisi depan',
     profileHeading: 'Profil',
     techHeading: 'Teknologi yang saya pakai',
-    photoAlt: 'Foto potret Muhammad Ravael Chessario Ramdoni',
+    photoAlt: 'Foto Muhammad Ravael Chessario Ramdoni',
     filterLabel: 'Filter kategori dokumentasi',
     allCategories: 'Semua',
     seeAll: 'Lihat semua',
@@ -121,20 +125,14 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     outOf: 'dari',
     gpaDesc: 'Skala 4,00 · Program Studi S1 Teknologi Informasi',
     favCourses: 'Mata kuliah favorit',
-    periodLabel: 'Periode',
     locationLabel: 'Lokasi',
-    participantsLabel: 'Peserta / Sasaran',
-    impactLabel: 'Dampak',
-    dataRelevance: 'Kaitan dengan Data',
     seeDetails: 'Lihat detail',
     tasksDone: 'Tugas & Tanggung Jawab',
     resultAchieved: 'Hasil & Dampak',
-    docPhotos: 'Dokumentasi Kegiatan & Hasil',
+    docPhotos: 'Dokumentasi Kegiatan',
     readCaseStudy: 'Baca case study',
     viewDemo: 'Lihat demo',
-    comingSoonSlot: 'Proyek analitik berikutnya — segera hadir',
-    templatePreviewSlot: 'Template Studi Kasus ke-2 (Data Analyst / Efisiensi Data)',
-    openTemplateB: 'Baca case study (Template Data Analyst)',
+    comingSoonSlot: 'Proyek berikutnya — segera hadir',
     usedIn: 'dipakai di',
     zoomCert: 'Perbesar gambar sertifikat',
     availableFrom: 'Tersedia mulai',
@@ -178,20 +176,14 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     outOf: 'of',
     gpaDesc: '4.00 Scale · B.Sc. in Information Technology',
     favCourses: 'Favorite courses',
-    periodLabel: 'Period',
     locationLabel: 'Location',
-    participantsLabel: 'Participants / Target',
-    impactLabel: 'Impact',
-    dataRelevance: 'Connection to Data',
     seeDetails: 'See details',
     tasksDone: 'Tasks & Responsibilities',
     resultAchieved: 'Results & Impact',
-    docPhotos: 'Activity & Result Documentation',
+    docPhotos: 'Activity Documentation',
     readCaseStudy: 'Read case study',
     viewDemo: 'View demo',
-    comingSoonSlot: 'Next analytics project — coming soon',
-    templatePreviewSlot: '2nd Case Study Template (Data Analyst / Data Efficiency)',
-    openTemplateB: 'Read case study (Data Analyst Template)',
+    comingSoonSlot: 'Next project — coming soon',
     usedIn: 'used in',
     zoomCert: 'Enlarge certificate image',
     availableFrom: 'Available from',
@@ -205,7 +197,7 @@ const UI_COPY: Record<Lang, Record<string, string>> = {
     groupMethods: 'Methods',
     groupViz: 'Visualization & Dashboards',
     groupTools: 'Work Tools',
-    groupSoft: 'Soft Skills',
+    groupSoft: 'Personal Skills',
   },
 };
 
@@ -297,6 +289,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
   // Contact email copy state
   const [emailCopied, setEmailCopied] = useState<boolean>(false);
 
+  // Lenis smooth scroll instance & main container ref for GSAP ScrollTrigger
+  const lenisRef = useRef<Lenis | null>(null);
+  const mainRef = useRef<HTMLElement>(null);
+
   // Hydrate persisted preferences on mount
   useEffect(() => {
     const savedLang = readStorage('lang');
@@ -338,7 +334,125 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     ? currentHash.slice('#/proyek/'.length)
     : '';
 
-  // Scroll progress bar, navbar avatar morph, and timeline draw progress
+  // Initialize Lenis Smooth Scroll + GSAP Ticker & ScrollTrigger sync
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const lenis = new Lenis({
+      autoRaf: false,
+      lerp: 0.1,
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+    });
+    lenisRef.current = lenis;
+
+    lenis.on('scroll', ScrollTrigger.update);
+    const tickerRaf = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerRaf);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(tickerRaf);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  // Pause Lenis when any Radix modal is open
+  useEffect(() => {
+    const anyDialogOpen = mobileMenuOpen || lightboxIdx >= 0 || expModalIdx >= 0 || certModalIdx >= 0;
+    if (anyDialogOpen) {
+      lenisRef.current?.stop();
+    } else {
+      lenisRef.current?.start();
+    }
+  }, [mobileMenuOpen, lightboxIdx, expModalIdx, certModalIdx]);
+
+  // GSAP + ScrollTrigger narrative animations for section headings, cards, and timeline
+  useEffect(() => {
+    if (caseStudySlug) return;
+    gsap.registerPlugin(ScrollTrigger);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Word-by-word section heading reveals
+      const headings = gsap.utils.toArray<HTMLElement>('.section-h2');
+      headings.forEach((h2) => {
+        const words = h2.querySelectorAll('.word-inner');
+        if (!words.length) return;
+        gsap.fromTo(
+          words,
+          { yPercent: 45, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.36,
+            stagger: 0.016,
+            ease: 'power3.out',
+            clearProps: 'transform,opacity',
+            scrollTrigger: {
+              trigger: h2,
+              start: 'top 92%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+      });
+
+      // 2. Section cards and bento tiles gentle staggered reveal
+      const sections = gsap.utils.toArray<HTMLElement>('.portfolio-section');
+      sections.forEach((sec) => {
+        const items = sec.querySelectorAll(
+          '.surface-card, .about-photo-frame, .bento-tile, .cert-card, .project-coming-slot, .contact-contrast-block, .city-map-card'
+        );
+        if (!items.length) return;
+        gsap.fromTo(
+          items,
+          { y: 24, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.62,
+            stagger: 0.075,
+            ease: 'power3.out',
+            clearProps: 'transform,opacity',
+            scrollTrigger: {
+              trigger: sec,
+              start: 'top 86%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+      });
+
+      // 3. Experience timeline vertical line scrubbed via ScrollTrigger
+      if (timelineRef.current) {
+        gsap.fromTo(
+          timelineRef.current,
+          { '--tl-progress': 0.14 },
+          {
+            '--tl-progress': 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: timelineRef.current,
+              start: 'top 78%',
+              end: 'bottom 58%',
+              scrub: 0.35,
+            },
+          }
+        );
+      }
+    }, mainRef);
+
+    return () => ctx.revert();
+  }, [caseStudySlug, lang]);
+
+  // Top scroll progress bar & navbar avatar morph
   useEffect(() => {
     let rafId = 0;
     const updateScrollMetrics = () => {
@@ -348,14 +462,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
       const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
       document.documentElement.style.setProperty('--scroll-progress', progress.toFixed(4));
       setScrolled(scrollTop > 56);
-
-      // Update timeline draw line progress
-      if (timelineRef.current) {
-        const rect = timelineRef.current.getBoundingClientRect();
-        const viewH = window.innerHeight;
-        const tlProg = Math.min(1, Math.max(0.12, (viewH * 0.72 - rect.top) / Math.max(1, rect.height)));
-        timelineRef.current.style.setProperty('--tl-progress', tlProg.toFixed(3));
-      }
     };
 
     const onScroll = () => {
@@ -371,10 +477,14 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     };
   }, [caseStudySlug]);
 
-  // Active section observer + Floating CV visibility observer (appears after Hero, hides at Contact)
+  // Active section observer + Floating CV visibility observer
   useEffect(() => {
     if (caseStudySlug) {
-      window.scrollTo({ top: 0, behavior: 'auto' });
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(0, { immediate: true });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
       setShowFloatingCv(false);
       return;
     }
@@ -423,7 +533,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     };
   }, [caseStudySlug]);
 
-  // GPA Ring Count-Up Animation when Education section enters viewport
+  // GPA Ring Count-Up Animation via GSAP when Education section enters viewport
   useEffect(() => {
     if (caseStudySlug) return;
     const el = eduRef.current;
@@ -435,25 +545,18 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
       return;
     }
 
-    let animRaf = 0;
+    const counter = { val: 0 };
+    let tween: gsap.core.Tween | null = null;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         io.disconnect();
-        let startTime = 0;
-        const duration = 1350;
-        const animateGpa = (now: number) => {
-          if (!startTime) startTime = now;
-          const p = Math.min(1, (now - startTime) / duration);
-          const eased = 1 - Math.pow(1 - p, 3);
-          setGpaAnimated(education.gpa * eased);
-          if (p < 1) {
-            animRaf = requestAnimationFrame(animateGpa);
-          } else {
-            setGpaAnimated(education.gpa);
-          }
-        };
-        animRaf = requestAnimationFrame(animateGpa);
+        tween = gsap.to(counter, {
+          val: education.gpa,
+          duration: 1.35,
+          ease: 'power3.out',
+          onUpdate: () => setGpaAnimated(counter.val),
+        });
       },
       { threshold: 0.25 }
     );
@@ -461,11 +564,11 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     io.observe(el);
     return () => {
       io.disconnect();
-      cancelAnimationFrame(animRaf);
+      tween?.kill();
     };
   }, [caseStudySlug]);
 
-  // Circular expanding View Transition on theme switch (with instant fallback, never slow property transitions)
+  // Circular expanding View Transition on theme switch
   const handleThemeSwitch = (nextTheme: ThemeMode, e: React.MouseEvent<HTMLButtonElement>) => {
     if (nextTheme === theme) return;
     triggerHapticAndSound('tap');
@@ -516,15 +619,25 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
       .catch(() => {});
   };
 
+  const scrollToTarget = (selectorOrTop: string | number) => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (lenisRef.current && !reduceMotion) {
+      lenisRef.current.scrollTo(selectorOrTop, { offset: typeof selectorOrTop === 'string' ? -76 : 0 });
+    } else if (typeof selectorOrTop === 'number') {
+      window.scrollTo({ top: selectorOrTop, behavior: reduceMotion ? 'auto' : 'smooth' });
+    } else {
+      const el = document.querySelector(selectorOrTop);
+      el?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+  };
+
   const navigateHash = (targetHash: string) => {
     window.location.hash = targetHash;
     setCurrentHash(targetHash);
     if (!targetHash.startsWith('#/proyek/')) {
       const id = targetHash.replace(/^#/, '');
       requestAnimationFrame(() => {
-        document.getElementById(id)?.scrollIntoView({
-          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-        });
+        scrollToTarget(`#${id}`);
       });
     }
   };
@@ -580,49 +693,56 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
     window.setTimeout(() => setEmailCopied(false), 1800);
   };
 
+  const brandMorphed = scrolled || mobileMenuOpen;
+
   return (
     <>
-      {/* Thin Scroll Progress Bar */}
+      {/* Thin Top Scroll Progress Line */}
       <div className="scroll-progress-bar" aria-hidden="true" />
 
-      {/* Top Sticky / Floating Pill Navbar */}
+      {/* Sticky Desktop Navbar / Mobile Floating Pill Navbar */}
       <header className={`site-navbar ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="navbar-inner">
-          {/* Brand: "Ravael." on desktop; on mobile/tablet morphs smoothly into Ravael's circular photo avatar on scroll or menu open */}
+          {/* Brand: "Ravael." morphs into circular framed photo on mobile/tablet when scrolled or menu open */}
           <a
             href="#top"
-            className={`navbar-brand ${scrolled || mobileMenuOpen ? 'show-avatar-mobile' : ''}`}
+            className={`navbar-brand ${brandMorphed ? 'is-morphed' : ''}`}
+            aria-label={profile.name}
             onClick={(e) => {
               if (caseStudySlug) {
                 e.preventDefault();
                 navigateHash('#top');
+              } else {
+                e.preventDefault();
+                scrollToTarget(0);
               }
             }}
-            aria-label={profile.name}
           >
-            <span className="brand-avatar-ring" aria-hidden="true">
+            <span className="brand-text">{profile.brand}</span>
+            <span className="brand-avatar-ring">
               <img
                 src={normalizedBase + profile.avatar}
-                alt=""
-                width={32}
-                height={32}
+                alt={profile.name}
+                width={34}
+                height={34}
                 className="brand-avatar-img"
               />
             </span>
-            <span className="brand-text">{profile.brand}</span>
           </a>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Section Links */}
           <nav className="navbar-links" aria-label={u.mainNav}>
             {SECTION_META.map((sec) => {
-              const isCurrent = !caseStudySlug && activeSection === sec.id;
+              const isActive = !caseStudySlug && activeSection === sec.id;
               return (
                 <a
                   key={sec.id}
                   href={`#${sec.id}`}
-                  aria-current={isCurrent ? 'true' : undefined}
-                  onClick={() => {
-                    if (caseStudySlug) navigateHash(`#${sec.id}`);
+                  className={`nav-link ${isActive ? 'is-active' : ''}`}
+                  aria-current={isActive ? 'location' : undefined}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateHash(`#${sec.id}`);
                   }}
                 >
                   {sec.nav[lang]}
@@ -631,14 +751,14 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             })}
           </nav>
 
-          {/* 3 Navbar Switches: ID | EN, Light | Dark, Sound On | Off + Mobile Menu Trigger */}
+          {/* 3 Switches: Language (ID | EN), Theme (Light | Dark), Sound (On | Off) */}
           <div className="navbar-controls">
             {/* 1. Language Switch (ID | EN) */}
-            <div className="seg-pill" role="group" aria-label={u.langSwitch}>
+            <div className="segmented-pill" role="group" aria-label={u.langSwitch}>
               <button
                 type="button"
+                className={`pill-option ${lang === 'id' ? 'is-active' : ''}`}
                 aria-pressed={lang === 'id'}
-                aria-label="Bahasa Indonesia"
                 onClick={() => {
                   if (lang !== 'id') {
                     triggerHapticAndSound('tap');
@@ -650,8 +770,8 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </button>
               <button
                 type="button"
+                className={`pill-option ${lang === 'en' ? 'is-active' : ''}`}
                 aria-pressed={lang === 'en'}
-                aria-label="English"
                 onClick={() => {
                   if (lang !== 'en') {
                     triggerHapticAndSound('tap');
@@ -664,39 +784,39 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
 
             {/* 2. Theme Switch (Light | Dark) */}
-            <div className="seg-pill" role="group" aria-label={u.themeSwitch}>
+            <div className="segmented-pill" role="group" aria-label={u.themeSwitch}>
               <button
                 type="button"
-                aria-pressed={theme === 'light'}
+                className={`pill-option ${theme === 'light' ? 'is-active' : ''}`}
                 aria-label={u.lightMode}
-                title={u.lightMode}
+                aria-pressed={theme === 'light'}
                 onClick={(e) => handleThemeSwitch('light', e)}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                  <circle cx="12" cy="12" r="4.5" />
+                  <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55" />
                 </svg>
               </button>
               <button
                 type="button"
-                aria-pressed={theme === 'dark'}
+                className={`pill-option ${theme === 'dark' ? 'is-active' : ''}`}
                 aria-label={u.darkMode}
-                title={u.darkMode}
+                aria-pressed={theme === 'dark'}
                 onClick={(e) => handleThemeSwitch('dark', e)}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
                 </svg>
               </button>
             </div>
 
-            {/* 3. Sound / Haptic Switch (On | Off) */}
-            <div className="seg-pill seg-sound-desktop" role="group" aria-label={u.soundSwitch}>
+            {/* 3. Sound Switch (On | Off) */}
+            <div className="segmented-pill sound-pill-desktop" role="group" aria-label={u.soundSwitch}>
               <button
                 type="button"
-                aria-pressed={soundOn}
+                className={`pill-option ${soundOn ? 'is-active' : ''}`}
                 aria-label={u.soundOn}
-                title={u.soundOn}
+                aria-pressed={soundOn}
                 onClick={() => {
                   feedbackState.enabled = true;
                   setSoundOn(true);
@@ -710,9 +830,9 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </button>
               <button
                 type="button"
-                aria-pressed={!soundOn}
+                className={`pill-option ${!soundOn ? 'is-active' : ''}`}
                 aria-label={u.soundOff}
-                title={u.soundOff}
+                aria-pressed={!soundOn}
                 onClick={() => {
                   feedbackState.enabled = false;
                   setSoundOn(false);
@@ -726,16 +846,21 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </button>
             </div>
 
-            {/* Accessible Mobile Sheet Menu Trigger (44px min tap target) */}
-            <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            {/* Mobile/Tablet Menu Drawer Trigger (44px+ tap target) */}
+            <Dialog.Root
+              open={mobileMenuOpen}
+              onOpenChange={(open) => {
+                triggerHapticAndSound('tap');
+                setMobileMenuOpen(open);
+              }}
+            >
               <Dialog.Trigger asChild>
                 <button
                   type="button"
                   className="mobile-menu-trigger"
                   aria-label={mobileMenuOpen ? u.close : u.menu}
-                  onClick={() => triggerHapticAndSound('tap')}
                 >
-                  <span className="menu-trigger-label">{mobileMenuOpen ? u.close : u.menu}</span>
+                  <span>{mobileMenuOpen ? u.close : u.menu}</span>
                 </button>
               </Dialog.Trigger>
               <Dialog.Portal>
@@ -751,8 +876,8 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                         className="sheet-avatar"
                       />
                       <div>
-                        <Dialog.Title className="sheet-title">{profile.brand}</Dialog.Title>
-                        <p className="sheet-sub">{t(profile.badgeRole, lang)}</p>
+                        <Dialog.Title className="sheet-name">{profile.name}</Dialog.Title>
+                        <p className="sheet-role">{t(profile.badgeRole, lang)}</p>
                       </div>
                     </div>
                     <Dialog.Close asChild>
@@ -767,24 +892,25 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       <a
                         key={sec.id}
                         href={`#${sec.id}`}
-                        className={`mobile-sheet-link ${activeSection === sec.id ? 'is-active' : ''}`}
-                        onClick={() => {
-                          triggerHapticAndSound('tap');
+                        className={`sheet-nav-item ${activeSection === sec.id ? 'is-active' : ''}`}
+                        onClick={(e) => {
+                          e.preventDefault();
                           setMobileMenuOpen(false);
-                          if (caseStudySlug) navigateHash(`#${sec.id}`);
+                          navigateHash(`#${sec.id}`);
                         }}
                       >
                         <span>{sec.nav[lang]}</span>
-                        <span aria-hidden="true">→</span>
                       </a>
                     ))}
                   </nav>
 
-                  <div className="mobile-sheet-switches">
-                    <span className="eyebrow">{u.soundSwitch}</span>
-                    <div className="seg-pill" role="group" aria-label={u.soundSwitch}>
+                  {/* Sound switch inside mobile drawer */}
+                  <div className="mobile-sheet-footer">
+                    <span className="sheet-footer-label">{u.soundSwitch}</span>
+                    <div className="segmented-pill" role="group" aria-label={u.soundSwitch}>
                       <button
                         type="button"
+                        className={`pill-option ${soundOn ? 'is-active' : ''}`}
                         aria-pressed={soundOn}
                         onClick={() => {
                           feedbackState.enabled = true;
@@ -796,6 +922,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       </button>
                       <button
                         type="button"
+                        className={`pill-option ${!soundOn ? 'is-active' : ''}`}
                         aria-pressed={!soundOn}
                         onClick={() => {
                           feedbackState.enabled = false;
@@ -815,7 +942,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
 
       {/* Main Content: Either Case Study View or Single-Page Scroll */}
       {caseStudySlug ? (
-        <main id="top">
+        <main id="top" ref={mainRef}>
           <CaseStudyView
             slug={caseStudySlug}
             lang={lang}
@@ -824,11 +951,16 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
           />
         </main>
       ) : (
-        <main id="top">
+        <main id="top" ref={mainRef}>
           {/* HERO SECTION */}
           <section className="hero-section">
             <div className="section-inner hero-grid">
-              <div className="hero-copy">
+              <motion.div
+                className="hero-copy"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <p className="hero-greeting">{t(profile.greeting, lang)}</p>
                 <h1 className="hero-name">{profile.name}</h1>
                 <p className="hero-typing">
@@ -839,7 +971,11 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                   <a
                     href="#proyek"
                     className="btn btn-primary"
-                    onClick={() => triggerHapticAndSound('tap')}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      triggerHapticAndSound('tap');
+                      navigateHash('#proyek');
+                    }}
                   >
                     {u.viewProjects}
                   </a>
@@ -852,9 +988,9 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                     {u.downloadCv}
                   </a>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Lazy-loaded Interactive Lanyard so Hero text paints first */}
+              {/* Lazy-loaded Interactive Lanyard */}
               <div className="hero-lanyard-col">
                 <Suspense
                   fallback={
@@ -878,7 +1014,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </section>
 
-          {/* 1. TENTANG (Profile + Technologies I Use on Left, 1 Portrait Photo on Right; no "Sekilas" or "Fokus") */}
+          {/* 1. TENTANG (Profile + Technologies I Use on Left, 1 Portrait Photo on Right) */}
           <SectionHeading
             id="tentang"
             eyebrow={SECTION_META[0].nav[lang]}
@@ -894,7 +1030,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 </article>
 
                 <article className="surface-card">
-                  {/* Title without icon as required by Section 2 */}
                   <div className="tech-card-header">
                     <h3 className="card-h3">{u.techHeading}</h3>
                   </div>
@@ -935,7 +1070,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </SectionHeading>
 
-          {/* 2. GALERI (Max 6 bento photos initially, category/date/caption, lightbox with Prev/Next, "See all", filter only if >=2 categories) */}
+          {/* 2. GALERI (6 unblurred KKN photos in bento layout, category/date/caption, lightbox with Prev/Next) */}
           <SectionHeading
             id="galeri"
             eyebrow={SECTION_META[1].nav[lang]}
@@ -978,12 +1113,13 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               </div>
             )}
 
-            <div className="bento-gallery-grid">
+            <motion.div layout className="bento-gallery-grid">
               {visibleGallery.map((item, idx) => {
                 const spanClass =
                   idx === 0 ? 'bento-featured' : idx === 3 || idx === 4 ? 'bento-wide' : '';
                 return (
-                  <button
+                  <motion.button
+                    layout
                     key={item.id}
                     type="button"
                     className={`bento-tile ${spanClass}`}
@@ -1005,10 +1141,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       </small>
                       <span className="bento-caption">{t(item.caption, lang)}</span>
                     </span>
-                  </button>
+                  </motion.button>
                 );
               })}
-            </div>
+            </motion.div>
 
             {filteredGallery.length > 6 && (
               <div className="gallery-more-row">
@@ -1047,11 +1183,6 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                           <Dialog.Title className="card-h3" style={{ marginTop: 4 }}>
                             {t(activeLightboxItem.caption, lang)}
                           </Dialog.Title>
-                          {activeLightboxItem.privacyNote && (
-                            <p className="muted-text" style={{ marginTop: 4, fontSize: 13 }}>
-                              {t(activeLightboxItem.privacyNote, lang)}
-                            </p>
-                          )}
                         </div>
                         <Dialog.Close asChild>
                           <button type="button" className="btn btn-outline btn-sm">
@@ -1079,7 +1210,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                             );
                           }}
                         >
-                          ← {u.prevPhoto}
+                          {u.prevPhoto}
                         </button>
                         <span className="lightbox-counter">
                           {lightboxIdx + 1} / {filteredGallery.length}
@@ -1092,7 +1223,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                             setLightboxIdx((lightboxIdx + 1) % filteredGallery.length);
                           }}
                         >
-                          {u.nextPhoto} →
+                          {u.nextPhoto}
                         </button>
                       </div>
                     </div>
@@ -1102,7 +1233,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </Dialog.Root>
           </SectionHeading>
 
-          {/* 3. PENDIDIKAN (Campus logo, large GPA in filling ring, contrast ribbon "IPK tertinggi peringkat 4 dari 21 lulusan", favorite courses without reasons, no thesis title) */}
+          {/* 3. PENDIDIKAN */}
           <SectionHeading
             id="pendidikan"
             eyebrow={SECTION_META[2].nav[lang]}
@@ -1131,7 +1262,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                   </div>
                 </div>
 
-                {/* Fixed-dimension GPA Ring so it never shrinks or overflows on 360px-430px mobile screens */}
+                {/* Fixed-dimension GPA Ring */}
                 <div className="edu-gpa-box">
                   <div className="gpa-ring-wrap" aria-label={`${u.gpaLabel}: ${formattedGpa} ${u.outOf} ${formattedGpaMax}`}>
                     <svg className="gpa-ring-svg" viewBox="0 0 124 124" aria-hidden="true">
@@ -1183,7 +1314,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                 </div>
               </div>
 
-              {/* Favorite Courses (Chips only, without reasons, without thesis title) */}
+              {/* Favorite Courses */}
               <div className="edu-courses-block">
                 <div className="eyebrow" style={{ marginBottom: 10 }}>
                   {u.favCourses}
@@ -1199,7 +1330,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </SectionHeading>
 
-          {/* 4. PENGALAMAN (Vertical timeline; KKN first, then Internship; "Lihat detail" modal with tasks, results, documentation photos) */}
+          {/* 4. PENGALAMAN (Clean vertical timeline; KKN first, then Internship; "Lihat detail" modal) */}
           <SectionHeading
             id="pengalaman"
             eyebrow={SECTION_META[3].nav[lang]}
@@ -1224,42 +1355,13 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       <span className="badge-pill">{t(item.period, lang)}</span>
                     </div>
 
-                    {/* Structured KKN / Experience metadata columns (period, location, participants, impact) */}
-                    <div className="exp-meta-grid">
-                      <div className="exp-meta-cell">
-                        <small>{u.periodLabel}</small>
-                        <strong>{t(item.period, lang)}</strong>
-                      </div>
-                      <div className="exp-meta-cell">
-                        <small>{u.locationLabel}</small>
-                        <strong>{t(item.location, lang)}</strong>
-                      </div>
-                      {item.participants && (
-                        <div className="exp-meta-cell">
-                          <small>{u.participantsLabel}</small>
-                          <strong>{t(item.participants, lang)}</strong>
-                        </div>
-                      )}
-                      {item.impact && (
-                        <div className="exp-meta-cell">
-                          <small>{u.impactLabel}</small>
-                          <strong>{t(item.impact, lang)}</strong>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="timeline-lines">
+                    <ul className="timeline-bullet-list">
                       {item.lines.map((line, lIdx) => (
-                        <p key={lIdx} className="body-text">
+                        <li key={lIdx} className="body-text">
                           {t(line, lang)}
-                        </p>
+                        </li>
                       ))}
-                    </div>
-
-                    <div className="exp-relevance-box">
-                      <strong>{u.dataRelevance}:</strong>{' '}
-                      <span>{t(item.relevance, lang)}</span>
-                    </div>
+                    </ul>
 
                     <div>
                       <button
@@ -1354,7 +1456,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </Dialog.Root>
           </SectionHeading>
 
-          {/* 5. PROYEK (1 large featured card + slots on right; working "Baca case study" buttons; honest project type labels) */}
+          {/* 5. PROYEK (1 large featured card + coming soon slots on right; no arrow symbols) */}
           <SectionHeading
             id="proyek"
             eyebrow={SECTION_META[4].nav[lang]}
@@ -1412,14 +1514,14 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                         rel="noopener noreferrer"
                         className="btn btn-outline"
                       >
-                        {u.viewDemo} ↗
+                        {u.viewDemo}
                       </a>
                     )}
                   </div>
                 </div>
               </article>
 
-              {/* Right Column: Any Secondary Projects + Coming Soon Slots */}
+              {/* Right Column: Secondary Projects (if any) + Coming Soon Slots */}
               <div className="projects-side-stack">
                 {secondaryProjects.map((secProj) => (
                   <article key={secProj.slug} className="surface-card project-side-card">
@@ -1454,7 +1556,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                           navigateHash(secProj.caseStudy);
                         }}
                       >
-                        {u.readCaseStudy} →
+                        {u.readCaseStudy}
                       </a>
                     </div>
                   </article>
@@ -1475,7 +1577,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </SectionHeading>
 
-          {/* 6. KETERAMPILAN (Image-only tool logos marquee, no level labels, pauses on hover/focus, tooltip "dipakai di: [proyek]") */}
+          {/* 6. KETERAMPILAN (Image-only tool logos marquee, pauses on hover/focus, tooltip "dipakai di: [proyek]") */}
           <SectionHeading
             id="keterampilan"
             eyebrow={SECTION_META[5].nav[lang]}
@@ -1528,7 +1630,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </div>
           </SectionHeading>
 
-          {/* 7. SERTIFIKASI (Certificate thumbnails displayed directly, click to enlarge, NO "Lihat sertifikat" text) */}
+          {/* 7. SERTIFIKASI (Only CV certifications: DSAREA Grade A + Google IT Support Coursera, click to enlarge) */}
           <SectionHeading
             id="sertifikasi"
             eyebrow={SECTION_META[6].nav[lang]}
@@ -1538,8 +1640,9 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
               {certificates.map((cert, idx) => {
                 const certTitle = t(cert.title, lang);
                 const certDate = t(cert.date, lang);
+                const certSummary = cert.summary ? t(cert.summary, lang) : '';
                 return (
-                  <div key={certTitle} className="cert-card">
+                  <div key={certTitle} className="surface-card cert-card">
                     <button
                       type="button"
                       className="cert-thumb-btn"
@@ -1556,10 +1659,18 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       />
                     </button>
                     <div className="cert-meta">
+                      <div className="cert-meta-top">
+                        <span className="eyebrow">{cert.issuer}</span>
+                        <span className="mono-num muted-text" style={{ fontSize: 13 }}>
+                          {certDate}
+                        </span>
+                      </div>
                       <h3 className="cert-title">{certTitle}</h3>
-                      <p className="muted-text">
-                        {cert.issuer} · {certDate}
-                      </p>
+                      {certSummary && (
+                        <p className="muted-text" style={{ marginTop: 6 }}>
+                          {certSummary}
+                        </p>
+                      )}
                     </div>
                   </div>
                 );
@@ -1614,7 +1725,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
             </Dialog.Root>
           </SectionHeading>
 
-          {/* 8. KONTAK (High-contrast dark block inverted in dark mode, Email + Copy -> Copied, LinkedIn row, City-level map + Open in Maps, Back to top; NO GitHub, NO Download CV here, NO phone number) */}
+          {/* 8. KONTAK */}
           <section id="kontak" className="portfolio-section">
             <div className="section-inner">
               <div className="contact-contrast-block">
@@ -1670,7 +1781,7 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                       className="contact-row-btn"
                       onClick={() => triggerHapticAndSound('tap')}
                     >
-                      {u.openBtn} ↗
+                      {u.openBtn}
                     </a>
                   </div>
                 </div>
@@ -1708,12 +1819,12 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                     style={{ marginTop: 8 }}
                     onClick={() => triggerHapticAndSound('tap')}
                   >
-                    {u.openMaps} ↗
+                    {u.openMaps}
                   </a>
                 </div>
               </div>
 
-              {/* Footer with Back to Top */}
+              {/* Footer with Back to Top (no arrow symbol) */}
               <footer className="site-footer">
                 <span className="muted-text">© 2026 {profile.name}</span>
                 <button
@@ -1721,15 +1832,10 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
                   className="btn btn-outline btn-sm"
                   onClick={() => {
                     triggerHapticAndSound('tap');
-                    window.scrollTo({
-                      top: 0,
-                      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                        ? 'auto'
-                        : 'smooth',
-                    });
+                    scrollToTarget(0);
                   }}
                 >
-                  ↑ {u.backToTop}
+                  {u.backToTop}
                 </button>
               </footer>
             </div>
@@ -1737,26 +1843,32 @@ export default function PortfolioApp({ baseUrl = '/' }: { baseUrl?: string }) {
         </main>
       )}
 
-      {/* Floating Download CV Button (Appears after Hero, hides at Contact; thin bottom bar on mobile) */}
-      {!caseStudySlug && (
-        <div className={`floating-cv-wrap ${showFloatingCv ? 'is-visible' : ''}`}>
-          <a
-            href={cvUrl}
-            download="CV_Muhammad_Ravael_Chessario_Ramdoni.pdf"
-            className="floating-cv-btn"
-            tabIndex={showFloatingCv ? 0 : -1}
-            aria-hidden={!showFloatingCv}
-            onClick={() => triggerHapticAndSound('tap')}
+      {/* Floating Download CV Button animated with Motion AnimatePresence */}
+      <AnimatePresence>
+        {!caseStudySlug && showFloatingCv && (
+          <motion.div
+            className="floating-cv-wrap is-visible"
+            initial={{ opacity: 0, y: 18, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 18, scale: 0.96 }}
+            transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            <span>{u.downloadCv}</span>
-          </a>
-        </div>
-      )}
+            <a
+              href={cvUrl}
+              download="CV_Muhammad_Ravael_Chessario_Ramdoni.pdf"
+              className="floating-cv-btn"
+              onClick={() => triggerHapticAndSound('tap')}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>{u.downloadCv}</span>
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

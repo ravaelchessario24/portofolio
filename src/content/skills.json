@@ -4,8 +4,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Analisis Sentimen Mobile JKN & Python for Data Science",
-      "en": "Mobile JKN Sentiment Analysis & Python for Data Science"
+      "id": "Analisis Sentimen Mobile JKN & Bootcamp DSAREA",
+      "en": "Mobile JKN Sentiment Analysis & DSAREA Bootcamp"
     },
     "logo": "images/tools/python.svg"
   },
@@ -14,8 +14,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Data Analyst Bootcamp (DSAREA) & The Complete SQL Bootcamp",
-      "en": "Data Analyst Bootcamp (DSAREA) & The Complete SQL Bootcamp"
+      "id": "Data Analyst Bootcamp DSAREA & Basis Data",
+      "en": "DSAREA Data Analyst Bootcamp & Database Systems"
     },
     "logo": "images/tools/sql.svg"
   },
@@ -24,8 +24,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Basis Data & Sistem CMS PAUD KB Flamboyan",
-      "en": "Database Systems & PAUD KB Flamboyan CMS"
+      "id": "CMS PAUD KB Flamboyan & Basis Data",
+      "en": "PAUD KB Flamboyan CMS & Database Systems"
     },
     "logo": "images/tools/mysql.svg"
   },
@@ -34,8 +34,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Data Analyst Bootcamp (DSAREA) & Excel 101 NgulikData",
-      "en": "Data Analyst Bootcamp (DSAREA) & Excel 101 NgulikData"
+      "id": "Data Analyst Bootcamp DSAREA (Pivot Table & Fungsi Lanjutan)",
+      "en": "DSAREA Data Analyst Bootcamp (Pivot Tables & Advanced Functions)"
     },
     "logo": "images/tools/excel.svg"
   },
@@ -44,8 +44,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Pengolahan Data & Rekapitulasi Kolaboratif",
-      "en": "Data Processing & Collaborative Reporting"
+      "id": "Rekapitulasi & Kolaborasi Data",
+      "en": "Data Tabulation & Collaboration"
     },
     "logo": "images/tools/sheets.svg"
   },
@@ -54,8 +54,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Pipeline 63.766 Ulasan Mobile JKN & Python for Data Science",
-      "en": "63,766 Mobile JKN Reviews Pipeline & Python for Data Science"
+      "id": "Data Cleaning 63.766 Ulasan Mobile JKN",
+      "en": "Data Cleaning on 63,766 Mobile JKN Reviews"
     },
     "logo": "images/tools/pandas.svg"
   },
@@ -64,8 +64,8 @@
     "group": "Data & Analitik",
     "tool": true,
     "usedIn": {
-      "id": "Analisis Sentimen Mobile JKN & Python for Data Science",
-      "en": "Mobile JKN Sentiment Analysis & Python for Data Science"
+      "id": "Komputasi Matriks Fitur Analisis Sentimen Mobile JKN",
+      "en": "Feature Matrix Computation in Mobile JKN Sentiment Analysis"
     },
     "logo": "images/tools/numpy.svg"
   },
@@ -75,22 +75,22 @@
     "tool": true,
     "usedIn": {
       "id": "TF-IDF Bigram & Multinomial Naive Bayes Mobile JKN",
-      "en": "TF-IDF Bigram & Multinomial Naive Bayes (Mobile JKN)"
+      "en": "TF-IDF Bigram & Multinomial Naive Bayes on Mobile JKN"
     },
     "logo": "images/tools/sklearn.svg"
   },
   {
+    "name": "Data Analysis",
+    "group": "Metode",
+    "tool": false
+  },
+  {
+    "name": "Machine Learning",
+    "group": "Metode",
+    "tool": false
+  },
+  {
     "name": "Data Cleaning",
-    "group": "Metode",
-    "tool": false
-  },
-  {
-    "name": "Exploratory Data Analysis",
-    "group": "Metode",
-    "tool": false
-  },
-  {
-    "name": "Text Mining",
     "group": "Metode",
     "tool": false
   },
@@ -100,12 +100,7 @@
     "tool": false
   },
   {
-    "name": "TF-IDF",
-    "group": "Metode",
-    "tool": false
-  },
-  {
-    "name": "Naive Bayes",
+    "name": "TF-IDF & Naive Bayes",
     "group": "Metode",
     "tool": false
   },
@@ -114,8 +109,8 @@
     "group": "Visualisasi & Dashboard",
     "tool": true,
     "usedIn": {
-      "id": "Visualisasi Distribusi Sentimen Mobile JKN & Haltev Academy",
-      "en": "Mobile JKN Sentiment Distribution Visualization & Haltev Academy"
+      "id": "Visualisasi Tren Sentimen Mobile JKN & Bootcamp DSAREA",
+      "en": "Mobile JKN Sentiment Trend Visualization & DSAREA Bootcamp"
     },
     "logo": "images/tools/matplotlib.svg"
   },
@@ -124,8 +119,8 @@
     "group": "Visualisasi & Dashboard",
     "tool": true,
     "usedIn": {
-      "id": "Evaluasi Confusion Matrix & EDA Mobile JKN",
-      "en": "Confusion Matrix Evaluation & EDA (Mobile JKN)"
+      "id": "Visualisasi Evaluasi Model Mobile JKN",
+      "en": "Mobile JKN Model Evaluation Visualization"
     },
     "logo": "images/tools/seaborn.svg"
   },
@@ -135,22 +130,17 @@
     "tool": true,
     "usedIn": {
       "id": "Dashboard Interaktif Analisis Sentimen Mobile JKN",
-      "en": "Interactive Mobile JKN Sentiment Analysis Dashboard"
+      "en": "Mobile JKN Interactive Sentiment Analysis Dashboard"
     },
     "logo": "images/tools/streamlit.svg"
-  },
-  {
-    "name": "Data Visualization",
-    "group": "Visualisasi & Dashboard",
-    "tool": false
   },
   {
     "name": "Jupyter Notebook",
     "group": "Alat Kerja",
     "tool": true,
     "usedIn": {
-      "id": "Eksperimen Model & Praproses Teks Mobile JKN",
-      "en": "Model Experimentation & Text Preprocessing (Mobile JKN)"
+      "id": "Eksperimen Pipeline KDD Mobile JKN",
+      "en": "Mobile JKN KDD Pipeline Experiments"
     },
     "logo": "images/tools/jupyter.svg"
   },
@@ -159,8 +149,8 @@
     "group": "Alat Kerja",
     "tool": true,
     "usedIn": {
-      "id": "Pelatihan Model NLP 63.766 Ulasan Mobile JKN",
-      "en": "NLP Model Training on 63,766 Mobile JKN Reviews"
+      "id": "Pelatihan Model & Stemming Sastrawi 62.878 Ulasan",
+      "en": "Model Training & Sastrawi Stemming on 62,878 Reviews"
     },
     "logo": "images/tools/colab.svg"
   },
@@ -176,6 +166,30 @@
   },
   {
     "name": {
+      "id": "Komunikasi",
+      "en": "Communication"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Kerja Sama Tim & Kolaborasi",
+      "en": "Teamwork & Collaboration"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
+      "id": "Troubleshooting",
+      "en": "Troubleshooting"
+    },
+    "group": "Kemampuan Personal",
+    "tool": false
+  },
+  {
+    "name": {
       "id": "Berpikir Analitis",
       "en": "Analytical Thinking"
     },
@@ -184,24 +198,8 @@
   },
   {
     "name": {
-      "id": "Ketelitian Detail",
+      "id": "Perhatian terhadap Detail",
       "en": "Attention to Detail"
-    },
-    "group": "Kemampuan Personal",
-    "tool": false
-  },
-  {
-    "name": {
-      "id": "Pemecahan Masalah",
-      "en": "Problem Solving"
-    },
-    "group": "Kemampuan Personal",
-    "tool": false
-  },
-  {
-    "name": {
-      "id": "Kerja Tim & Kolaborasi",
-      "en": "Teamwork & Collaboration"
     },
     "group": "Kemampuan Personal",
     "tool": false

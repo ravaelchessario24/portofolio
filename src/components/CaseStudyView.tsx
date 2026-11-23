@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { projects, t, type Lang } from '../lib/content';
 import { triggerHapticAndSound } from '../lib/feedback';
 
@@ -12,53 +13,43 @@ interface CaseStudyViewProps {
 const LABELS = {
   id: {
     backToProjects: 'Kembali ke bagian Proyek',
-    templateSwitcher: 'Pilih Template Studi Kasus',
-    templateML: 'Template A: Machine Learning / Data Science',
-    templateDA: 'Template B: Data Analyst / Efisiensi Data',
-    honestLabel: 'Klasifikasi Proyek',
-    liveDemo: 'Buka Dashboard / Demo Langsung',
+    templateSwitcher: 'Pilih Studi Kasus',
+    liveDemo: 'Lihat Demo Dashboard',
     metricsTitle: 'Metrik Evaluasi Model & Skala Dataset',
     daMetricsTitle: 'Angka Kunci: Skala Data, Cakupan & Efisiensi',
-    pipelineEyebrow: 'ALUR PENGOLAHAN DATA BERTAHAP',
-    pipelineTitle: 'Tahapan End-to-End & Tools yang Digunakan',
+    pipelineEyebrow: 'ALUR PENGOLAHAN DATA',
+    pipelineTitle: 'Tahapan Pengerjaan & Tools yang Digunakan',
     toolsUsed: 'Tools:',
-    outputLabel: 'Output Tahap:',
-    findingsEyebrow: 'INSIGHT UTAMA DARI DATA',
-    findingsTitle: 'Temuan Kunci & Visualisasi Bukti',
-    recBadge: 'Rekomendasi Langsung:',
-    actionsEyebrow: 'TINDAK LANJUT & KEPUTUSAN',
-    actionsTitle: 'Action Items yang Disarankan Berdasarkan Insight',
-    targetCol: 'Sasaran Sistem / Area',
-    actionCol: 'Tindakan yang Disarankan',
-    impactCol: 'Dampak Terukur',
-    contextEyebrow: 'KONTEKS & METODOLOGI',
-    nextCaseStudy: 'Lihat Template Studi Kasus Lainnya',
-    openStudy: 'Buka Studi Kasus',
+    outputLabel: 'Hasil Tahap:',
+    findingsEyebrow: 'TEMUAN UTAMA',
+    findingsTitle: 'Insight Data & Bukti Visual',
+    recBadge: 'Rekomendasi:',
+    actionsEyebrow: 'REKOMENDASI PERBAIKAN',
+    actionsTitle: 'Action Items Berdasarkan Insight Data',
+    impactCol: 'Dampak yang Diharapkan',
+    contextEyebrow: 'RINGKASAN STUDI KASUS',
+    nextCaseStudy: 'Studi Kasus Lainnya',
+    openStudy: 'Baca Studi Kasus',
   },
   en: {
-    backToProjects: 'Back to Projects section',
-    templateSwitcher: 'Switch Case Study Template',
-    templateML: 'Template A: Machine Learning / Data Science',
-    templateDA: 'Template B: Data Analyst / Data Efficiency',
-    honestLabel: 'Project Classification',
-    liveDemo: 'Open Live Dashboard / Demo',
+    backToProjects: 'Back to Projects',
+    templateSwitcher: 'Select Case Study',
+    liveDemo: 'View Live Dashboard',
     metricsTitle: 'Model Evaluation Metrics & Dataset Scale',
     daMetricsTitle: 'Key Figures: Data Scale, Coverage & Efficiency',
-    pipelineEyebrow: 'STEP-BY-STEP DATA PROCESSING PIPELINE',
-    pipelineTitle: 'End-to-End Stages & Tools Used',
+    pipelineEyebrow: 'DATA PROCESSING PIPELINE',
+    pipelineTitle: 'Step-by-Step Workflow & Tools Used',
     toolsUsed: 'Tools:',
     outputLabel: 'Stage Output:',
-    findingsEyebrow: 'KEY INSIGHTS FROM THE DATA',
-    findingsTitle: 'Core Findings & Visual Evidence',
-    recBadge: 'Direct Recommendation:',
-    actionsEyebrow: 'DECISIONS & NEXT STEPS',
-    actionsTitle: 'Recommended Action Items Based on Insights',
-    targetCol: 'Target System / Area',
-    actionCol: 'Recommended Action',
+    findingsEyebrow: 'KEY FINDINGS',
+    findingsTitle: 'Data Insights & Visual Evidence',
+    recBadge: 'Recommendation:',
+    actionsEyebrow: 'IMPROVEMENT RECOMMENDATIONS',
+    actionsTitle: 'Action Items Based on Data Insights',
     impactCol: 'Expected Impact',
-    contextEyebrow: 'CONTEXT & METHODOLOGY',
-    nextCaseStudy: 'Explore the Other Case Study Template',
-    openStudy: 'Open Case Study',
+    contextEyebrow: 'CASE STUDY OVERVIEW',
+    nextCaseStudy: 'Other Case Study',
+    openStudy: 'Read Case Study',
   },
 };
 
@@ -164,7 +155,12 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
   const cs = project.cs;
 
   return (
-    <article className="cs-page">
+    <motion.article
+      className="cs-page"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="section-inner">
         {/* Top bar: Back button + Project switcher (if multiple projects exist) */}
         <div className="cs-topbar">
@@ -176,7 +172,7 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
               onNavigate('#proyek');
             }}
           >
-            ← {u.backToProjects}
+            {u.backToProjects}
           </button>
 
           {projects.length > 1 && (
@@ -206,9 +202,7 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
         <header className="cs-header">
           <div className="cs-badges">
             <span className="badge-pill badge-accent">{t(project.categoryBadge, lang)}</span>
-            <span className="badge-pill badge-honest">
-              {u.honestLabel}: {t(project.projectTypeLabel, lang)}
-            </span>
+            <span className="badge-pill badge-honest">{t(project.projectTypeLabel, lang)}</span>
           </div>
           <p className="eyebrow">{t(cs.eyebrow, lang)}</p>
           <h1 className="cs-title">{t(cs.headline, lang)}</h1>
@@ -230,7 +224,7 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
-                {u.liveDemo} ↗
+                {u.liveDemo}
               </a>
             </div>
           )}
@@ -250,7 +244,7 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
           <div className="eyebrow">
             {project.template === 'ml' ? u.metricsTitle : u.daMetricsTitle}
           </div>
-          <div className={`cs-metrics-grid ${project.template === 'ml' ? 'cols-3' : 'cols-3'}`}>
+          <div className="cs-metrics-grid cols-3">
             {cs.metrics.map((m) => (
               <div key={m.v + t(m.l, lang)} className="cs-metric-card">
                 <strong className="cs-metric-val">{m.v}</strong>
@@ -355,7 +349,7 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
           </div>
         </section>
 
-        {/* Footer Navigation to Other Template */}
+        {/* Footer Navigation to Other Case Study (if multiple exist) */}
         {otherProject && (
           <div className="cs-next-banner surface-card">
             <div>
@@ -375,11 +369,11 @@ export default function CaseStudyView({ slug, lang, baseUrl, onNavigate }: CaseS
                 onNavigate(`#/proyek/${otherProject.slug}`);
               }}
             >
-              {u.openStudy} →
+              {u.openStudy}
             </button>
           </div>
         )}
       </div>
-    </article>
+    </motion.article>
   );
 }

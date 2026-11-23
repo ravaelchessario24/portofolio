@@ -3,7 +3,7 @@
     "id": "kkn",
     "title": {
       "id": "Divisi Acara · KKN Digimapan",
-      "en": "Events Division · KKN Digimapan Community Service"
+      "en": "Events Division · KKN Digimapan"
     },
     "org": "ITB Ahmad Dahlan Jakarta",
     "period": {
@@ -15,45 +15,45 @@
       "en": "Lebak Wangi Village, East Sepatan, Tangerang Regency"
     },
     "participants": {
-      "id": "Siswa SD / Madrasah Desa Lebak Wangi",
-      "en": "Elementary / Madrasah Students of Lebak Wangi Village"
+      "id": "Siswa SD Desa Lebak Wangi",
+      "en": "Elementary Students of Lebak Wangi Village"
     },
     "impact": {
-      "id": "Menginisiasi dan menjalankan kelas literasi digital dasar dengan praktik langsung Typingcore dan Microsoft Paint.",
-      "en": "Initiated and delivered foundational digital literacy classes with hands-on Typingcore and Microsoft Paint practice."
+      "id": "Menginisiasi kelas literasi digital dasar dengan praktik Typingcore dan Microsoft Paint.",
+      "en": "Initiated basic digital literacy classes with hands-on Typingcore and Microsoft Paint practice."
     },
     "lines": [
       {
-        "id": "Bertugas di Divisi Acara KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi, Kec. Sepatan Timur, Kab. Tangerang.",
-        "en": "Served in the Events Division of ITB Ahmad Dahlan's KKN Digimapan in Lebak Wangi Village, East Sepatan, Tangerang."
+        "id": "Merancang susunan acara dan jadwal pelaksanaan kegiatan pengabdian masyarakat KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi.",
+        "en": "Planned event rundowns and activity schedules for ITB Ahmad Dahlan's KKN Digimapan community service in Lebak Wangi Village."
       },
       {
-        "id": "Mengusulkan dan menyusun modul program literasi digital untuk siswa SD memakai Typingcore dan Microsoft Paint agar siswa terbiasa mengoperasikan papan ketik serta kursor.",
-        "en": "Proposed and structured a digital literacy program for elementary students using Typingcore and Microsoft Paint to build keyboard and mouse fluency."
+        "id": "Menginisiasi dan mendampingi kelas literasi digital bagi siswa SD menggunakan Typingcore untuk latihan mengetik dasar serta Microsoft Paint untuk melatih koordinasi kursor.",
+        "en": "Initiated and mentored digital literacy sessions for elementary students using Typingcore for basic typing and Microsoft Paint for mouse coordination."
       }
     ],
     "relevance": {
-      "id": "Menerjemahkan konsep teknis menjadi langkah bertahap yang mudah dipahami audiens non-teknis — keterampilan komunikasi yang esensial saat mempresentasikan temuan data kepada pemangku kepentingan.",
-      "en": "Translating technical concepts into approachable step-by-step guidance for non-technical audiences — an essential communication skill when presenting data insights to stakeholders."
+      "id": "Melatih kemampuan menyederhanakan konsep teknis menjadi panduan yang mudah dipahami oleh audiens non-teknis.",
+      "en": "Built practical experience translating technical concepts into clear guidance for non-technical audiences."
     },
     "detail": {
       "tasks": [
         {
-          "id": "Merancang susunan acara dan jadwal pelaksanaan kegiatan pengabdian masyarakat KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi.",
-          "en": "Designed event rundowns and execution schedules for ITB Ahmad Dahlan's KKN Digimapan community service in Lebak Wangi Village."
+          "id": "Menyusun rundown kegiatan dan mengoordinasikan jalannya acara KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi.",
+          "en": "Prepared activity rundowns and coordinated events for ITB Ahmad Dahlan's KKN Digimapan in Lebak Wangi Village."
         },
         {
-          "id": "Mengusulkan program literasi digital tingkat Sekolah Dasar menggunakan Typingcore (latihan mengetik 10 jari dasar) dan Microsoft Paint (kontrol kursor & visual).",
-          "en": "Proposed an elementary digital literacy program using Typingcore (basic typing practice) and Microsoft Paint (cursor & visual control)."
+          "id": "Mengusulkan program pengenalan komputer tingkat Sekolah Dasar menggunakan Typingcore dan Microsoft Paint.",
+          "en": "Proposed an elementary computer introduction program using Typingcore and Microsoft Paint."
         },
         {
-          "id": "Memfasilitasi pendampingan kelompok kecil secara bergiliran agar setiap siswa mendapatkan pengalaman praktik langsung di perangkat laptop.",
-          "en": "Facilitated rotating small-group mentoring so every student received direct hands-on practice on a laptop."
+          "id": "Mendampingi siswa secara bergiliran dalam kelompok kecil agar setiap anak dapat mempraktikkan penggunaan laptop secara langsung.",
+          "en": "Guided students in rotating small groups so each child had direct hands-on practice on a laptop."
         }
       ],
       "result": {
-        "id": "Program literasi digital terlaksana dengan partisipasi aktif siswa di kelas dan mendokumentasikan peningkatan kelancaran penggunaan perangkat dasar.",
-        "en": "Successfully delivered the digital literacy program with active classroom participation and documented smoother basic device operation among students."
+        "id": "Kegiatan literasi digital berjalan lancar dengan antusiasme tinggi dari siswa dalam mengenali fungsi papan ketik dan pengoperasian dasar komputer.",
+        "en": "Delivered smooth, high-engagement digital literacy sessions where students gained familiarity with keyboard layouts and basic computer operation."
       },
       "photos": [
         "images/gallery/kkn-1.webp",
@@ -81,49 +81,49 @@
       "en": "Tangerang, Indonesia"
     },
     "participants": {
-      "id": "Pengelola Administrasi, Guru & Calon Orang Tua Murid",
-      "en": "School Administrators, Teachers & Prospective Parents"
+      "id": "Pengelola Sekolah, Guru & Calon Orang Tua Murid",
+      "en": "School Staff, Teachers & Prospective Parents"
     },
     "impact": {
-      "id": "Efisiensi administrasi sekolah meningkat hingga 50% melalui digitalisasi data guru dan silabus.",
-      "en": "School administrative efficiency increased by up to 50% through teacher data and syllabus digitization."
+      "id": "Meningkatkan efisiensi administrasi sekolah hingga 50%.",
+      "en": "Increased school administrative efficiency by up to 50%."
     },
     "lines": [
       {
-        "id": "Merancang dan membangun website landing page serta Content Management System (CMS) untuk informasi sekolah, mencakup manajemen konten dinamis, data guru, dan kurikulum mata pelajaran.",
-        "en": "Designed and built a landing page website and Content Management System (CMS) for school information, covering dynamic content management, teacher records, and subject curriculum."
+        "id": "Merancang dan membangun website landing page serta Content Management System untuk informasi sekolah, mencakup manajemen konten dinamis, data guru, dan kurikulum mata pelajaran.",
+        "en": "Designed and built a landing page website and Content Management System for school information, covering dynamic content management, teacher data, and subject curriculum."
       },
       {
         "id": "Meningkatkan efisiensi administrasi sekolah hingga 50% melalui digitalisasi pendataan profil guru dan silabus kegiatan.",
-        "en": "Improved school administration efficiency by up to 50% through the digitization of teacher profile records and activity syllabi."
+        "en": "Increased school administrative efficiency by up to 50% through the digitization of teacher profile records and activity syllabi."
       },
       {
         "id": "Mengembangkan tampilan website yang responsif di perangkat mobile dan desktop untuk mempermudah calon orang tua murid mengakses informasi sekolah.",
-        "en": "Developed a responsive web interface across mobile and desktop devices so prospective parents can easily access school information."
+        "en": "Developed a responsive website interface across mobile and desktop devices so prospective parents can easily access school information."
       }
     ],
     "relevance": {
-      "id": "Merapikan pencatatan manual profil guru dan silabus kegiatan ke dalam skema database CMS yang terstruktur — fondasi yang sama dengan proses data cleaning dan normalisasi skema sebelum analisis data.",
-      "en": "Restructuring manual teacher records and activity syllabi into a normalized CMS database schema — the exact same foundation as data cleaning and schema structuring prior to data analysis."
+      "id": "Menata data administrasi manual ke dalam struktur database yang rapi dan konsisten.",
+      "en": "Structured manual administrative records into a clean, consistent database schema."
     },
     "detail": {
       "tasks": [
         {
-          "id": "Merancang struktur data terpusat dan membangun Content Management System (CMS) untuk mengelola konten dinamis, pendataan profil guru, dan kurikulum mata pelajaran.",
-          "en": "Designed a centralized data structure and built a Content Management System (CMS) to manage dynamic content, teacher profile data, and curriculum."
+          "id": "Merancang dan membangun website landing page serta Content Management System untuk informasi sekolah, mencakup manajemen konten dinamis, data guru, dan kurikulum mata pelajaran.",
+          "en": "Designed and built a landing page website and Content Management System for school information, covering dynamic content management, teacher data, and subject curriculum."
         },
         {
-          "id": "Mengubah proses pendataan profil guru dan silabus kegiatan dari dokumen terpisah menjadi alur input digital terstandar.",
-          "en": "Transformed teacher profile and activity syllabus recording from scattered documents into a standardized digital input workflow."
+          "id": "Mendigitalisasi alur pendataan profil guru dan silabus kegiatan agar terpusat di dalam sistem.",
+          "en": "Digitized teacher profile and activity syllabus recordkeeping into a centralized system."
         },
         {
-          "id": "Membangun antarmuka landing page yang responsif di perangkat mobile dan desktop bagi calon orang tua murid.",
-          "en": "Built a responsive landing page across mobile and desktop devices for prospective parents."
+          "id": "Mengembangkan tampilan website yang responsif di perangkat mobile dan desktop bagi calon orang tua murid.",
+          "en": "Developed a responsive web interface across mobile and desktop devices for prospective parents."
         }
       ],
       "result": {
-        "id": "Meningkatkan efisiensi administrasi sekolah hingga 50% melalui digitalisasi pendataan profil guru dan silabus kegiatan, sekaligus membuka akses informasi publik 24/7 bagi calon orang tua murid.",
-        "en": "Increased school administrative efficiency by up to 50% by digitizing teacher profiles and activity syllabi, while providing 24/7 public information access for prospective parents."
+        "id": "Meningkatkan efisiensi administrasi sekolah hingga 50% melalui digitalisasi pendataan profil guru dan silabus kegiatan, serta mempermudah akses informasi sekolah bagi calon orang tua murid.",
+        "en": "Increased school administrative efficiency by up to 50% through teacher profile and syllabus digitization while making school information easily accessible to prospective parents."
       },
       "photos": []
     }
