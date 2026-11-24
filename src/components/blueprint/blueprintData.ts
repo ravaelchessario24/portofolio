@@ -89,7 +89,7 @@ export interface BlueprintExperience {
   type: { id: string; en: string };
   imageFit?: 'contain' | 'cover';
   points: { id: string[]; en: string[] };
-  tech: string[];
+  tech: ({ id: string; en: string } | string)[];
   metrics?: { label: { id: string; en: string }; value: string }[];
   photos: { src: string; caption: { id: string; en: string } }[];
 }
@@ -176,7 +176,7 @@ export const blueprintExperiences: BlueprintExperience[] = [
       id: 'Desa Lebak Wangi, Kab. Tangerang',
       en: 'Lebak Wangi Village, Tangerang Regency',
     },
-    src: 'images/itb-ad-logo.webp',
+    src: 'images/digimapan-logo.webp',
     type: { id: 'Lapangan', en: 'Field Program' },
     imageFit: 'contain',
     points: {
@@ -191,7 +191,13 @@ export const blueprintExperiences: BlueprintExperience[] = [
         'Structured Hands-on Mentorship: Implemented rotating small-group lab sessions ensuring every participating student gained direct, guided experience operating a laptop.',
       ],
     },
-    tech: ['Digital Literacy', 'Typingcore', 'Microsoft Paint', 'Program Coordination', 'Public Speaking'],
+    tech: [
+      'Digital Literacy',
+      'Typingcore',
+      'Microsoft Paint',
+      'Program Coordination',
+      { id: 'Pemecahan Masalah', en: 'Problem Solving' },
+    ],
     metrics: [
       { label: { id: 'Sasaran Utama', en: 'Target Group' }, value: 'Siswa SD' },
       { label: { id: 'Lokasi', en: 'Location' }, value: 'Lebak Wangi' },
@@ -337,29 +343,41 @@ export const blueprintProjects: BlueprintProject[] = [
   {
     slug: 'coming-soon',
     title: {
-      id: 'Coming Soon — Proyek Data Analytics & Machine Learning Berikutnya',
-      en: 'Coming Soon — Next Data Analytics & Machine Learning Project',
+      id: 'Coming Soon — Proyek Data Analyst & Dashboard Interaktif (Microsoft Excel)',
+      en: 'Coming Soon — Data Analyst & Interactive Dashboard Project (Microsoft Excel)',
     },
-    imageTitle: 'Coming Soon — Data Project',
+    imageTitle: 'Coming Soon — Excel Data Analyst Project',
     src: 'banner-dark.jpg',
     gallery: [],
     description: {
-      id: 'Eksplorasi dataset, pemodelan prediktif, dan dashboard analitik interaktif berikutnya sedang dalam tahap pengembangan.',
-      en: 'Upcoming dataset exploration, predictive modeling pipeline, and interactive analytics dashboard currently in development.',
+      id: 'Studi kasus analisis data bisnis, pembersihan data (Data Cleaning), fungsi lanjutan, Pivot Table, dan visualisasi dashboard interaktif menggunakan Microsoft Excel.',
+      en: 'Business data analysis case study featuring data cleaning, advanced formulas, Pivot Tables, and an interactive dashboard built with Microsoft Excel.',
     },
     longDescription: {
       id: [
-        'Proyek Data Analytics & Data Science berikutnya sedang dalam tahap riset dan persiapan dataset. Nantikan pembaruan studi kasus dan dashboard interaktifnya segera.',
+        'Proyek Data Analyst menggunakan Microsoft Excel (meliputi Data Cleaning, Pivot Table, fungsi lanjutan, serta Dashboard Interaktif) sedang dalam tahap penyusunan studi kasus. Nantikan pembaruannya segera.',
       ],
       en: [
-        'The next Data Analytics & Data Science project is currently in the research and dataset preparation phase. Stay tuned for the upcoming case study and interactive dashboard.',
+        'An upcoming Data Analyst project built with Microsoft Excel (covering Data Cleaning, Pivot Tables, advanced formulas, and an Interactive Dashboard) is currently in preparation. Stay tuned.',
       ],
     },
-    tech: ['python', 'sql', 'pandas', 'sklearn', 'streamlit'],
+    tech: ['excel', 'sheets'],
     status: 'coming-soon',
     hasPin: false,
     isComingSoon: true,
   },
+];
+
+export const blueprintCoursework: { id: string; en: string }[] = [
+  { id: 'Basis Data', en: 'Database Systems' },
+  { id: 'Data Mining dan Kecerdasan Bisnis', en: 'Data Mining & Business Intelligence' },
+  { id: 'Big Data dan Analitik', en: 'Big Data & Analytics' },
+  { id: 'Algoritma dan Struktur Data', en: 'Algorithms & Data Structures' },
+  { id: 'Konsep Teknologi', en: 'Technology Concepts' },
+  { id: 'Manajemen Proyek TI', en: 'IT Project Management' },
+  { id: 'Organisasi dan Manajemen Perusahaan', en: 'Corporate Organization & Management' },
+  { id: 'Organisasi dan Arsitektur Komputer', en: 'Computer Organization & Architecture' },
+  { id: 'Etika Profesi TI dan Komunikasi', en: 'IT Professional Ethics & Communication' },
 ];
 
 export const blueprintSkillGroups = [

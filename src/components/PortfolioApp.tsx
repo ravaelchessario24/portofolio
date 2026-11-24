@@ -10,7 +10,8 @@ import {
   Sun,
   X,
 } from 'lucide-react';
-import { FaLinkedin, FaWhatsapp } from 'react-icons/fa6';
+import { FaLinkedin } from 'react-icons/fa6';
+import { triggerHapticAndSound } from '../lib/feedback';
 import {
   dashedX,
   dashedY,
@@ -27,6 +28,7 @@ import {
   blueprintProjects,
   blueprintSkillGroups,
   blueprintCertifications,
+  blueprintCoursework,
   blueprintHighlights,
   animeWithCovers,
   musicScenes,
@@ -166,6 +168,42 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     };
   }, [view]);
 
+  // Global default interactive sound effects on every button / href / interactive element
+  useEffect(() => {
+    let lastHoveredEl: Element | null = null;
+
+    const findInteractive = (target: EventTarget | null): HTMLElement | null => {
+      if (!(target instanceof HTMLElement)) return null;
+      return target.closest(
+        'button, a[href], [role="button"], .cursor-pointer, .cursor-zoom-in',
+      );
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+      const el = findInteractive(e.target);
+      if (el) {
+        triggerHapticAndSound('tap');
+      }
+    };
+
+    const onMouseOver = (e: MouseEvent) => {
+      const el = findInteractive(e.target);
+      if (el && el !== lastHoveredEl) {
+        lastHoveredEl = el;
+        triggerHapticAndSound('hover');
+      } else if (!el) {
+        lastHoveredEl = null;
+      }
+    };
+
+    window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    window.addEventListener('mouseover', onMouseOver, { passive: true });
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('mouseover', onMouseOver);
+    };
+  }, []);
+
   // Keyboard shortcut Ctrl+K / Cmd+K & Escape
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -288,33 +326,36 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
       {/* Architectural Micro-Dotted Vertical Lines */}
       <div
-        className="absolute top-0 bottom-0 left-3 md:left-[18%] xl:left-[26%] w-[1px]"
+        className="absolute top-0 bottom-0 left-2.5 sm:left-4 md:left-[15%] lg:left-[18%] xl:left-[26%] w-[1px]"
         style={dashedY}
       />
       <div
-        className="absolute top-0 bottom-0 right-3 md:right-[18%] xl:right-[26%] w-[1px]"
+        className="absolute top-0 bottom-0 right-2.5 sm:right-4 md:right-[15%] lg:right-[18%] xl:right-[26%] w-[1px]"
         style={dashedY}
       />
 
       {/* Horizontal Blueprint Lines */}
-      <div className="absolute left-0 right-0 top-[22vh] h-[1px] z-20" style={dashedX} />
       <div
-        className="absolute left-0 right-0 top-[calc(22vh+112px)] h-[1px] z-20"
+        className="absolute left-0 right-0 top-[18vh] sm:top-[22vh] h-[1px] z-20"
+        style={dashedX}
+      />
+      <div
+        className="absolute left-0 right-0 top-[calc(18vh+106px)] sm:top-[calc(22vh+112px)] h-[1px] z-20"
         style={dashedX}
       />
 
       {/* Intersection Nodes (3px × 3px) */}
-      <div className="hidden md:block absolute left-[18%] xl:left-[26%] top-[22vh] w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-      <div className="hidden md:block absolute right-[18%] xl:right-[26%] top-[22vh] w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-      <div className="hidden md:block absolute left-[18%] xl:left-[26%] top-[calc(22vh+112px)] w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-      <div className="hidden md:block absolute right-[18%] xl:right-[26%] top-[calc(22vh+112px)] w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+      <div className="hidden md:block absolute md:left-[15%] lg:left-[18%] xl:left-[26%] top-[22vh] w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+      <div className="hidden md:block absolute md:right-[15%] lg:right-[18%] xl:right-[26%] top-[22vh] w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+      <div className="hidden md:block absolute md:left-[15%] lg:left-[18%] xl:left-[26%] top-[calc(22vh+112px)] w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+      <div className="hidden md:block absolute md:right-[15%] lg:right-[18%] xl:right-[26%] top-[calc(22vh+112px)] w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
 
       {/* Center Architectural Column */}
-      <div className="mx-3 md:mx-[18%] xl:mx-[26%]">
-        {/* 22vh Top Banner with Particles & Dot-Matrix Clock (Original Kept) */}
+      <div className="mx-2.5 sm:mx-4 md:mx-[15%] lg:mx-[18%] xl:mx-[26%]">
+        {/* Top Banner with Particles & Dot-Matrix Clock */}
         <div
           onClick={() => navigateToView('home')}
-          className="relative h-[22vh] w-full overflow-hidden cursor-pointer"
+          className="relative h-[18vh] sm:h-[22vh] w-full overflow-hidden cursor-pointer"
         >
           <img
             src={withBase('banner-light.jpg')}
@@ -331,10 +372,10 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
           <CurrentTime />
         </div>
 
-        {/* 112px Profile Bar */}
-        <div className="relative h-[112px] flex">
-          {/* Avatar Box — Full Color (No Monochrome Filter) */}
-          <div className="relative h-full aspect-square shrink-0 p-[3px]">
+        {/* Profile Bar (106px on mobile so full tagline & full name fit without any truncation, 112px on sm+) */}
+        <div className="relative h-[106px] sm:h-[112px] flex">
+          {/* Avatar Box — Full Color */}
+          <div className="relative h-full w-[94px] sm:w-[112px] shrink-0 p-[3px]">
             <button
               type="button"
               onClick={() =>
@@ -361,28 +402,28 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
           </div>
 
           {/* Right Header Controls + Name & Location */}
-          <div className="relative flex-1 flex flex-col justify-between px-3 sm:px-4 py-2 min-w-0">
-            <div className="absolute left-0 right-0 top-[42%] h-[1px]" style={dashedX} />
+          <div className="relative flex-1 flex flex-col justify-between px-2.5 sm:px-4 py-1.5 sm:py-2 min-w-0">
+            <div className="absolute left-0 right-0 top-[46%] sm:top-[42%] h-[1px]" style={dashedX} />
 
-            {/* Top Action Row: Tagline + ID|EN + ⌘K + Theme Toggle */}
-            <div className="flex justify-between items-center gap-2">
+            {/* Top Action Row: Full Tagline (never cut off!) + ID|EN + ⌘K + Theme Toggle */}
+            <div className="flex justify-between items-center gap-1.5 sm:gap-2">
               <button
                 type="button"
                 onClick={() => navigateToView('home')}
-                className="text-[11px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 truncate cursor-pointer text-left"
+                className="text-[10px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 leading-tight cursor-pointer text-left min-w-0 flex-1"
               >
                 {lang === 'id'
                   ? 'Seorang Data dan Tech Enthusiast yang suka vibe coding'
                   : 'A Data and Tech Enthusiast who loves vibe coding'}
               </button>
 
-              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                 {/* ID | EN Switcher */}
                 <button
                   type="button"
                   onClick={toggleLang}
                   aria-label="Switch Language ID / EN"
-                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-mono rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-neutral-500 transition cursor-pointer"
+                  className="inline-flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-[11px] font-mono rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-neutral-500 transition cursor-pointer"
                 >
                   <span
                     className={
@@ -406,7 +447,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   type="button"
                   onClick={() => setCmdOpen(true)}
                   aria-label="Open Command Menu"
-                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-mono rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:border-neutral-500 transition cursor-pointer"
+                  className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-[11px] font-mono rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:border-neutral-500 transition cursor-pointer"
                 >
                   <span>⌘K</span>
                 </button>
@@ -416,18 +457,18 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   type="button"
                   onClick={toggleTheme}
                   aria-label="Toggle Theme"
-                  className="p-1.5 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-neutral-500 transition cursor-pointer"
+                  className="p-1 sm:p-1.5 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-neutral-500 transition cursor-pointer"
                 >
                   {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
 
-            {/* Bottom Name + Location Row */}
-            <div className="pt-1 flex flex-wrap justify-between items-end gap-x-3 gap-y-0.5 min-w-0">
+            {/* Bottom Name + Location Row (Single clean line on Desktop & iPhone without wrapping or truncation) */}
+            <div className="pt-1 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-x-2 gap-y-0.5 min-w-0">
               <h1
                 onClick={() => navigateToView('home')}
-                className="text-base sm:text-xl md:text-2xl font-bold tracking-tight leading-tight truncate cursor-pointer"
+                className="text-[13px] sm:text-[17px] md:text-[18px] lg:text-[20px] xl:text-[22px] font-bold tracking-tight leading-tight cursor-pointer sm:whitespace-nowrap"
                 style={{
                   textShadow:
                     '-0.4px 0 rgba(255,0,80,0.22), 0.4px 0 rgba(0,200,255,0.22)',
@@ -436,7 +477,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 Muhammad Ravael Chessario Ramdoni
               </h1>
 
-              <span className="text-[11px] sm:text-xs text-neutral-500 font-medium tracking-wide shrink-0">
+              <span className="text-[10px] sm:text-xs text-neutral-500 font-medium tracking-wide shrink-0">
                 Tangerang, Indonesia
               </span>
             </div>
@@ -634,16 +675,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   </a>
 
                   <a
-                    href="https://wa.me/6287744415565"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60 transition"
-                  >
-                    <FaWhatsapp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    WhatsApp
-                  </a>
-
-                  <a
                     href="mailto:ravaelchessario@gmail.com"
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60 transition"
                   >
@@ -704,8 +735,10 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                             <img
                               src={withBase(exp.src)}
                               alt={exp.title}
-                              className={`w-11 h-11 rounded-md border border-neutral-300 dark:border-neutral-700 shrink-0 bg-white ${
-                                exp.imageFit === 'contain' ? 'object-contain p-1' : 'object-cover'
+                              className={`w-11 h-11 rounded-md border border-neutral-300 dark:border-neutral-700 shrink-0 ${
+                                exp.imageFit === 'contain'
+                                  ? 'object-contain p-1 bg-neutral-100 dark:bg-neutral-900'
+                                  : 'object-cover bg-white'
                               }`}
                             />
                             <div>
@@ -782,14 +815,17 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                             )}
 
                             <div className="mt-3 flex flex-wrap gap-1.5">
-                              {exp.tech.map((t) => (
-                                <span
-                                  key={t}
-                                  className="text-[11px] font-mono px-2 py-[2px] rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
-                                >
-                                  {t}
-                                </span>
-                              ))}
+                              {exp.tech.map((t, idx) => {
+                                const label = pick(t, lang);
+                                return (
+                                  <span
+                                    key={`${label}-${idx}`}
+                                    className="text-[11px] font-mono px-2 py-[2px] rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
+                                  >
+                                    {label}
+                                  </span>
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
@@ -1056,11 +1092,24 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                       </div>
                     </div>
 
-                    <p className="mt-3 pt-3 border-t border-dashed border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 leading-relaxed">
-                      {lang === 'id'
-                        ? 'Riset Skripsi: Klasifikasi Sentimen 63.766 Ulasan Aplikasi Mobile JKN Menggunakan Hybrid Labeling (InSet Lexicon), TF-IDF Bigram & Multinomial Naive Bayes (Akurasi 94,38%).'
-                        : 'Undergraduate Thesis: Sentiment Classification of 63,766 Mobile JKN Reviews via Hybrid Labeling (InSet Lexicon), TF-IDF Bigrams & Multinomial Naive Bayes (94.38% Accuracy).'}
-                    </p>
+                    <div className="mt-3 pt-3 border-t border-dashed border-neutral-200 dark:border-neutral-800">
+                      <p className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 mb-2">
+                        {lang === 'id' ? 'Mata Kuliah Relevan' : 'Relevant Coursework'}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {blueprintCoursework.map((course) => {
+                          const label = pick(course, lang);
+                          return (
+                            <span
+                              key={label}
+                              className="px-2 py-1 text-[11px] rounded-md bg-neutral-100 dark:bg-neutral-800/80 border border-dashed border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium"
+                            >
+                              {label}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Right Card: Strictly 2 Professional Certifications (Text Only — No Duplicate Cert Image) */}
