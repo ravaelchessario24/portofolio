@@ -10,7 +10,7 @@ import {
   Sun,
   X,
 } from 'lucide-react';
-import { FaLinkedin } from 'react-icons/fa6';
+import { FaLinkedin, FaWhatsapp } from 'react-icons/fa6';
 import {
   dashedX,
   dashedY,
@@ -19,6 +19,7 @@ import {
   FooterBackground,
   SoftPillButton,
   FlipCoverButton,
+  BlueprintLoader,
 } from './blueprint/BlueprintHelpers';
 import {
   type Lang,
@@ -240,6 +241,9 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
   return (
     <div className="relative min-h-screen w-full overflow-x-clip bg-[var(--background)] text-[var(--foreground)]">
+      {/* Architectural Blueprint Loading Overlay */}
+      <BlueprintLoader />
+
       {/* Right Fixed Blueprint INDEX Navbar */}
       {view === 'home' && (
         <div className="fixed inset-0 z-40 pointer-events-none hidden lg:block">
@@ -338,8 +342,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   withBase('images/ravael-square.webp'),
                   'Muhammad Ravael Chessario Ramdoni',
                   lang === 'id'
-                    ? 'S1 Teknologi Informasi — ITB Ahmad Dahlan Jakarta (IPK 3,77 / 4,00)'
-                    : 'B.Sc. in Information Technology — ITB Ahmad Dahlan Jakarta (GPA 3.77 / 4.00)',
+                    ? 'S1 Teknologi Informasi — ITB Ahmad Dahlan Jakarta (IPK 3,77 / 4,00 · Cumlaude)'
+                    : 'B.Sc. in Information Technology — ITB Ahmad Dahlan Jakarta (GPA 3.77 / 4.00 · Cumlaude)',
                 )
               }
               className="relative w-full h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700 bg-white"
@@ -510,7 +514,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       3,77 / 4,00
                     </span>{' '}
-                    · Peringkat 4 dari 21 lulusan) dengan spesialisasi pada{' '}
+                    · <strong className="text-neutral-900 dark:text-neutral-100">Cumlaude</strong>) dengan spesialisasi pada{' '}
                     <span className="underline decoration-dotted">
                       Data Analytics, SQL, Python, Machine Learning, dan Dukungan Sistem TI
                     </span>
@@ -525,7 +529,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       3.77 / 4.00
                     </span>{' '}
-                    · Ranked 4th out of 21 graduates) specializing in{' '}
+                    · <strong className="text-neutral-900 dark:text-neutral-100">Cumlaude</strong>) specializing in{' '}
                     <span className="underline decoration-dotted">
                       Data Analytics, SQL, Python, Machine Learning, and IT Systems Support
                     </span>
@@ -630,11 +634,21 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   </a>
 
                   <a
-                    href="mailto:ravaelramdoni@gmail.com"
+                    href="https://wa.me/6287744415565"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60 transition"
+                  >
+                    <FaWhatsapp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    WhatsApp
+                  </a>
+
+                  <a
+                    href="mailto:ravaelchessario@gmail.com"
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60 transition"
                   >
                     <Mail className="w-3.5 h-3.5" />
-                    ravaelramdoni@gmail.com
+                    ravaelchessario@gmail.com
                   </a>
 
                   <a
@@ -817,88 +831,120 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2">
-                  {blueprintProjects.map((project, index) => (
-                    <div
-                      key={project.slug}
-                      onClick={() => openProjectDetail(project.slug)}
-                      className="group p-4 transition-colors duration-300 hover:bg-neutral-100/40 dark:hover:bg-neutral-900/30 cursor-pointer relative"
-                    >
-                      {/* Framed Preview Container with Floating Bottom Screenshot */}
-                      <div className="relative aspect-[15/10] w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 p-1.5 bg-neutral-100/60 dark:bg-neutral-900/40">
-                        <div className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-950">
-                          <img
-                            src={withBase(
-                              index % 2 === 0 ? 'banner-dark.jpg' : 'banner-light.jpg',
-                            )}
-                            alt=""
-                            className="w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                          />
-                          <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-900 group-hover:bg-black/25 transition-colors duration-300" />
-
-                          {/* Slide Count Pill */}
-                          <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full text-[10px] font-mono bg-black/75 text-white backdrop-blur-sm">
-                            {project.gallery.length}{' '}
-                            {lang === 'id' ? 'Tangkapan Layar' : 'Screenshots'}
-                          </span>
-
-                          {/* Floating Bottom Screenshot Card */}
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[84%] h-[80%] rounded-t-xl overflow-hidden shadow-2xl border border-white/15 transition-all duration-500 group-hover:scale-[1.03]">
-                            <img
-                              src={withBase(project.src)}
-                              alt={pick(project.title, lang)}
-                              className="w-full h-full object-cover object-top"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Title + Action Icons */}
-                      <div className="mt-3 px-1 flex items-start justify-between gap-2">
-                        <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 leading-snug group-hover:underline">
-                          {pick(project.title, lang)}
-                        </h3>
-
-                        <div
-                          className="flex items-center gap-2 text-neutral-500 shrink-0"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {project.live && (
-                            <a
-                              href={project.live}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={lang === 'id' ? 'Buka Live Demo' : 'Open Live Demo'}
-                              className="hover:text-neutral-900 dark:hover:text-white transition"
+                  {blueprintProjects.map((project, index) => {
+                    const isComingSoon = Boolean(project.isComingSoon);
+                    return (
+                      <div
+                        key={project.slug}
+                        onClick={() => {
+                          if (!isComingSoon) openProjectDetail(project.slug);
+                        }}
+                        className={`group p-4 transition-colors duration-300 hover:bg-neutral-100/40 dark:hover:bg-neutral-900/30 relative ${
+                          isComingSoon ? 'cursor-default' : 'cursor-pointer'
+                        }`}
+                      >
+                        {/* Framed Preview Container */}
+                        <div className="relative aspect-[15/10] w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 p-1.5 bg-neutral-100/60 dark:bg-neutral-900/40">
+                          {isComingSoon ? (
+                            <div
+                              className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-dashed border-neutral-300 dark:border-neutral-700 flex flex-col items-center justify-center p-4 text-center"
+                              style={{
+                                backgroundImage:
+                                  'repeating-linear-gradient(-45deg, rgba(120,120,120,0.12) 0px, rgba(120,120,120,0.12) 1px, transparent 1px, transparent 8px)',
+                              }}
                             >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
+                              <span className="px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold">
+                                Coming Soon
+                              </span>
+                              <p className="mt-2.5 text-xs font-mono text-neutral-500 dark:text-neutral-400">
+                                {lang === 'id'
+                                  ? 'Sedang dalam tahap riset & eksplorasi data'
+                                  : 'In research & dataset exploration phase'}
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-950">
+                              <img
+                                src={withBase(
+                                  index % 2 === 0 ? 'banner-dark.jpg' : 'banner-light.jpg',
+                                )}
+                                alt=""
+                                className="w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                              />
+                              <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-900 group-hover:bg-black/25 transition-colors duration-300" />
+
+                              {/* Slide Count Pill */}
+                              <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full text-[10px] font-mono bg-black/75 text-white backdrop-blur-sm">
+                                {project.gallery.length}{' '}
+                                {lang === 'id' ? 'Tangkapan Layar' : 'Screenshots'}
+                              </span>
+
+                              {/* Floating Bottom Screenshot Card */}
+                              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[84%] h-[80%] rounded-t-xl overflow-hidden shadow-2xl border border-white/15 transition-all duration-500 group-hover:scale-[1.03]">
+                                <img
+                                  src={withBase(project.src)}
+                                  alt={pick(project.title, lang)}
+                                  className="w-full h-full object-cover object-top"
+                                />
+                              </div>
+                            </div>
                           )}
-                          <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        </div>
+
+                        {/* Title + Action Icons */}
+                        <div className="mt-3 px-1 flex items-start justify-between gap-2">
+                          <h3
+                            className={`text-sm font-semibold text-neutral-900 dark:text-neutral-100 leading-snug ${
+                              isComingSoon ? '' : 'group-hover:underline'
+                            }`}
+                          >
+                            {pick(project.title, lang)}
+                          </h3>
+
+                          {!isComingSoon && (
+                            <div
+                              className="flex items-center gap-2 text-neutral-500 shrink-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {project.live && (
+                                <a
+                                  href={project.live}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title={lang === 'id' ? 'Buka Live Demo' : 'Open Live Demo'}
+                                  className="hover:text-neutral-900 dark:hover:text-white transition"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                              <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Short Description */}
+                        <p className="mt-1 px-1 text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
+                          {pick(project.description, lang)}
+                        </p>
+
+                        {/* Tech Stack Pills */}
+                        <div className="mt-2.5 px-1 flex flex-wrap gap-1">
+                          {project.tech.slice(0, 4).map((t) => {
+                            const Icon = iconMap[t];
+                            return (
+                              <span
+                                key={t}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-mono rounded bg-neutral-100 dark:bg-neutral-800/90 text-neutral-600 dark:text-neutral-300 border border-neutral-300/60 dark:border-neutral-700"
+                              >
+                                {Icon && <Icon className="w-3 h-3" />}
+                                {techNames[t] || t}
+                              </span>
+                            );
+                          })}
                         </div>
                       </div>
-
-                      {/* Short Description */}
-                      <p className="mt-1 px-1 text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
-                        {pick(project.description, lang)}
-                      </p>
-
-                      {/* Tech Stack Pills */}
-                      <div className="mt-2.5 px-1 flex flex-wrap gap-1">
-                        {project.tech.slice(0, 4).map((t) => {
-                          const Icon = iconMap[t];
-                          return (
-                            <span
-                              key={t}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-mono rounded bg-neutral-100 dark:bg-neutral-800/90 text-neutral-600 dark:text-neutral-300 border border-neutral-300/60 dark:border-neutral-700"
-                            >
-                              {Icon && <Icon className="w-3 h-3" />}
-                              {techNames[t] || t}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="w-full h-[1px]" style={dashedX} />
@@ -980,7 +1026,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                           {lang === 'id' ? 'Pendidikan Tinggi' : 'Higher Education'}
                         </h3>
                         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                          {lang === 'id' ? 'Peringkat 4 / 21' : 'Rank 4 / 21'}
+                          Cumlaude
                         </span>
                       </div>
 

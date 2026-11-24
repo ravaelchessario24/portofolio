@@ -455,3 +455,247 @@ export function FlipCoverButton({
     </div>
   );
 }
+
+/* ==========================================================================
+   5. ARCHITECTURAL BLUEPRINT LOADER (Matches WhatsApp_Video_2026-11-24_at_18.21.38.mp4
+      adapted 1:1 to Ravael's Portfolio Layout)
+   ========================================================================== */
+const hatchStyle: React.CSSProperties = {
+  backgroundImage:
+    'repeating-linear-gradient(-45deg, rgba(255,255,255,0.22) 0px, rgba(255,255,255,0.22) 1px, transparent 1px, transparent 6px)',
+};
+
+const blueprintGridStyle: React.CSSProperties = {
+  backgroundColor: '#2456B8',
+  backgroundImage: `
+    linear-gradient(to right, rgba(255,255,255,0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.22) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255,255,255,0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.09) 1px, transparent 1px)
+  `,
+  backgroundSize: '96px 96px, 96px 96px, 16px 16px, 16px 16px',
+};
+
+function BpTag({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span
+      className={`inline-block px-1.5 py-[1px] bg-white text-[#1E4AA8] font-mono text-[9px] font-bold tracking-wider uppercase leading-tight select-none shadow-xs ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function BlueprintLoader() {
+  // phase 0: initial grid, 1: header & profile schematic, 2: bio & sections schematic, 3: translucent overlay over real page, 4: wipe down top-to-bottom, 5: unmounted
+  const [phase, setPhase] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+
+  useEffect(() => {
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+      setPhase(5);
+      return;
+    }
+
+    const t1 = window.setTimeout(() => setPhase(1), 140);
+    const t2 = window.setTimeout(() => setPhase(2), 550);
+    const t3 = window.setTimeout(() => setPhase(3), 1150);
+    const t4 = window.setTimeout(() => setPhase(4), 1600);
+    const t5 = window.setTimeout(() => setPhase(5), 2350);
+
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+      window.clearTimeout(t4);
+      window.clearTimeout(t5);
+    };
+  }, []);
+
+  if (phase === 5) return null;
+
+  return (
+    <div
+      aria-hidden="true"
+      className="fixed inset-0 z-[100] pointer-events-none overflow-hidden select-none"
+      style={{
+        ...blueprintGridStyle,
+        backgroundColor: phase >= 3 ? 'rgba(36, 86, 184, 0.84)' : '#2456B8',
+        clipPath: phase === 4 ? 'inset(100% 0 0 0)' : 'inset(0% 0 0 0)',
+        transition:
+          'clip-path 720ms cubic-bezier(0.65, 0, 0.35, 1), background-color 380ms ease',
+      }}
+    >
+      {/* Top Wipe Edge Line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.9)]" />
+
+      {/* Architectural Vertical Guidelines matching PortfolioApp */}
+      <div className="absolute top-0 bottom-0 left-3 md:left-[18%] xl:left-[26%] w-[1px] bg-white/45" />
+      <div className="absolute top-0 bottom-0 right-3 md:right-[18%] xl:right-[26%] w-[1px] bg-white/45" />
+
+      {/* Horizontal Blueprint Lines matching 22vh and calc(22vh+112px) */}
+      <div className="absolute left-0 right-0 top-[22vh] h-[1px] bg-white/45" />
+      <div className="absolute left-0 right-0 top-[calc(22vh+112px)] h-[1px] bg-white/45" />
+
+      {/* Right INDEX Schematic (Desktop) */}
+      <div
+        className={`hidden lg:flex flex-col gap-3.5 absolute top-[22vh] left-[calc(82%+24px)] xl:left-[calc(74%+32px)] mt-3 transition-all duration-300 ${
+          phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}
+      >
+        <BpTag>INDEX 01</BpTag>
+        {['EXP', 'PROJ', 'SKILL', 'EDU', 'CERT', 'MEDIA'].map((lbl) => (
+          <div key={lbl} className="flex items-center gap-2">
+            <span className="w-3 h-[1px] bg-white/70" />
+            <span className="w-16 h-3 border border-white/60" style={hatchStyle} />
+          </div>
+        ))}
+      </div>
+
+      {/* Center Column matching mx-3 md:mx-[18%] xl:mx-[26%] */}
+      <div className="mx-3 md:mx-[18%] xl:mx-[26%] h-full flex flex-col">
+        {/* Top Dimension Ruler */}
+        <div className="relative h-5 flex items-center justify-center border-b border-white/30 text-[10px] font-mono text-white/90">
+          <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px]">├</span>
+          <span className="px-2 bg-[#2456B8]">768 px · MAIN COLUMN</span>
+          <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[9px]">┤</span>
+        </div>
+
+        {/* 1. 22vh Top Banner Schematic */}
+        <div
+          className={`relative h-[calc(22vh-20px)] w-full p-3 border-b border-white/40 transition-all duration-300 ${
+            phase >= 1 ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={hatchStyle}
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-1.5">
+              <BpTag>BANNER 01</BpTag>
+              <span className="text-[10px] font-mono text-white/85">22vh × 100%</span>
+            </div>
+            <div className="flex flex-col items-end gap-1">
+              <BpTag>CLOCK · WIB</BpTag>
+              <div className="w-24 h-6 border border-white/80 bg-white/10 flex items-center justify-center font-mono text-[10px] text-white">
+                00 : 00 : 00
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 border border-white/50 bg-[#2456B8]/90 font-mono text-[9px] text-white/90">
+            PARTICLE_CANVAS · 56 NODES
+          </div>
+        </div>
+
+        {/* 2. 112px Profile Row Schematic */}
+        <div
+          className={`relative h-[112px] flex transition-all duration-300 ${
+            phase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          }`}
+        >
+          {/* Avatar Square Schematic */}
+          <div className="relative h-full aspect-square shrink-0 p-[5px] border-r border-white/45">
+            <div
+              className="w-full h-full border border-white/85 flex flex-col items-start justify-between p-1.5"
+              style={hatchStyle}
+            >
+              <BpTag>AVATAR</BpTag>
+              <span className="self-end px-1 bg-white/90 text-[#1E4AA8] font-mono text-[8px] font-bold">
+                104×104
+              </span>
+            </div>
+          </div>
+
+          {/* Profile Info Schematic */}
+          <div className="flex-1 flex flex-col justify-between px-3 sm:px-4 py-2.5">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-dashed border-white/40">
+              <div className="flex items-center gap-1.5">
+                <BpTag>TAGLINE 01</BpTag>
+                <div className="hidden sm:block w-44 h-3.5 border border-white/65" style={hatchStyle} />
+              </div>
+              <div className="flex items-center gap-1.5">
+                <BpTag>ID/EN</BpTag>
+                <BpTag>⌘K</BpTag>
+                <BpTag>THEME</BpTag>
+              </div>
+            </div>
+
+            <div className="pt-1 flex items-end justify-between gap-2">
+              <div className="flex flex-col gap-1 flex-1 max-w-md">
+                <div className="flex items-center gap-1.5">
+                  <BpTag>TITLE</BpTag>
+                  <span className="px-1 bg-white/90 text-[#1E4AA8] font-mono text-[8px] font-bold">
+                    380 × 28
+                  </span>
+                </div>
+                <div className="w-full h-6 border border-white/85" style={hatchStyle} />
+              </div>
+              <div className="hidden sm:flex flex-col items-end gap-1">
+                <BpTag>LOC 01</BpTag>
+                <div className="w-28 h-4 border border-white/65" style={hatchStyle} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Bio, Bullet Points, CTA & Sections Schematic */}
+        <div
+          className={`p-4 space-y-4 transition-all duration-300 ${
+            phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+          }`}
+        >
+          {/* Bio Paragraph Box */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <BpTag>COPY 01 · PROFILE SUMMARY</BpTag>
+              <span className="font-mono text-[9px] text-white/80">736 × 54</span>
+            </div>
+            <div className="w-full h-14 border border-white/75" style={hatchStyle} />
+          </div>
+
+          {/* 3 Bullet Boxes */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <BpTag>COPY 02 · KEY ACHIEVEMENTS (3 ITEMS)</BpTag>
+              <span className="font-mono text-[9px] text-white/80">736 × 72</span>
+            </div>
+            <div className="w-full h-18 border border-white/75" style={hatchStyle} />
+          </div>
+
+          {/* CTA & Social Pills Schematic */}
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <BpTag>CTA 01</BpTag>
+            <div className="w-44 h-8 border border-white/85" style={hatchStyle} />
+            <div className="w-28 h-8 border border-white/70" style={hatchStyle} />
+            <div className="w-24 h-7 border border-white/50 ml-auto hidden sm:block" style={hatchStyle} />
+          </div>
+
+          {/* Section 01: Experience Schematic */}
+          <div className="pt-3 border-t border-dashed border-white/40 space-y-2">
+            <div className="flex items-center justify-between">
+              <BpTag>SECTION 01 · EXPERIENCE (PAUD & KKN)</BpTag>
+              <span className="font-mono text-[9px] text-white/80">2 CARDS</span>
+            </div>
+            <div className="w-full h-24 border border-white/75" style={hatchStyle} />
+            <div className="w-full h-16 border border-white/60" style={hatchStyle} />
+          </div>
+
+          {/* Section 02: Projects 2-Column Grid Schematic */}
+          <div className="pt-3 border-t border-dashed border-white/40 space-y-2">
+            <div className="flex items-center justify-between">
+              <BpTag>SECTION 02 · PROJECTS (MOBILE JKN + COMING SOON)</BpTag>
+              <span className="font-mono text-[9px] text-white/80">GRID 1×2</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="h-36 border border-white/75" style={hatchStyle} />
+              <div className="h-36 border border-white/60" style={hatchStyle} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

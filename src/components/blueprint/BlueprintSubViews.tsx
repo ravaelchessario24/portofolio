@@ -315,49 +315,89 @@ export function AllProjectsView({
           className="hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1px] pointer-events-none"
           style={dashedY}
         />
-        {blueprintProjects.map((project) => (
-          <div
-            key={project.slug}
-            onClick={() => onSelectProject(project.slug)}
-            className="group p-5 transition-colors hover:bg-neutral-50/70 dark:hover:bg-neutral-900/40 cursor-pointer border-b border-dashed border-neutral-300 dark:border-neutral-800"
-          >
-            <div className="aspect-[16/10] w-full rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 mb-4">
-              <img
-                src={withBase(project.src)}
-                alt={pick(project.title, lang)}
-                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-              />
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
-                {project.status === 'live'
-                  ? lang === 'id'
-                    ? 'Selesai & Aktif'
-                    : 'Live & Verified'
-                  : project.status}
-              </span>
-              <span className="text-[11px] font-mono text-neutral-400">
-                {project.gallery.length} {lang === 'id' ? 'Layar' : 'Slides'}
-              </span>
-            </div>
-            <h2 className="mt-1 text-base font-semibold text-neutral-900 dark:text-neutral-100 group-hover:underline">
-              {pick(project.title, lang)}
-            </h2>
-            <p className="mt-1.5 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              {pick(project.description, lang)}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {project.tech.map((t) => (
+        {blueprintProjects.map((project) => {
+          const isComingSoon = Boolean(project.isComingSoon);
+          return (
+            <div
+              key={project.slug}
+              onClick={() => {
+                if (!isComingSoon) onSelectProject(project.slug);
+              }}
+              className={`group p-5 transition-colors hover:bg-neutral-50/70 dark:hover:bg-neutral-900/40 border-b border-dashed border-neutral-300 dark:border-neutral-800 ${
+                isComingSoon ? 'cursor-default' : 'cursor-pointer'
+              }`}
+            >
+              <div className="aspect-[16/10] w-full rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 mb-4">
+                {isComingSoon ? (
+                  <div
+                    className="w-full h-full flex flex-col items-center justify-center p-4 text-center"
+                    style={{
+                      backgroundImage:
+                        'repeating-linear-gradient(-45deg, rgba(120,120,120,0.12) 0px, rgba(120,120,120,0.12) 1px, transparent 1px, transparent 8px)',
+                    }}
+                  >
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold">
+                      Coming Soon
+                    </span>
+                    <p className="mt-2 text-xs font-mono text-neutral-500 dark:text-neutral-400">
+                      {lang === 'id'
+                        ? 'Sedang dalam tahap riset & eksplorasi data'
+                        : 'In research & dataset exploration phase'}
+                    </p>
+                  </div>
+                ) : (
+                  <img
+                    src={withBase(project.src)}
+                    alt={pick(project.title, lang)}
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                )}
+              </div>
+              <div className="flex items-center justify-between gap-2">
                 <span
-                  key={t}
-                  className="px-2 py-0.5 text-[10px] font-mono rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300"
+                  className={`text-[11px] font-mono ${
+                    isComingSoon
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }`}
                 >
-                  {techNames[t] || t}
+                  {isComingSoon
+                    ? 'Coming Soon'
+                    : project.status === 'live'
+                      ? lang === 'id'
+                        ? 'Selesai & Aktif'
+                        : 'Live & Verified'
+                      : project.status}
                 </span>
-              ))}
+                {!isComingSoon && (
+                  <span className="text-[11px] font-mono text-neutral-400">
+                    {project.gallery.length} {lang === 'id' ? 'Layar' : 'Slides'}
+                  </span>
+                )}
+              </div>
+              <h2
+                className={`mt-1 text-base font-semibold text-neutral-900 dark:text-neutral-100 ${
+                  isComingSoon ? '' : 'group-hover:underline'
+                }`}
+              >
+                {pick(project.title, lang)}
+              </h2>
+              <p className="mt-1.5 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                {pick(project.description, lang)}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {project.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="px-2 py-0.5 text-[10px] font-mono rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300"
+                  >
+                    {techNames[t] || t}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -845,11 +885,11 @@ export function ContactPageView({
     const body = encodeURIComponent(
       `Halo Ravael,\n\nNama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`,
     );
-    window.location.href = `mailto:ravaelramdoni@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:ravaelchessario@gmail.com?subject=${subject}&body=${body}`;
   };
 
   const copyDirectEmail = () => {
-    navigator.clipboard?.writeText('ravaelramdoni@gmail.com');
+    navigator.clipboard?.writeText('ravaelchessario@gmail.com');
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2200);
   };
@@ -939,7 +979,7 @@ export function ContactPageView({
         <div className="md:col-span-2 space-y-3">
           <div className="p-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700">
             <div className="text-xs font-mono text-neutral-500">Email</div>
-            <div className="mt-1 text-sm font-medium break-all">ravaelramdoni@gmail.com</div>
+            <div className="mt-1 text-sm font-medium break-all">ravaelchessario@gmail.com</div>
             <button
               type="button"
               onClick={copyDirectEmail}
@@ -958,6 +998,19 @@ export function ContactPageView({
               )}
             </button>
           </div>
+
+          <a
+            href="https://wa.me/6287744415565"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block p-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 transition"
+          >
+            <div className="text-xs font-mono text-neutral-500">WhatsApp</div>
+            <div className="mt-1 text-sm font-medium flex items-center justify-between">
+              <span>+62 877-4441-5565</span>
+              <ArrowUpRight className="w-4 h-4 shrink-0" />
+            </div>
+          </a>
 
           <a
             href="https://www.linkedin.com/in/muhammad-ravael-chessario-ramdoni-47b37728b"
@@ -1115,11 +1168,11 @@ export function CommandMenuModal({
       },
     },
     {
-      group: lang === 'id' ? 'Studi Kasus Proyek' : 'Project Case Studies',
-      label: 'PAUD KB Flamboyan — School Website & CMS (5 Slides)',
-      icon: <FolderGit2 className="w-4 h-4" />,
+      group: lang === 'id' ? 'Kontak Langsung' : 'Direct Contact',
+      label: 'WhatsApp (+62 877-4441-5565)',
+      icon: <Send className="w-4 h-4" />,
       action: () => {
-        onSelectProject('paud-flamboyan');
+        window.open('https://wa.me/6287744415565', '_blank');
         onClose();
       },
     },

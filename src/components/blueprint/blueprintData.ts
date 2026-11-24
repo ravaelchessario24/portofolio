@@ -255,8 +255,9 @@ export interface BlueprintProject {
   longDescription: { id: string[]; en: string[] };
   tech: TechKey[];
   live?: string;
-  status: 'live' | 'building' | 'research';
+  status: 'live' | 'building' | 'research' | 'coming-soon';
   hasPin: boolean;
+  isComingSoon?: boolean;
   metrics?: { label: { id: string; en: string }; value: string }[];
 }
 
@@ -334,73 +335,30 @@ export const blueprintProjects: BlueprintProject[] = [
     ],
   },
   {
-    slug: 'paud-flamboyan',
+    slug: 'coming-soon',
     title: {
-      id: 'Website Profil & CMS Sekolah — PAUD KB Flamboyan',
-      en: 'School Profile Website & CMS — PAUD KB Flamboyan',
+      id: 'Coming Soon — Proyek Data Analytics & Machine Learning Berikutnya',
+      en: 'Coming Soon — Next Data Analytics & Machine Learning Project',
     },
-    imageTitle: 'PAUD KB Flamboyan CMS',
-    src: 'images/experience/paud-1.webp',
-    gallery: [
-      {
-        src: 'images/experience/paud-1.webp',
-        caption: {
-          id: 'Halaman Utama (Hero) Website Profil PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Official Landing Page Hero',
-        },
-      },
-      {
-        src: 'images/experience/paud-2.webp',
-        caption: {
-          id: 'Ringkasan Statistik Sekolah, Profil Institusi, Visi & Misi',
-          en: 'School Statistics, Institutional Profile, Vision & Mission',
-        },
-      },
-      {
-        src: 'images/experience/paud-3.webp',
-        caption: {
-          id: 'Direktori & Manajemen Data Profil Guru Terstruktur',
-          en: 'Structured Educator Profile Directory & Records',
-        },
-      },
-      {
-        src: 'images/experience/paud-4.webp',
-        caption: {
-          id: 'Jadwal Harian & Silabus Kurikulum per Kelas (Play Group, Kelas A, Kelas B)',
-          en: 'Interactive Daily Schedule & Class Curriculum (Play Group, Class A, Class B)',
-        },
-      },
-      {
-        src: 'images/experience/paud-5.webp',
-        caption: {
-          id: 'Testimoni Orang Tua Murid & Integrasi Peta Lokasi Sekolah',
-          en: 'Parent Testimonials & School Location Map Integration',
-        },
-      },
-    ],
+    imageTitle: 'Coming Soon — Data Project',
+    src: 'banner-dark.jpg',
+    gallery: [],
     description: {
-      id: 'Sistem informasi web dan Content Management System (CMS) berbasis MySQL yang mengintegrasikan profil sekolah, direktori guru, serta jadwal kurikulum PAUD KB Flamboyan—meningkatkan efisiensi administrasi hingga 50%.',
-      en: 'MySQL-powered school website and Content Management System (CMS) centralizing institutional profiles, teacher records, and class schedules for PAUD KB Flamboyan—boosting administrative efficiency by up to 50%.',
+      id: 'Eksplorasi dataset, pemodelan prediktif, dan dashboard analitik interaktif berikutnya sedang dalam tahap pengembangan.',
+      en: 'Upcoming dataset exploration, predictive modeling pipeline, and interactive analytics dashboard currently in development.',
     },
     longDescription: {
       id: [
-        'Digitalisasi Operasional Sekolah: Merancang dan membangun platform web profil beserta Content Management System (CMS) bagi PAUD KB Flamboyan untuk mentransformasi pengelolaan data guru, jadwal pembelajaran, dan informasi pendaftaran dari pencatatan manual menjadi sistem digital terpusat.',
-        'Strukturisasi Database Relasional MySQL: Mendesain tabel relasional MySQL yang terukur untuk mengelola konten dinamis (statistik sekolah, direktori pengajar, serta kurikulum Play Group, Kelas A, dan Kelas B), memangkas waktu pembaruan administrasi sekolah hingga 50%.',
+        'Proyek Data Analytics & Data Science berikutnya sedang dalam tahap riset dan persiapan dataset. Nantikan pembaruan studi kasus dan dashboard interaktifnya segera.',
       ],
       en: [
-        'School Operations Digitization: Engineered an integrated web portal and Content Management System (CMS) for PAUD KB Flamboyan, transforming scattered manual records for educator profiles, class schedules, and admissions into a single source of truth.',
-        'Relational MySQL Data Modeling: Designed normalized MySQL tables supporting dynamic updates across school statistics, teacher directories, and class syllabi (Play Group, Class A, and Class B), cutting administrative turnaround time by up to 50%.',
+        'The next Data Analytics & Data Science project is currently in the research and dataset preparation phase. Stay tuned for the upcoming case study and interactive dashboard.',
       ],
     },
-    tech: ['mysql', 'sql', 'cms'],
-    status: 'live',
-    hasPin: true,
-    metrics: [
-      { label: { id: 'Efisiensi Admin', en: 'Admin Efficiency' }, value: '+50%' },
-      { label: { id: 'Basis Data', en: 'Database' }, value: 'MySQL' },
-      { label: { id: 'Kelas Terdata', en: 'Classes Managed' }, value: '3 Kelas' },
-      { label: { id: 'Periode', en: 'Delivered' }, value: '2025' },
-    ],
+    tech: ['python', 'sql', 'pandas', 'sklearn', 'streamlit'],
+    status: 'coming-soon',
+    hasPin: false,
+    isComingSoon: true,
   },
 ];
 
