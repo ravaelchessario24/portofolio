@@ -1,0 +1,143 @@
+{
+  "_comment": "Array order is display order. Scenes list the artists shown as chips; nowPlaying is the embedded track (the id after /track/ in a Spotify share link). To add an album paste its Spotify album id with artist, year and scene, then run `npm run refresh-music` to fill in title and download the cover.",
+  "scenes": [
+    {
+      "scene": "Western rap",
+      "artists": [
+        "Eminem",
+        "J. Cole",
+        "Travis Scott",
+        "XXXTENTACION",
+        "Nipsey Hussle",
+        "Jack Harlow"
+      ]
+    },
+    {
+      "scene": "Desi hip-hop",
+      "artists": [
+        "Seedhe Maut",
+        "KR$NA",
+        "Karma",
+        "Prabh Deep",
+        "Raftaar",
+        "Bohemia",
+        "Sikander Kahlon",
+        "Young Stunners"
+      ]
+    },
+    {
+      "scene": "Pop & R&B",
+      "artists": [
+        "Taylor Swift",
+        "Gracie Abrams",
+        "Dua Lipa",
+        "Tyla",
+        "ZAYN",
+        "Lana Del Rey",
+        "Selena Gomez",
+        "Ed Sheeran",
+        "Sia",
+        "Maroon 5"
+      ]
+    },
+    {
+      "scene": "Punjabi",
+      "artists": [
+        "Sidhu Moose Wala",
+        "Karan Aujla",
+        "Shubh",
+        "AP Dhillon",
+        "Parmish Verma",
+        "Talwiinder"
+      ]
+    },
+    {
+      "scene": "Haryanvi",
+      "artists": [
+        "Dhanda Nyoliwala",
+        "Khasa Aala Chahar",
+        "CHIEF",
+        "Lash Curry"
+      ]
+    }
+  ],
+  "nowPlaying": {
+    "trackId": "6HZILIRieu8S0iqY8kIKhj",
+    "title": "DNA.",
+    "artist": "Kendrick Lamar"
+  },
+  "albums": [
+    {
+      "id": "4otkd9As6YaxxEkIjXPiZ6",
+      "artist": "Eminem",
+      "year": 2020,
+      "scene": "Western rap",
+      "title": "Music To Be Murdered By",
+      "cover": "/music/eminem-music-to-be-murdered-by.webp"
+    },
+    {
+      "id": "47BiFcV59TQi2s9SkBo2pb",
+      "artist": "Eminem",
+      "year": 2010,
+      "scene": "Western rap",
+      "title": "Recovery",
+      "cover": "/music/eminem-recovery.webp"
+    },
+    {
+      "id": "41GuZcammIkupMPKH2OJ6I",
+      "artist": "Travis Scott",
+      "year": 2018,
+      "scene": "Western rap",
+      "title": "ASTROWORLD",
+      "cover": "/music/travis-scott-astroworld.webp"
+    },
+    {
+      "id": "1Sf8GsXG32t0jNrX11xqWx",
+      "artist": "Travis Scott",
+      "year": 2019,
+      "scene": "Western",
+      "title": "JACKBOYS",
+      "cover": "/music/travis-scott-jackboys.webp"
+    },
+    {
+      "id": "7txGsnDSqVMoRl6RQ9XyZP",
+      "artist": "Metro Boomin",
+      "year": 2022,
+      "scene": "Western rap",
+      "title": "HEROES & VILLAINS",
+      "cover": "/music/metro-boomin-heroes-villains.webp"
+    },
+    {
+      "id": "0UMMIkurRUmkruZ3KGBLtG",
+      "artist": "J. Cole",
+      "year": 2014,
+      "scene": "Western rap",
+      "title": "2014 Forest Hills Drive",
+      "cover": "/music/j-cole-2014-forest-hills-drive.webp"
+    },
+    {
+      "id": "16PSZwABl4VFJvfDFOPOoB",
+      "artist": "Seedhe Maut",
+      "year": 2023,
+      "scene": "Desi hip-hop",
+      "title": "Lunch Break",
+      "cover": "/music/seedhe-maut-lunch-break.webp"
+    },
+    {
+      "id": "1fNqSeMllriqw6YYFnkYC6",
+      "artist": "Karma",
+      "year": 2021,
+      "scene": "Desi hip-hop",
+      "title": "Made You Proud",
+      "cover": "/music/karma-made-you-proud.webp"
+    },
+    {
+      "id": "09JgaY8X1pjMhllG2HSdiF",
+      "artist": "Tyla",
+      "year": 2026,
+      "scene": "Pop & R&B",
+      "title": "A*POP",
+      "cover": "/music/tyla-a-pop.webp"
+    }
+  ]
+}

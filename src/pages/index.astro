@@ -65,11 +65,11 @@ const personJsonLd = {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={`${baseUrl}images/itb-ad-logo.svg`} />
 
-    <!-- Google Fonts: Inter, Instrument Serif Italic, JetBrains Mono -->
+    <!-- Google Fonts: Geist, Geist Mono, Doto -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Doto:wght@400;700;900&family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -79,8 +79,9 @@ const personJsonLd = {
         const savedTheme = localStorage.getItem('theme');
         const prefersDark =
           window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme =
-          savedTheme || (prefersDark ? 'dark' : 'light');
+        const resolved = savedTheme || (prefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.classList.toggle('dark', resolved === 'dark');
         const savedLang = localStorage.getItem('lang');
         if (savedLang === 'en' || savedLang === 'id') {
           document.documentElement.lang = savedLang;
