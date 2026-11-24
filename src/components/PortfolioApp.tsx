@@ -68,7 +68,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   const [openExpIndex, setOpenExpIndex] = useState<number | null>(0);
   const [showAllMusicArtists, setShowAllMusicArtists] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
-  const [hoveredNav, setHoveredNav] = useState<number | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('experience');
   const [lightbox, setLightbox] = useState<{
     src: string;
     title: string;
@@ -106,6 +106,39 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
       }
     } catch {}
   }, []);
+
+  // Scroll-spy for RightNavbar INDEX (matches portfolio-main/src/components/RightNavbar.tsx)
+  useEffect(() => {
+    if (view !== 'home') return;
+    const ids = NAV_ITEMS.map((item) => item.href);
+
+    const sync = () => {
+      let current: string | null = null;
+      const threshold = Math.max(180, window.innerHeight * 0.28);
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= threshold) {
+          current = id;
+        }
+      }
+      // If scrolled near the bottom of the page, highlight the last section
+      if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 60
+      ) {
+        current = ids[ids.length - 1];
+      }
+      setActiveSection(current ?? ids[0]);
+    };
+
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    return () => {
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', sync);
+    };
+  }, [view]);
 
   // Keyboard shortcut Ctrl+K / Cmd+K & Escape
   useEffect(() => {
@@ -180,39 +213,43 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
-      {/* Right Fixed Blueprint Index Navbar */}
-      <nav
-        aria-label="Blueprint Section Index"
-        className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-end gap-3"
-      >
-        {NAV_ITEMS.map((item, i) => (
-          <button
-            key={item.href}
-            type="button"
-            onClick={() => scrollToSection(item.href)}
-            className="flex items-center gap-2.5 group py-1 cursor-pointer bg-transparent border-0"
-            onMouseEnter={() => setHoveredNav(i)}
-            onMouseLeave={() => setHoveredNav(null)}
+      {/* Right Fixed Blueprint INDEX Navbar (exact match to RightNavbar.tsx in portfolio-main.zip) */}
+      {view === 'home' && (
+        <div className="fixed inset-0 z-40 pointer-events-none hidden lg:block">
+          <nav
+            aria-label="Blueprint Section Index"
+            className="absolute top-[22vh] left-[calc(82%+24px)] xl:left-[calc(74%+32px)] pointer-events-auto flex flex-col gap-3.5 mt-3"
           >
-            <span
-              className={`text-xs font-mono transition-all duration-200 ${
-                hoveredNav === i
-                  ? 'opacity-100 translate-x-0 text-neutral-800 dark:text-neutral-200'
-                  : 'opacity-0 translate-x-2 pointer-events-none text-neutral-500'
-              }`}
-            >
-              {pick(item.label, lang)}
-            </span>
-            <span
-              className={`block rounded-full transition-all duration-200 ${
-                hoveredNav === i
-                  ? 'w-5 h-[2px] bg-neutral-800 dark:bg-neutral-200'
-                  : 'w-3 h-[1.5px] bg-neutral-400/70 dark:bg-neutral-500/70'
-              }`}
-            />
-          </button>
-        ))}
-      </nav>
+            <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-500 uppercase mb-1">
+              INDEX
+            </h3>
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item.href;
+              return (
+                <button
+                  key={item.href}
+                  type="button"
+                  onClick={() => scrollToSection(item.href)}
+                  className={`text-[12px] font-medium tracking-[0.04em] transition-all duration-300 ease-out flex items-center gap-2.5 text-left cursor-pointer bg-transparent border-0 p-0 ${
+                    isActive
+                      ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
+                      : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+                  }`}
+                >
+                  <span
+                    className={`h-[1.5px] transition-all duration-300 ease-out ${
+                      isActive
+                        ? 'w-3.5 bg-zinc-500 dark:bg-zinc-400'
+                        : 'w-0 bg-transparent'
+                    }`}
+                  />
+                  <span>{pick(item.label, lang)}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      )}
 
       {/* Architectural Micro-Dotted Vertical Lines */}
       <div
@@ -292,14 +329,16 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
           <div className="relative flex-1 flex flex-col justify-between px-3 sm:px-4 py-2 min-w-0">
             <div className="absolute left-0 right-0 top-[42%] h-[1px]" style={dashedX} />
 
-            {/* Top Action Row: ID|EN + ⌘K + Theme Toggle */}
+            {/* Top Action Row: Tagline + ID|EN + ⌘K + Theme Toggle */}
             <div className="flex justify-between items-center gap-2">
               <button
                 type="button"
                 onClick={() => navigateToView('home')}
-                className="text-[11px] font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 truncate cursor-pointer"
+                className="text-[11px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 truncate cursor-pointer text-left"
               >
-                ravaelchessario24.github.io
+                {lang === 'id'
+                  ? 'Seorang Data Enthusiast yang suka vibe coding'
+                  : 'A Data Enthusiast who loves vibe coding'}
               </button>
 
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -1015,53 +1054,42 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               5. HIGHLIGHTS SECTION (Highlights.tsx auto-scrolling marquee)
+               5. HIGHLIGHTS SECTION (Strictly 2 Training Certifications)
                ================================================================ */}
             <section id="highlights" className="w-full py-2">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">Highlights</h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Sorotan bukti visual: sertifikat kompetensi, metrik riset Mobile JKN, dan dokumentasi lapangan KKN Digimapan.'
-                    : 'Visual proof highlights: certificates, Mobile JKN research evaluations, and KKN Digimapan field documentation.'}
+                    ? 'Pencapaian sertifikasi pelatihan profesional yang telah diselesaikan (klik kartu untuk memperbesar sertifikat).'
+                    : 'Completed professional training certifications and achievements (click any card to zoom certificate).'}
                 </p>
 
-                <div className="mt-5 relative overflow-hidden">
-                  <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-10 bg-gradient-to-r from-[var(--background)] to-transparent z-10" />
-                  <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-[var(--background)] to-transparent z-10" />
-
-                  <div className="flex gap-4 w-max highlights-track">
-                    {[...blueprintHighlights, ...blueprintHighlights].map((item, i) => (
-                      <div
-                        key={`${item.id}-${i}`}
-                        onClick={() =>
-                          openLightbox(withBase(item.image), pick(item.title, lang), item.badge)
-                        }
-                        className="group relative w-[240px] h-[270px] rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 shrink-0 cursor-zoom-in"
-                      >
-                        <img
-                          src={withBase(item.image)}
-                          alt={pick(item.title, lang)}
-                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-105 group-hover:scale-100 transition duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                        <span className="absolute top-3 left-3 text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded bg-black/70 text-white backdrop-blur-sm">
-                          {item.badge}
-                        </span>
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <h3 className="text-xs font-semibold text-white leading-snug">
-                            {pick(item.title, lang)}
-                          </h3>
-                        </div>
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {blueprintHighlights.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() =>
+                        openLightbox(withBase(item.image), pick(item.title, lang), item.badge)
+                      }
+                      className="group relative aspect-[16/11] rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 cursor-zoom-in bg-neutral-100 dark:bg-neutral-900"
+                    >
+                      <img
+                        src={withBase(item.image)}
+                        alt={pick(item.title, lang)}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-105 group-hover:scale-100 transition duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                      <span className="absolute top-3 left-3 text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded bg-black/75 text-white backdrop-blur-sm">
+                        {item.badge}
+                      </span>
+                      <div className="absolute bottom-3 left-3.5 right-3.5">
+                        <h3 className="text-xs sm:text-sm font-semibold text-white leading-snug">
+                          {pick(item.title, lang)}
+                        </h3>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-6 flex justify-center">
-                  <SoftPillButton onClick={() => navigateToView('highlights')}>
-                    {lang === 'id' ? 'Lihat Semua Highlights' : 'View All'}
-                  </SoftPillButton>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>

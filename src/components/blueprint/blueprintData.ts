@@ -450,112 +450,24 @@ export const blueprintHighlights: BlueprintHighlight[] = [
   {
     id: 'cert-dsarea-grade-a',
     title: {
-      id: 'Lulus Data Analyst Bootcamp DSAREA dengan Predikat A (Skor 85–100, Memuaskan)',
-      en: 'Graduated DSAREA Data Analyst Bootcamp with Grade A (Score 85–100, Satisfactory)',
+      id: 'Sertifikat Kelulusan Data Analyst Bootcamp DSAREA — Predikat A (Grade A · Skor 85–100)',
+      en: 'DSAREA Data Analyst Bootcamp Certificate of Completion — Grade A (Score 85–100)',
     },
     badge: 'DSAREA · Grade A',
     image: 'images/certs/cert-dsarea.webp',
     imageFit: 'contain',
-    cardWidth: 310,
-  },
-  {
-    id: 'jkn-dashboard-94',
-    title: {
-      id: 'Membangun Pipeline Analisis Sentimen 63.766 Ulasan Mobile JKN dengan Akurasi 94,38%',
-      en: 'Built Sentiment Analysis Pipeline on 63,766 Mobile JKN Reviews with 94.38% Accuracy',
-    },
-    badge: 'Mobile JKN · 94,38%',
-    image: 'images/projects/mobile-jkn-dashboard.webp',
-    imageFit: 'cover',
-    cardWidth: 310,
+    cardWidth: 340,
   },
   {
     id: 'cert-google-coursera',
     title: {
-      id: 'Menyelesaikan 5 Kursus Google IT Support Professional Certificate di Coursera',
-      en: 'Completed 5-Course Google IT Support Professional Certificate on Coursera',
+      id: 'Google IT Support Professional Certificate — Coursera (5 Kursus Spesialisasi Google)',
+      en: 'Google IT Support Professional Certificate — Coursera (5-Course Google Specialization)',
     },
     badge: 'Coursera · Google',
     image: 'images/certs/cert-coursera.webp',
     imageFit: 'contain',
-    cardWidth: 310,
-  },
-  {
-    id: 'gpa-rank-4-itbad',
-    title: {
-      id: 'IPK Tertinggi Peringkat 4 dari 21 Lulusan S1 Teknologi Informasi (IPK 3,77 / 4,00)',
-      en: 'Ranked 4th Highest GPA out of 21 Information Technology Graduates (GPA 3.77 / 4.00)',
-    },
-    badge: 'ITB Ahmad Dahlan · IPK 3,77',
-    image: 'images/ravael-about.webp',
-    imageFit: 'cover',
-    cardWidth: 240,
-  },
-  {
-    id: 'jkn-roc-evaluation',
-    title: {
-      id: 'Evaluasi Multinomial Naive Bayes Mobile JKN: F1-Score 94,86% & ROC AUC 0,965',
-      en: 'Mobile JKN Multinomial Naive Bayes Evaluation: 94.86% F1-Score & 0.965 ROC AUC',
-    },
-    badge: 'Model Eval · AUC 0,965',
-    image: 'images/projects/mobile-jkn-4.webp',
-    imageFit: 'contain',
-    cardWidth: 295,
-  },
-  {
-    id: 'paud-cms-50',
-    title: {
-      id: 'Digitalisasi Website & CMS PAUD KB Flamboyan — Efisiensi Administrasi +50%',
-      en: 'Digitized PAUD KB Flamboyan Website & CMS — +50% Administrative Efficiency',
-    },
-    badge: 'PAUD KB Flamboyan',
-    image: 'images/experience/paud-1.webp',
-    imageFit: 'cover',
-    cardWidth: 310,
-  },
-  {
-    id: 'kkn-digimapan-1',
-    title: {
-      id: 'Inisiasi Kelas Literasi Digital Siswa SD pada KKN Digimapan Desa Lebak Wangi',
-      en: 'Initiated Elementary Digital Literacy Classes at KKN Digimapan in Lebak Wangi',
-    },
-    badge: 'KKN Digimapan 2025',
-    image: 'images/gallery/kkn-1.webp',
-    imageFit: 'cover',
-    cardWidth: 300,
-  },
-  {
-    id: 'kkn-digimapan-2',
-    title: {
-      id: 'Pendampingan Praktik Mengetik Typingcore & Microsoft Paint bagi Siswa SD',
-      en: 'Mentoring Elementary Students on Typingcore & Microsoft Paint Practice',
-    },
-    badge: 'KKN Digimapan 2025',
-    image: 'images/gallery/kkn-2.webp',
-    imageFit: 'cover',
-    cardWidth: 300,
-  },
-  {
-    id: 'kkn-digimapan-3',
-    title: {
-      id: 'Sesi Belajar Komputer Kelompok Kecil KKN Digimapan ITB Ahmad Dahlan',
-      en: 'Small-Group Computer Learning Session at ITB Ahmad Dahlan Digimapan KKN',
-    },
-    badge: 'KKN Digimapan 2025',
-    image: 'images/gallery/kkn-3.webp',
-    imageFit: 'cover',
-    cardWidth: 300,
-  },
-  {
-    id: 'kkn-digimapan-4',
-    title: {
-      id: 'Dokumentasi Kebersamaan Tim KKN Digimapan & Siswa SD Desa Lebak Wangi',
-      en: 'Community Service Documentation with KKN Digimapan Team & Elementary Students',
-    },
-    badge: 'KKN Digimapan 2025',
-    image: 'images/gallery/kkn-4.webp',
-    imageFit: 'cover',
-    cardWidth: 300,
+    cardWidth: 340,
   },
 ];
 
