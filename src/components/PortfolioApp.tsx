@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   ArrowUpRight,
   ChevronDown,
@@ -9,7 +9,6 @@ import {
   Moon,
   Sun,
   X,
-  ZoomIn,
 } from 'lucide-react';
 import { FaLinkedin } from 'react-icons/fa6';
 import {
@@ -26,6 +25,7 @@ import {
   blueprintExperiences,
   blueprintProjects,
   blueprintSkillGroups,
+  blueprintCertifications,
   blueprintHighlights,
   animeWithCovers,
   musicScenes,
@@ -57,7 +57,7 @@ const NAV_ITEMS = [
   { label: { id: 'Keahlian', en: 'Skills' }, href: 'skills' },
   { label: { id: 'Pendidikan', en: 'Education' }, href: 'education' },
   { label: { id: 'Highlights', en: 'Highlights' }, href: 'highlights' },
-  { label: { id: 'Anime & Musik', en: 'Anime & Music' }, href: 'anime' },
+  { label: { id: 'Film & Musik', en: 'Movies & Music' }, href: 'movies' },
 ];
 
 export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
@@ -66,6 +66,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   const [view, setView] = useState<BlueprintView>('home');
   const [activeProjectSlug, setActiveProjectSlug] = useState<string>('mobile-jkn');
   const [openExpIndex, setOpenExpIndex] = useState<number | null>(0);
+  const [showAllMovies, setShowAllMovies] = useState(false);
   const [showAllMusicArtists, setShowAllMusicArtists] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('experience');
@@ -74,6 +75,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     title: string;
     caption?: string;
   } | null>(null);
+
+  const scrollLockUntilRef = useRef<number>(0);
 
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const withBase = useCallback(
@@ -107,36 +110,58 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     } catch {}
   }, []);
 
-  // Scroll-spy for RightNavbar INDEX (matches portfolio-main/src/components/RightNavbar.tsx)
+  // Smooth Scroll-Spy for RightNavbar INDEX (works seamlessly scrolling down & up)
   useEffect(() => {
     if (view !== 'home') return;
     const ids = NAV_ITEMS.map((item) => item.href);
+    let rafId = 0;
 
-    const sync = () => {
-      let current: string | null = null;
-      const threshold = Math.max(180, window.innerHeight * 0.28);
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= threshold) {
-          current = id;
+    const computeActive = () => {
+      if (Date.now() < scrollLockUntilRef.current) return;
+
+      const vh = window.innerHeight;
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+
+      if (scrollY < 80) {
+        setActiveSection(ids[0]);
+        return;
+      }
+
+      if (vh + scrollY >= docHeight - 100) {
+        const lastEl = document.getElementById(ids[ids.length - 1]);
+        if (lastEl && lastEl.getBoundingClientRect().top < vh * 0.8) {
+          setActiveSection(ids[ids.length - 1]);
+          return;
         }
       }
-      // If scrolled near the bottom of the page, highlight the last section
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 60
-      ) {
-        current = ids[ids.length - 1];
+
+      const threshold = Math.max(160, vh * 0.34);
+      let current: string = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= threshold) {
+            current = id;
+          }
+        }
       }
-      setActiveSection(current ?? ids[0]);
+      setActiveSection(current);
     };
 
-    sync();
-    window.addEventListener('scroll', sync, { passive: true });
-    window.addEventListener('resize', sync);
+    const onScrollOrResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(computeActive);
+    };
+
+    computeActive();
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
     return () => {
-      window.removeEventListener('scroll', sync);
-      window.removeEventListener('resize', sync);
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
     };
   }, [view]);
 
@@ -191,6 +216,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   }, []);
 
   const scrollToSection = useCallback((sectionId: string) => {
+    setActiveSection(sectionId);
+    scrollLockUntilRef.current = Date.now() + 700;
     setView('home');
     setTimeout(() => {
       const el = document.getElementById(sectionId);
@@ -207,13 +234,13 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   const activeProject =
     blueprintProjects.find((p) => p.slug === activeProjectSlug) || blueprintProjects[0];
 
-  const featuredAnime = animeWithCovers.slice(0, 8);
+  const displayedMovies = showAllMovies ? animeWithCovers : animeWithCovers.slice(0, 8);
   const visibleArtists = showAllMusicArtists ? allArtists : featuredArtists;
-  const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${nowPlaying.trackId}?utm_source=generator&theme=0`;
+  const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${nowPlaying.trackId}?utm_source=generator`;
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
-      {/* Right Fixed Blueprint INDEX Navbar (exact match to RightNavbar.tsx in portfolio-main.zip) */}
+    <div className="relative min-h-screen w-full overflow-x-clip bg-[var(--background)] text-[var(--foreground)]">
+      {/* Right Fixed Blueprint INDEX Navbar */}
       {view === 'home' && (
         <div className="fixed inset-0 z-40 pointer-events-none hidden lg:block">
           <nav
@@ -229,21 +256,25 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 <button
                   key={item.href}
                   type="button"
+                  aria-current={isActive ? 'location' : undefined}
                   onClick={() => scrollToSection(item.href)}
-                  className={`text-[12px] font-medium tracking-[0.04em] transition-all duration-300 ease-out flex items-center gap-2.5 text-left cursor-pointer bg-transparent border-0 p-0 ${
+                  className={`group text-[12px] tracking-[0.04em] transition-colors duration-300 ease-out flex items-center text-left cursor-pointer bg-transparent border-0 p-0 ${
                     isActive
-                      ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
-                      : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+                      ? 'text-zinc-950 dark:text-zinc-50 font-semibold'
+                      : 'text-zinc-500 dark:text-zinc-400 font-medium hover:text-zinc-800 dark:hover:text-zinc-200'
                   }`}
                 >
                   <span
-                    className={`h-[1.5px] transition-all duration-300 ease-out ${
+                    aria-hidden="true"
+                    className={`inline-block h-[1.5px] rounded-full transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       isActive
-                        ? 'w-3.5 bg-zinc-500 dark:bg-zinc-400'
-                        : 'w-0 bg-transparent'
+                        ? 'w-4 mr-2.5 bg-zinc-900 dark:bg-zinc-100 opacity-100'
+                        : 'w-0 mr-0 bg-zinc-400 dark:bg-zinc-500 opacity-0 group-hover:w-2 group-hover:mr-2 group-hover:opacity-60'
                     }`}
                   />
-                  <span>{pick(item.label, lang)}</span>
+                  <span className="transition-transform duration-300 ease-out">
+                    {pick(item.label, lang)}
+                  </span>
                 </button>
               );
             })}
@@ -276,7 +307,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
       {/* Center Architectural Column */}
       <div className="mx-3 md:mx-[18%] xl:mx-[26%]">
-        {/* 22vh Top Banner with Particles & Dot-Matrix Clock */}
+        {/* 22vh Top Banner with Particles & Dot-Matrix Clock (Original Kept) */}
         <div
           onClick={() => navigateToView('home')}
           className="relative h-[22vh] w-full overflow-hidden cursor-pointer"
@@ -298,25 +329,25 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
         {/* 112px Profile Bar */}
         <div className="relative h-[112px] flex">
-          {/* Avatar Box */}
+          {/* Avatar Box — Full Color (No Monochrome Filter) */}
           <div className="relative h-full aspect-square shrink-0 p-[3px]">
             <button
               type="button"
               onClick={() =>
                 openLightbox(
-                  withBase('images/ravael-hero.webp'),
+                  withBase('images/ravael-square.webp'),
                   'Muhammad Ravael Chessario Ramdoni',
                   lang === 'id'
                     ? 'S1 Teknologi Informasi — ITB Ahmad Dahlan Jakarta (IPK 3,77 / 4,00)'
                     : 'B.Sc. in Information Technology — ITB Ahmad Dahlan Jakarta (GPA 3.77 / 4.00)',
                 )
               }
-              className="relative w-full h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700"
+              className="relative w-full h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700 bg-white"
             >
               <img
                 src={withBase('images/ravael-square.webp')}
                 alt="Muhammad Ravael Chessario Ramdoni"
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500 ease-in-out"
+                className="w-full h-full object-cover transition-transform duration-500 ease-out hover:scale-105"
               />
             </button>
             <div
@@ -337,11 +368,11 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 className="text-[11px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 truncate cursor-pointer text-left"
               >
                 {lang === 'id'
-                  ? 'Seorang Data Enthusiast yang suka vibe coding'
-                  : 'A Data Enthusiast who loves vibe coding'}
+                  ? 'Seorang Data dan Tech Enthusiast yang suka vibe coding'
+                  : 'A Data and Tech Enthusiast who loves vibe coding'}
               </button>
 
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 {/* ID | EN Switcher */}
                 <button
                   type="button"
@@ -471,44 +502,43 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               <p>
                 {lang === 'id' ? (
                   <>
-                    Lulusan baru{' '}
+                    Lulusan{' '}
                     <strong className="text-neutral-900 dark:text-neutral-100">
-                      S1 Teknologi Informasi ITB Ahmad Dahlan Jakarta
+                      S1 Teknologi Informasi — ITB Ahmad Dahlan Jakarta
                     </strong>{' '}
                     (IPK{' '}
                     <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       3,77 / 4,00
                     </span>{' '}
-                    — Peringkat 4 dari 21 lulusan) dengan fokus pada{' '}
+                    · Peringkat 4 dari 21 lulusan) dengan spesialisasi pada{' '}
                     <span className="underline decoration-dotted">
-                      Data Analytics, Data Cleaning, SQL, Python, dan Machine Learning
+                      Data Analytics, SQL, Python, Machine Learning, dan Dukungan Sistem TI
                     </span>
-                    . Terbiasa mengolah dataset skala puluhan ribu baris menjadi visualisasi dan wawasan bisnis yang mudah dipahami.
+                    . Berfokus menerjemahkan puluhan ribu data mentah menjadi temuan terukur yang mendukung pengambilan keputusan produk dan operasional bisnis.
                   </>
                 ) : (
                   <>
-                    Fresh graduate in{' '}
                     <strong className="text-neutral-900 dark:text-neutral-100">
-                      Information Technology from ITB Ahmad Dahlan Jakarta
+                      B.Sc. in Information Technology graduate from ITB Ahmad Dahlan Jakarta
                     </strong>{' '}
                     (GPA{' '}
                     <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       3.77 / 4.00
                     </span>{' '}
-                    — Ranked 4th out of 21 graduates) specializing in{' '}
+                    · Ranked 4th out of 21 graduates) specializing in{' '}
                     <span className="underline decoration-dotted">
-                      Data Analytics, Data Cleaning, SQL, Python, and Machine Learning
+                      Data Analytics, SQL, Python, Machine Learning, and IT Systems Support
                     </span>
-                    . Experienced in transforming tens of thousands of raw records into actionable dashboards.
+                    . Focused on transforming tens of thousands of raw records into clear, decision-ready product and business insights.
                   </>
                 )}
               </p>
 
-              <ul className="space-y-1 pl-4 list-disc">
+              <ul className="space-y-1.5 pl-4 list-disc">
                 <li>
                   {lang === 'id' ? (
                     <>
-                      Membangun pipeline NLP & dashboard interaktif untuk{' '}
+                      Merancang pipeline NLP end-to-end & dashboard Streamlit terhadap{' '}
                       <button
                         type="button"
                         onClick={() => openProjectDetail('mobile-jkn')}
@@ -516,13 +546,16 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                       >
                         63.766 ulasan aplikasi Mobile JKN
                       </button>{' '}
-                      (59.980 data berlabel, Akurasi <span className="font-mono">94,38%</span>, F1-Score{' '}
-                      <span className="font-mono">94,86%</span>, ROC AUC{' '}
-                      <span className="font-mono">0,965</span>).
+                      (59.980 ulasan berlabel seimbang, Akurasi Uji{' '}
+                      <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+                        94,38%
+                      </span>
+                      , F1-Score <span className="font-mono">94,86%</span>, ROC AUC{' '}
+                      <span className="font-mono">0,965</span>) untuk memetakan prioritas perbaikan fitur login & verifikasi akun.
                     </>
                   ) : (
                     <>
-                      Built an end-to-end NLP pipeline & interactive dashboard for{' '}
+                      Engineered an end-to-end NLP pipeline & Streamlit dashboard across{' '}
                       <button
                         type="button"
                         onClick={() => openProjectDetail('mobile-jkn')}
@@ -530,28 +563,31 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                       >
                         63,766 Mobile JKN app reviews
                       </button>{' '}
-                      (59,980 labeled rows, <span className="font-mono">94.38%</span> Accuracy,{' '}
-                      <span className="font-mono">94.86%</span> F1-Score,{' '}
-                      <span className="font-mono">0.965</span> ROC AUC).
+                      (59,980 balanced rows,{' '}
+                      <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+                        94.38%
+                      </span>{' '}
+                      Test Accuracy, <span className="font-mono">94.86%</span> F1-Score,{' '}
+                      <span className="font-mono">0.965</span> ROC AUC) to prioritize login & account verification fixes.
                     </>
                   )}
                 </li>
                 <li>
                   {lang === 'id'
-                    ? 'Meraih Predikat A (Grade A) pada Data Analyst Bootcamp DSAREA serta menyelesaikan Google IT Support Professional Certificate (Coursera).'
-                    : 'Achieved Grade A at DSAREA Data Analyst Bootcamp and completed the Google IT Support Professional Certificate (Coursera).'}
+                    ? 'Meraih Predikat A (Grade A · Skor 85–100) pada Data Analyst Bootcamp DSAREA serta menyelesaikan 5 kursus spesialisasi Google IT Support Professional Certificate (Coursera).'
+                    : 'Earned Grade A distinction (Score 85–100) in the DSAREA Data Analyst Bootcamp and completed the 5-course Google IT Support Professional Certificate on Coursera.'}
                 </li>
                 <li>
                   {lang === 'id'
-                    ? 'Mengembangkan Website & CMS PAUD KB Flamboyan (+50% efisiensi administrasi) serta menginisiasi program literasi digital pada KKN Digimapan.'
-                    : 'Engineered PAUD KB Flamboyan school website & CMS (+50% admin efficiency) and led youth digital literacy sessions during KKN Digimapan.'}
+                    ? 'Membangun Website Profil & CMS berbasis MySQL pada magang PAUD KB Flamboyan (+50% efisiensi administrasi sekolah) serta menginisiasi program literasi digital SD pada KKN Digimapan.'
+                    : 'Built a MySQL-backed Website & CMS during my internship at PAUD KB Flamboyan (+50% administrative efficiency) and spearheaded elementary digital literacy sessions during KKN Digimapan.'}
                 </li>
               </ul>
 
               <p>
                 {lang === 'id'
-                  ? 'Saat ini terbuka untuk posisi Full-Time maupun Internship di bidang Data Analyst, Business Intelligence, atau Data Science.'
-                  : 'Currently open to Full-Time and Internship opportunities in Data Analytics, Business Intelligence, or Data Science.'}
+                  ? 'Saat ini terbuka untuk posisi Full-Time maupun Internship di bidang Data Analyst, Data Science, atau IT Helpdesk.'
+                  : 'Currently open to Full-Time and Internship positions in Data Analyst, Data Science, or IT Helpdesk.'}
               </p>
 
               {/* CTA Buttons: FlipCoverButton + SoftPillButton */}
@@ -612,7 +648,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   </a>
 
                   <a
-                    href={withBase('CV_Muhammad_Ravael_Chessario_Ramdoni.pdf')}
+                    href={withBase('files/CV_Muhammad_Ravael_Chessario_Ramdoni.pdf')}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition"
@@ -627,17 +663,17 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               1. EXPERIENCES SECTION (ExperienceList.tsx)
+               1. EXPERIENCES SECTION
                ================================================================ */}
-            <section id="experience" className="w-full py-2">
+            <section id="experience" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-                  {lang === 'id' ? 'Pengalaman' : 'Experiences'}
+                  {lang === 'id' ? 'Pengalaman' : 'Experience'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Pengalaman magang pengembangan sistem dan pengabdian masyarakat.'
-                    : 'Web systems development internship and community digital literacy leadership.'}
+                    ? 'Rekam jejak magang pengembangan sistem basis data dan inisiatif literasi digital lapangan.'
+                    : 'Database-driven web systems internship and community digital literacy leadership.'}
                 </p>
 
                 <div className="mt-4 space-y-4">
@@ -654,7 +690,9 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                             <img
                               src={withBase(exp.src)}
                               alt={exp.title}
-                              className="w-11 h-11 rounded-md object-cover border border-neutral-300 dark:border-neutral-700 shrink-0 bg-white"
+                              className={`w-11 h-11 rounded-md border border-neutral-300 dark:border-neutral-700 shrink-0 bg-white ${
+                                exp.imageFit === 'contain' ? 'object-contain p-1' : 'object-cover'
+                              }`}
                             />
                             <div>
                               <div className="flex flex-wrap items-center gap-2">
@@ -748,7 +786,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
                 <div className="mt-6 flex justify-center">
                   <SoftPillButton onClick={() => navigateToView('experience')}>
-                    {lang === 'id' ? 'Lihat Semua Pengalaman' : 'View All'}
+                    {lang === 'id' ? 'Lihat Dokumentasi Lengkap' : 'View Full Timeline'}
                   </SoftPillButton>
                 </div>
               </div>
@@ -757,17 +795,17 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               2. PROJECTS SECTION (ProjectsGrid.tsx exact 2-column blueprint cards)
+               2. PROJECTS SECTION (2-column blueprint cards)
                ================================================================ */}
-            <section id="projects" className="w-full py-2">
+            <section id="projects" className="w-full py-2 scroll-mt-16">
               <div className="px-4 pb-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-                  {lang === 'id' ? 'Proyek Pilihan' : 'Projects'}
+                  {lang === 'id' ? 'Proyek Pilihan' : 'Featured Projects'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Klik kartu proyek untuk melihat 5 tangkapan layar dashboard, metrik model, dan studi kasus lengkap.'
-                    : 'Click any project card to view all 5 dashboard screenshots, model metrics, and full case study.'}
+                    ? 'Klik kartu proyek untuk meninjau 5 tangkapan layar antarmuka, metrik evaluasi model, dan studi kasus mendalam.'
+                    : 'Click any project card to inspect all 5 interface screenshots, model evaluation metrics, and full case study.'}
                 </p>
               </div>
 
@@ -868,7 +906,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
               <div className="mt-6 flex justify-center">
                 <SoftPillButton onClick={() => navigateToView('projects')}>
-                  {lang === 'id' ? 'Lihat Semua Proyek' : 'View All'}
+                  {lang === 'id' ? 'Lihat Semua Proyek' : 'View All Projects'}
                 </SoftPillButton>
               </div>
             </section>
@@ -878,15 +916,15 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             {/* ================================================================
                3. SKILLS & TECHNOLOGIES SECTION
                ================================================================ */}
-            <section id="skills" className="w-full py-2">
+            <section id="skills" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Keahlian & Teknologi' : 'Skills & Technologies'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Instrumen analitik, bahasa pemrograman, dan perangkat lunak yang saya gunakan.'
-                    : 'Analytical instruments, programming languages, and tools I work with.'}
+                    ? 'Perangkat analitik, pengolahan data, dan pemodelan yang digunakan dalam proyek riset maupun produksi.'
+                    : 'Core analytical stack, query languages, and modeling libraries applied across research and production.'}
                 </p>
 
                 <div className="mt-4 space-y-4">
@@ -920,17 +958,17 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               4. EDUCATION & CERTIFICATIONS SECTION (Education.tsx)
+               4. EDUCATION & CERTIFICATIONS SECTION (Text Credentials — Images in Highlights)
                ================================================================ */}
-            <section id="education" className="w-full py-2">
+            <section id="education" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Pendidikan & Sertifikasi' : 'Education & Certifications'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Latar belakang akademik dan sertifikasi kompetensi profesional.'
-                    : 'Academic background and verified professional certifications.'}
+                    ? 'Kualifikasi akademik S1 Teknologi Informasi dan sertifikasi pelatihan kompetensi profesional.'
+                    : 'Academic qualification in Information Technology and professional training certifications.'}
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -939,7 +977,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     <div>
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                          {lang === 'id' ? 'Pendidikan Tinggi' : 'Education'}
+                          {lang === 'id' ? 'Pendidikan Tinggi' : 'Higher Education'}
                         </h3>
                         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
                           {lang === 'id' ? 'Peringkat 4 / 21' : 'Rank 4 / 21'}
@@ -948,7 +986,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
                       <div className="mt-3 flex items-start gap-3">
                         <img
-                          src={withBase('images/itb-ad-logo.svg')}
+                          src={withBase('images/itb-ad-logo.webp')}
                           alt="ITB Ahmad Dahlan Jakarta"
                           className="w-10 h-10 rounded-md object-contain border border-neutral-300 dark:border-neutral-700 p-1 bg-white shrink-0"
                         />
@@ -965,7 +1003,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                           <p className="text-neutral-500">
                             {lang === 'id' ? 'IPK:' : 'GPA:'}{' '}
                             <span className="text-neutral-900 dark:text-neutral-100 font-mono font-bold">
-                              3.77 / 4.00
+                              {lang === 'id' ? '3,77 / 4,00' : '3.77 / 4.00'}
                             </span>
                           </p>
                         </div>
@@ -974,77 +1012,40 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
                     <p className="mt-3 pt-3 border-t border-dashed border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 leading-relaxed">
                       {lang === 'id'
-                        ? 'Fokus riset tugas akhir: Klasifikasi Sentimen Ulasan Aplikasi Mobile JKN Menggunakan TF-IDF & Multinomial Naive Bayes (63.766 ulasan).'
-                        : 'Undergraduate thesis focus: Sentiment Classification of Mobile JKN App Reviews using TF-IDF & Multinomial Naive Bayes (63,766 reviews).'}
+                        ? 'Riset Skripsi: Klasifikasi Sentimen 63.766 Ulasan Aplikasi Mobile JKN Menggunakan Hybrid Labeling (InSet Lexicon), TF-IDF Bigram & Multinomial Naive Bayes (Akurasi 94,38%).'
+                        : 'Undergraduate Thesis: Sentiment Classification of 63,766 Mobile JKN Reviews via Hybrid Labeling (InSet Lexicon), TF-IDF Bigrams & Multinomial Naive Bayes (94.38% Accuracy).'}
                     </p>
                   </div>
 
-                  {/* Right Card: Certifications */}
+                  {/* Right Card: Strictly 2 Professional Certifications (Text Only — No Duplicate Cert Image) */}
                   <div className="p-4 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700">
                     <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                      {lang === 'id' ? 'Sertifikasi Kompetensi' : 'Certifications'}
+                      {lang === 'id' ? 'Sertifikasi Pelatihan' : 'Training Certifications'}
                     </h3>
 
                     <div className="mt-3 space-y-3 text-xs text-neutral-600 dark:text-neutral-400">
-                      {/* Cert 1: DSAREA */}
-                      <div className="flex items-start justify-between gap-2 pb-3 border-b border-dashed border-neutral-200 dark:border-neutral-800">
-                        <div>
-                          <p className="font-semibold text-neutral-900 dark:text-neutral-100">
-                            Data Analyst Bootcamp — DSAREA
+                      {blueprintCertifications.map((cert, idx) => (
+                        <div
+                          key={cert.id}
+                          className={
+                            idx === 0
+                              ? 'pb-3 border-b border-dashed border-neutral-200 dark:border-neutral-800'
+                              : ''
+                          }
+                        >
+                          <p className="font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+                            {cert.title}
                           </p>
                           <p className="text-neutral-500 mt-0.5">
-                            {lang === 'id'
-                              ? 'Oktober – November 2025 · Predikat A (Grade A)'
-                              : 'October – November 2025 · Grade A'}
+                            {pick(cert.period, lang)} · {pick(cert.detail, lang)}
                           </p>
-                          <p className="text-[11px] text-neutral-500 font-mono mt-0.5">
-                            ID: 043/DSAREA/XI/2025
-                          </p>
+                          {cert.credentialId && (
+                            <p className="text-[11px] text-neutral-500 font-mono mt-0.5">
+                              ID: {cert.credentialId}
+                            </p>
+                          )}
                         </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openLightbox(
-                              withBase('images/certs/cert-dsarea.webp'),
-                              'Data Analyst Bootcamp — DSAREA (Grade A)',
-                              'Certificate ID: 043/DSAREA/XI/2025 · Issued November 2025',
-                            )
-                          }
-                          className="inline-flex items-center gap-1 px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 text-[11px] font-mono shrink-0 cursor-pointer"
-                        >
-                          <ZoomIn className="w-3 h-3" />
-                          {lang === 'id' ? 'Sertifikat' : 'Verify'}
-                        </button>
-                      </div>
-
-                      {/* Cert 2: Google IT Support Coursera */}
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="font-semibold text-neutral-900 dark:text-neutral-100">
-                            Google IT Support Professional Certificate
-                          </p>
-                          <p className="text-neutral-500 mt-0.5">
-                            Coursera · {lang === 'id' ? 'Januari – Maret 2025' : 'Jan – Mar 2025'}
-                          </p>
-                          <p className="text-[11px] text-neutral-500 mt-0.5">
-                            5-Course Google Career Certificate
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openLightbox(
-                              withBase('images/certs/cert-coursera.webp'),
-                              'Google IT Support Professional Certificate — Coursera',
-                              'Issued March 2025 · Google Career Certificates',
-                            )
-                          }
-                          className="inline-flex items-center gap-1 px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 text-[11px] font-mono shrink-0 cursor-pointer"
-                        >
-                          <ZoomIn className="w-3 h-3" />
-                          {lang === 'id' ? 'Sertifikat' : 'Verify'}
-                        </button>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1056,7 +1057,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             {/* ================================================================
                5. HIGHLIGHTS SECTION (Strictly 2 Training Certifications)
                ================================================================ */}
-            <section id="highlights" className="w-full py-2">
+            <section id="highlights" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">Highlights</h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
@@ -1097,46 +1098,61 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               6. ANIME & MUSIC SECTION (AnimeMusic.tsx)
+               6. MOVIES & MUSIC SECTION (#movies — Full Color Posters + Playable Spotify)
                ================================================================ */}
-            <section id="anime" className="w-full py-2">
+            <section id="movies" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-                  {lang === 'id' ? 'Anime & Musik' : 'Anime & Music'}
+                  {lang === 'id' ? 'Film & Musik' : 'Movies & Music'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Tontonan dan musik yang menemani sesi ngoding dan eksplorasi data.'
-                    : 'Stories I watch and music on rotation during coding and data sessions.'}
+                    ? 'Daftar film favorit dan lagu yang menemani sesi vibe coding maupun eksplorasi data.'
+                    : 'Favorite films and music rotation accompanying vibe coding and data exploration.'}
                 </p>
 
-                {/* Anime Grid (8 featured items) */}
+                {/* Movies Poster Grid (Full Color — No Monochrome Filter) */}
                 <div className="mt-4">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2.5">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
-                      {lang === 'id' ? 'Daftar Tontonan Anime' : 'Anime Watchlist'}
+                      {lang === 'id' ? 'Film & Serial Favorit' : 'Favorite Films & Series'}
                     </h3>
-                    <span className="text-[11px] text-neutral-400">
-                      {lang === 'id' ? 'Beberapa favorit' : 'A few favorites'}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowAllMovies((prev) => !prev)}
+                      className="text-[11px] font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline decoration-dotted cursor-pointer"
+                    >
+                      {showAllMovies
+                        ? lang === 'id'
+                          ? 'Ringkas (8 Film)'
+                          : 'Show 8'
+                        : lang === 'id'
+                          ? `Tampilkan Semua (${animeWithCovers.length})`
+                          : `Show All (${animeWithCovers.length})`}
+                    </button>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {featuredAnime.map((anime) => (
+                    {displayedMovies.map((movie) => (
                       <div
-                        key={anime.title}
+                        key={movie.title}
                         onClick={() => navigateToView('anime')}
-                        className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 cursor-pointer"
+                        className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 cursor-pointer bg-neutral-900"
                       >
                         <img
-                          src={withBase((anime.cover || '').replace(/^\//, ''))}
-                          alt={anime.title}
-                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-105 group-hover:scale-100 transition duration-500"
+                          src={withBase((movie.cover || '').replace(/^\//, ''))}
+                          alt={movie.title}
+                          className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                        <div className="absolute bottom-2 left-2.5 right-2.5">
-                          <p className="text-xs font-semibold text-white truncate">
-                            {anime.title}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                        {movie.year && (
+                          <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white/90 backdrop-blur-sm">
+                            {movie.year}
+                          </span>
+                        )}
+                        <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                          <p className="text-xs font-semibold text-white leading-snug line-clamp-2">
+                            {movie.title}
                           </p>
                         </div>
                       </div>
@@ -1144,14 +1160,14 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   </div>
                 </div>
 
-                {/* Music Rotation + Spotify Embed */}
+                {/* Music Rotation + Playable Spotify Embed */}
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
-                      {lang === 'id' ? 'Musik' : 'Music'}
+                      {lang === 'id' ? 'Musik & Rotasi Spotify' : 'Music & Spotify Rotation'}
                     </h3>
                     <span className="text-[11px] text-neutral-400">
-                      {lang === 'id' ? 'Playlist pengantar fokus' : 'Mostly on loop'}
+                      {nowPlaying.title} — {nowPlaying.artist}
                     </span>
                   </div>
 
@@ -1176,19 +1192,21 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                           {artist}
                         </span>
                       ))}
-                      <button
-                        type="button"
-                        onClick={() => setShowAllMusicArtists((prev) => !prev)}
-                        className="text-xs px-2.5 py-1 rounded-md border border-dashed border-neutral-400/60 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition cursor-pointer"
-                      >
-                        {showAllMusicArtists
-                          ? lang === 'id'
-                            ? 'Sembunyikan'
-                            : 'Show less'
-                          : `+${allArtists.length - featuredArtists.length} ${
-                              lang === 'id' ? 'lainnya' : 'more'
-                            }`}
-                      </button>
+                      {allArtists.length > featuredArtists.length && (
+                        <button
+                          type="button"
+                          onClick={() => setShowAllMusicArtists((prev) => !prev)}
+                          className="text-xs px-2.5 py-1 rounded-md border border-dashed border-neutral-400/60 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition cursor-pointer"
+                        >
+                          {showAllMusicArtists
+                            ? lang === 'id'
+                              ? 'Sembunyikan'
+                              : 'Show less'
+                            : `+${allArtists.length - featuredArtists.length} ${
+                                lang === 'id' ? 'artis lainnya' : 'more artists'
+                              }`}
+                        </button>
+                      )}
                     </div>
 
                     <div className="pt-1">
@@ -1199,7 +1217,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                           height="152"
                           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                           loading="lazy"
-                          title="Spotify Embed"
+                          title={`${nowPlaying.title} — ${nowPlaying.artist}`}
                           className="block border-0"
                         />
                       </div>
@@ -1209,7 +1227,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
                 <div className="mt-6 flex justify-center">
                   <SoftPillButton onClick={() => navigateToView('anime')}>
-                    {lang === 'id' ? 'Lihat Semua Anime & Musik' : 'View All'}
+                    {lang === 'id' ? 'Lihat Detail Film & Album' : 'Explore Movies & Albums'}
                   </SoftPillButton>
                 </div>
               </div>
@@ -1237,7 +1255,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
         <div className="w-full h-[1px] mt-4" style={dashedX} />
 
-        {/* Interactive Dot-Matrix Footer (FooterBackground.tsx) */}
+        {/* Interactive Dot-Matrix Footer */}
         <FooterBackground>
           <footer className="w-full py-10 px-4 text-xs text-neutral-500">
             <div className="flex flex-col items-center text-center space-y-2.5">
@@ -1274,6 +1292,14 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 <span>·</span>
                 <button
                   type="button"
+                  onClick={() => navigateToView('anime')}
+                  className="hover:text-neutral-900 dark:hover:text-white cursor-pointer"
+                >
+                  {lang === 'id' ? 'Film & Musik' : 'Movies & Music'}
+                </button>
+                <span>·</span>
+                <button
+                  type="button"
                   onClick={() => navigateToView('contact')}
                   className="hover:text-neutral-900 dark:hover:text-white cursor-pointer"
                 >
@@ -1303,7 +1329,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
         withBase={withBase}
       />
 
-      {/* Lightbox Modal for Certificates, Project Dashboards & KKN Photos */}
+      {/* Lightbox Modal for Certificates, Project Dashboards & Photos */}
       {lightbox && (
         <div
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"

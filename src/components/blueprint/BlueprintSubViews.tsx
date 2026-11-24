@@ -485,7 +485,7 @@ export function ExperienceTimelineView({
 }
 
 /* ============================================================================
-   4. ALL HIGHLIGHTS VIEW (/highlights — Visual Proofs, Certs & KKN Archive)
+   4. ALL HIGHLIGHTS VIEW (/highlights — 2 Verified Training Certifications)
    ============================================================================ */
 export function AllHighlightsView({
   lang,
@@ -511,13 +511,13 @@ export function AllHighlightsView({
         </button>
         <h1 className="mt-3 text-xl md:text-2xl font-bold tracking-tight">
           {lang === 'id'
-            ? 'Highlights — Bukti Visual, Sertifikat & Dokumentasi'
-            : 'Highlights — Visual Proofs, Certificates & Documentation'}
+            ? 'Highlights — Sertifikasi Pelatihan Profesional'
+            : 'Highlights — Professional Training Certifications'}
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Kumpulan bukti visual dari sertifikasi, hasil evaluasi model riset, pencapaian akademik, dan dokumentasi lapangan.'
-            : 'Visual proof archive covering certifications, research model evaluation, academic achievement, and field documentation.'}
+            ? 'Dua sertifikasi pelatihan kompetensi utama yang telah diselesaikan (klik kartu untuk memperbesar sertifikat).'
+            : 'Two completed professional training certifications (click any card to zoom certificate).'}
         </p>
       </div>
 
@@ -530,13 +530,13 @@ export function AllHighlightsView({
             onClick={() =>
               onOpenLightbox(withBase(item.image), pick(item.title, lang), item.badge)
             }
-            className="group rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 overflow-hidden bg-neutral-50/50 dark:bg-neutral-900/40 hover:border-neutral-500 transition cursor-pointer"
+            className="group rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 overflow-hidden bg-neutral-50/50 dark:bg-neutral-900/40 hover:border-neutral-500 transition cursor-zoom-in"
           >
             <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-950">
               <img
                 src={withBase(item.image)}
                 alt={pick(item.title, lang)}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.02] transition-all duration-500"
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
               />
               <span className="absolute top-3 left-3 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded bg-black/75 text-white backdrop-blur-sm">
                 {item.badge}
@@ -555,7 +555,7 @@ export function AllHighlightsView({
 }
 
 /* ============================================================================
-   5. ALL ANIME & MUSIC VIEW (/anime)
+   5. ALL MOVIES & MUSIC VIEW (/anime)
    ============================================================================ */
 export function AllAnimeMusicView({
   lang,
@@ -567,7 +567,7 @@ export function AllAnimeMusicView({
   onBack: () => void;
 }) {
   const [selectedAnime, setSelectedAnime] = useState<AnimeItem | null>(null);
-  const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${nowPlaying.trackId}?utm_source=generator&theme=0`;
+  const spotifyEmbedUrl = `https://open.spotify.com/embed/track/${nowPlaying.trackId}?utm_source=generator`;
 
   return (
     <div className="w-full pb-20">
@@ -581,12 +581,12 @@ export function AllAnimeMusicView({
           {lang === 'id' ? 'Kembali ke Beranda' : 'Back to Home'}
         </button>
         <h1 className="mt-3 text-xl md:text-2xl font-bold tracking-tight">
-          {lang === 'id' ? 'Anime & Musik Favorit' : 'Anime Watchlist & Music Rotation'}
+          {lang === 'id' ? 'Film & Musik Favorit' : 'Favorite Movies & Music'}
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Tontonan dan musik yang menemani sesi eksplorasi data, coding, dan istirahat.'
-            : 'Shows and music rotation during data exploration, coding sessions, and downtime.'}
+            ? 'Daftar film pilihan dan rotasi lagu yang menemani sesi eksplorasi data, vibe coding, maupun waktu santai.'
+            : 'Curated films and music rotation accompanying data exploration, vibe coding sessions, and downtime.'}
         </p>
       </div>
 
@@ -596,23 +596,24 @@ export function AllAnimeMusicView({
       <div className="px-4 md:px-6 py-4 grid grid-cols-2 gap-3">
         <div className="p-3 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700">
           <div className="text-xs font-mono text-neutral-500">
-            {lang === 'id' ? 'Total Judul Anime' : 'Total Anime Watched'}
+            {lang === 'id' ? 'Total Film & Serial Favorit' : 'Favorite Films & Series'}
           </div>
           <div className="text-base font-bold font-mono text-neutral-900 dark:text-neutral-100 mt-0.5">
-            {animeStats.total}
+            {animeStats.total} {lang === 'id' ? 'Judul' : 'Titles'}
           </div>
         </div>
         <div className="p-3 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700">
           <div className="text-xs font-mono text-neutral-500">
-            {lang === 'id' ? 'Total Episode' : 'Total Episodes'}
+            {lang === 'id' ? 'Total Durasi Tontonan' : 'Total Watch Runtime'}
           </div>
           <div className="text-base font-bold font-mono text-neutral-900 dark:text-neutral-100 mt-0.5">
-            {animeStats.episodes.toLocaleString()}
+            ~{animeStats.hours} {lang === 'id' ? 'Jam' : 'Hrs'} ({animeStats.minutes.toLocaleString()}{' '}
+            {lang === 'id' ? 'mnt' : 'min'})
           </div>
         </div>
       </div>
 
-      {/* Anime Sections */}
+      {/* Movie Sections */}
       {animeSections.map((sec) => (
         <div key={sec.id} className="px-4 md:px-6 py-4">
           <div className="mb-3">
@@ -623,23 +624,30 @@ export function AllAnimeMusicView({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {sec.items
               .filter((a) => a.cover)
-              .map((anime) => (
+              .map((movie) => (
                 <button
-                  key={anime.title}
+                  key={movie.title}
                   type="button"
-                  onClick={() => setSelectedAnime(anime)}
-                  className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 text-left cursor-pointer"
+                  onClick={() => setSelectedAnime(movie)}
+                  className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 text-left cursor-pointer bg-neutral-900"
                 >
                   <img
-                    src={withBase((anime.cover || '').replace(/^\//, ''))}
-                    alt={anime.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                    src={withBase((movie.cover || '').replace(/^\//, ''))}
+                    alt={movie.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                  {movie.year && (
+                    <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white/90 backdrop-blur-sm">
+                      {movie.year}
+                    </span>
+                  )}
                   <div className="absolute bottom-2.5 left-2.5 right-2.5">
-                    <p className="text-xs font-semibold text-white truncate">{anime.title}</p>
-                    {anime.studio && (
-                      <p className="text-[10px] text-white/70 truncate">{anime.studio}</p>
+                    <p className="text-xs font-semibold text-white leading-snug line-clamp-2">
+                      {movie.title}
+                    </p>
+                    {movie.studio && (
+                      <p className="text-[10px] text-white/70 truncate mt-0.5">{movie.studio}</p>
                     )}
                   </div>
                 </button>
@@ -652,20 +660,34 @@ export function AllAnimeMusicView({
 
       {/* Music Rotation & Spotify Embed */}
       <div className="px-4 md:px-6 py-4 space-y-5">
-        <div>
-          <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
-            {lang === 'id' ? 'Rotasi Musik & Playlist' : 'Music Rotation & Playlist'}
-          </h2>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {musicScenes.map((s) => (
-              <span
-                key={s.scene}
-                className="px-2.5 py-1 text-[11px] font-mono rounded-full border border-dashed border-neutral-400/60 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300"
-              >
-                {s.scene}
-              </span>
-            ))}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
+              {lang === 'id' ? 'Rotasi Musik & Lagu Favorit' : 'Music Rotation & Top Track'}
+            </h2>
+            <p className="text-xs text-neutral-500 mt-0.5">
+              {nowPlaying.title} — {nowPlaying.artist}
+            </p>
           </div>
+          <a
+            href={`https://open.spotify.com/track/${nowPlaying.trackId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-mono bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-neutral-500 transition"
+          >
+            Spotify <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {musicScenes.map((s) => (
+            <span
+              key={s.scene}
+              className="px-2.5 py-1 text-[11px] font-mono rounded-full border border-dashed border-neutral-400/60 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300"
+            >
+              {s.scene}
+            </span>
+          ))}
         </div>
 
         <div className="rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800">
@@ -675,7 +697,7 @@ export function AllAnimeMusicView({
             height="152"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
-            title="Spotify Track"
+            title={`${nowPlaying.title} — ${nowPlaying.artist}`}
             className="block border-0"
           />
         </div>
@@ -683,29 +705,35 @@ export function AllAnimeMusicView({
         {/* Albums Grid */}
         <div>
           <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500 mb-3">
-            {lang === 'id' ? 'Album dalam Rotasi' : 'Albums on Rotation'}
+            {lang === 'id' ? 'Album & Rilisan dalam Rotasi' : 'Albums & Releases on Rotation'}
           </h3>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
             {albums.map((alb) => (
-              <div key={alb.id} className="group block">
+              <a
+                key={alb.id}
+                href={`https://open.spotify.com/album/${alb.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block"
+              >
                 <div className="aspect-square rounded-lg overflow-hidden border border-neutral-300 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900">
                   <img
                     src={withBase(alb.cover.replace(/^\//, ''))}
                     alt={alb.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <p className="mt-1.5 text-xs font-medium text-neutral-900 dark:text-neutral-100 truncate">
+                <p className="mt-1.5 text-xs font-medium text-neutral-900 dark:text-neutral-100 truncate group-hover:underline">
                   {alb.title}
                 </p>
                 <p className="text-[10px] text-neutral-500 truncate">{alb.artist}</p>
-              </div>
+              </a>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Anime Detail Modal */}
+      {/* Movie Detail Modal */}
       {selectedAnime && (
         <div
           className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
@@ -743,9 +771,14 @@ export function AllAnimeMusicView({
                 </div>
 
                 <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-mono text-neutral-500">
-                  {selectedAnime.episodes && <span>{selectedAnime.episodes} eps</span>}
-                  {selectedAnime.year && <span>· {selectedAnime.year}</span>}
-                  {selectedAnime.score && <span>· ★ {selectedAnime.score}</span>}
+                  {selectedAnime.year && <span>{selectedAnime.year}</span>}
+                  {selectedAnime.episodes && selectedAnime.episodes > 1 ? (
+                    <span>· {selectedAnime.episodes} eps</span>
+                  ) : selectedAnime.runtime ? (
+                    <span>· {selectedAnime.runtime} min</span>
+                  ) : null}
+                  {selectedAnime.score && <span>· ★ {(selectedAnime.score / 10).toFixed(1)}</span>}
+                  {selectedAnime.note && <span>· {selectedAnime.note}</span>}
                 </div>
 
                 {selectedAnime.genres && (
@@ -774,7 +807,8 @@ export function AllAnimeMusicView({
                     rel="noopener noreferrer"
                     className="mt-3 inline-flex items-center gap-1 text-xs font-mono text-neutral-900 dark:text-white hover:underline"
                   >
-                    MyAnimeList <ArrowUpRight className="w-3 h-3" />
+                    {lang === 'id' ? 'Referensi Film' : 'Film Reference'}{' '}
+                    <ArrowUpRight className="w-3 h-3" />
                   </a>
                 )}
               </div>
@@ -787,7 +821,7 @@ export function AllAnimeMusicView({
 }
 
 /* ============================================================================
-   6. CONTACT VIEW (/contact — Matching portfolio-main.zip/src/app/contact/page.tsx)
+   6. CONTACT VIEW (/contact)
    ============================================================================ */
 export function ContactPageView({
   lang,
@@ -806,7 +840,7 @@ export function ContactPageView({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const subject = encodeURIComponent(
-      `[Portfolio Contact] ${name || 'Recruiter / Collaborator'}`,
+      `[Portfolio Inquiry] ${name || 'Recruiter / Collaborator'}`,
     );
     const body = encodeURIComponent(
       `Halo Ravael,\n\nNama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`,
@@ -833,12 +867,12 @@ export function ContactPageView({
         </button>
 
         <h1 className="mt-4 text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-          {lang === 'id' ? 'Hubungi Saya' : 'Hit me up'}
+          {lang === 'id' ? 'Hubungi Saya' : 'Get in Touch'}
         </h1>
         <p className="mt-1.5 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Terbuka untuk peluang kerja Full-Time, Internship, maupun kolaborasi proyek Data Analyst & Data Science.'
-            : 'Open for Full-Time roles, Internships, or Data Analyst & Data Science project collaborations.'}
+            ? 'Saat ini terbuka untuk posisi Full-Time maupun Internship di bidang Data Analyst, Data Science, atau IT Helpdesk.'
+            : 'Currently open to Full-Time and Internship opportunities in Data Analyst, Data Science, or IT Helpdesk roles.'}
         </p>
       </div>
 
@@ -848,14 +882,14 @@ export function ContactPageView({
         <form onSubmit={handleSubmit} className="md:col-span-3 space-y-4">
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-neutral-500 mb-1.5">
-              {lang === 'id' ? 'Nama Lengkap' : 'Full Name'}
+              {lang === 'id' ? 'Nama Lengkap / Perusahaan' : 'Full Name / Organization'}
             </label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={lang === 'id' ? 'Nama Anda / Perusahaan' : 'Your Name / Company'}
+              placeholder={lang === 'id' ? 'Nama Anda / Tim Rekrutmen' : 'Your Name / Hiring Team'}
               className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 bg-transparent focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-200"
             />
           </div>
@@ -885,8 +919,8 @@ export function ContactPageView({
               onChange={(e) => setMessage(e.target.value)}
               placeholder={
                 lang === 'id'
-                  ? 'Ceritakan kebutuhan tim atau posisi yang ingin didiskusikan...'
-                  : 'Tell me about the role or data project you would like to discuss...'
+                  ? 'Sampaikan posisi, kebutuhan tim, atau proyek yang ingin didiskusikan...'
+                  : 'Share details about the role, team needs, or collaboration opportunity...'
               }
               className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 bg-transparent focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-200 resize-y"
             />
@@ -939,7 +973,7 @@ export function ContactPageView({
           </a>
 
           <a
-            href={withBase('CV_Muhammad_Ravael_Chessario_Ramdoni.pdf')}
+            href={withBase('files/CV_Muhammad_Ravael_Chessario_Ramdoni.pdf')}
             target="_blank"
             rel="noopener noreferrer"
             className="block p-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 transition"
@@ -1028,6 +1062,15 @@ export function CommandMenuModal({
     },
     {
       group: lang === 'id' ? 'Navigasi Halaman' : 'Navigation',
+      label: lang === 'id' ? 'Keahlian & Teknologi (Skills)' : 'Skills & Technologies',
+      icon: <Sparkles className="w-4 h-4" />,
+      action: () => {
+        onScrollToSection('skills');
+        onClose();
+      },
+    },
+    {
+      group: lang === 'id' ? 'Navigasi Halaman' : 'Navigation',
       label: lang === 'id' ? 'Pendidikan & Sertifikasi' : 'Education & Certifications',
       icon: <Award className="w-4 h-4" />,
       action: () => {
@@ -1037,19 +1080,19 @@ export function CommandMenuModal({
     },
     {
       group: lang === 'id' ? 'Navigasi Halaman' : 'Navigation',
-      label: lang === 'id' ? 'Highlights (Bukti Visual & KKN)' : 'Highlights Archive',
+      label: lang === 'id' ? 'Highlights (2 Sertifikasi Pelatihan)' : 'Highlights (2 Certifications)',
       icon: <Sparkles className="w-4 h-4" />,
       action: () => {
-        onNavigateView('highlights');
+        onScrollToSection('highlights');
         onClose();
       },
     },
     {
       group: lang === 'id' ? 'Navigasi Halaman' : 'Navigation',
-      label: lang === 'id' ? 'Anime & Musik' : 'Anime & Music',
+      label: lang === 'id' ? 'Film & Musik Favorit' : 'Movies & Music',
       icon: <Tv className="w-4 h-4" />,
       action: () => {
-        onNavigateView('anime');
+        onScrollToSection('movies');
         onClose();
       },
     },
@@ -1112,7 +1155,7 @@ export function CommandMenuModal({
       label: lang === 'id' ? 'Unduh CV / Résumé (PDF)' : 'Download CV / Résumé (PDF)',
       icon: <FileText className="w-4 h-4" />,
       action: () => {
-        window.open(withBase('CV_Muhammad_Ravael_Chessario_Ramdoni.pdf'), '_blank');
+        window.open(withBase('files/CV_Muhammad_Ravael_Chessario_Ramdoni.pdf'), '_blank');
         onClose();
       },
     },
