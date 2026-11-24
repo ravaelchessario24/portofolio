@@ -38,6 +38,7 @@ import {
   pick,
 } from './blueprintData';
 import { dashedX, dashedY } from './BlueprintHelpers';
+import { Bookshelf3D } from './Bookshelf3D';
 
 export type BlueprintView =
   | 'home'
@@ -628,12 +629,14 @@ export function AllAnimeMusicView({
           {lang === 'id' ? 'Kembali ke Beranda' : 'Back to Home'}
         </button>
         <h1 className="mt-3 text-xl md:text-2xl font-bold tracking-tight">
-          {lang === 'id' ? 'Film & Musik Favorit' : 'Favorite Movies & Music'}
+          {lang === 'id'
+            ? 'Tentang Diriku — Film, Buku & Musik'
+            : 'Beyond the Data — Films, Books & Music'}
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Daftar film pilihan dan rotasi lagu yang menemani sesi eksplorasi data, vibe coding, maupun waktu santai.'
-            : 'Curated films and music rotation accompanying data exploration, vibe coding sessions, and downtime.'}
+            ? 'Sisi personal di luar dunia data: daftar film pilihan, rak buku interaktif, dan rotasi lagu yang menemani sesi vibe coding.'
+            : 'Personal interests beyond the data: curated films, interactive bookshelf, and music rotation during vibe coding.'}
         </p>
       </div>
 
@@ -702,6 +705,13 @@ export function AllAnimeMusicView({
           </div>
         </div>
       ))}
+
+      <div className="w-full h-[1px] my-4" style={dashedX} />
+
+      {/* Interactive 3D Bookshelf (Middle — Between Movies and Music) */}
+      <div className="px-4 md:px-6 py-2">
+        <Bookshelf3D lang={lang} withBase={withBase} />
+      </div>
 
       <div className="w-full h-[1px] my-4" style={dashedX} />
 
@@ -1149,7 +1159,10 @@ export function CommandMenuModal({
     },
     {
       group: lang === 'id' ? 'Navigasi Halaman' : 'Navigation',
-      label: lang === 'id' ? 'Film & Musik Favorit' : 'Movies & Music',
+      label:
+        lang === 'id'
+          ? 'Tentang Diriku (Film, Buku & Musik)'
+          : 'Beyond the Data (Films, Books & Music)',
       icon: <Tv className="w-4 h-4" />,
       action: () => {
         onScrollToSection('movies');

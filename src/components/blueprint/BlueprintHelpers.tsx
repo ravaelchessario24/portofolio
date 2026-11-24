@@ -572,7 +572,7 @@ export function BlueprintLoader() {
           { label: 'Keahlian', active: false, w: 'w-16' },
           { label: 'Pendidikan', active: false, w: 'w-20' },
           { label: 'Highlights', active: false, w: 'w-18' },
-          { label: 'Film & Musik', active: false, w: 'w-22' },
+          { label: 'Tentang Diriku', active: false, w: 'w-24' },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             {item.active && <span className="w-4 h-[1.5px] bg-white" />}

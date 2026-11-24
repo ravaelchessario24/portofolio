@@ -41,6 +41,7 @@ import {
   pick,
 } from './blueprint/blueprintData';
 import { ClosingQuery } from './blueprint/ClosingQuery';
+import { Bookshelf3D } from './blueprint/Bookshelf3D';
 import {
   type BlueprintView,
   ProjectDetailView,
@@ -62,7 +63,7 @@ const NAV_ITEMS = [
   { label: { id: 'Keahlian', en: 'Skills' }, href: 'skills' },
   { label: { id: 'Pendidikan', en: 'Education' }, href: 'education' },
   { label: { id: 'Highlights', en: 'Highlights' }, href: 'highlights' },
-  { label: { id: 'Film & Musik', en: 'Movies & Music' }, href: 'movies' },
+  { label: { id: 'Tentang Diriku', en: 'Beyond the Data' }, href: 'movies' },
 ];
 
 export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
@@ -1200,20 +1201,20 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               6. MOVIES & MUSIC SECTION (#movies — Full Color Posters + Playable Spotify)
+               6. TENTANG DIRIKU SECTION (#movies — Films + Interactive 3D Bookshelf + Music)
                ================================================================ */}
             <section id="movies" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-                  {lang === 'id' ? 'Film & Musik' : 'Movies & Music'}
+                  {lang === 'id' ? 'Tentang Diriku' : 'Beyond the Data'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Daftar film favorit dan lagu yang menemani sesi vibe coding maupun eksplorasi data.'
-                    : 'Favorite films and music rotation accompanying vibe coding and data exploration.'}
+                    ? 'Sisi personal saya di luar dunia data — mulai dari film favorit, bacaan di rak buku, hingga musik yang menemani sesi vibe coding.'
+                    : 'A closer look at who I am beyond the data — from favorite films and my interactive bookshelf to music on rotation during vibe coding.'}
                 </p>
 
-                {/* Movies Poster Grid (Full Color — No Monochrome Filter) */}
+                {/* 1. Movies Poster Grid (Top) */}
                 <div className="mt-4">
                   <div className="flex items-center justify-between mb-2.5">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
@@ -1262,8 +1263,11 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   </div>
                 </div>
 
-                {/* Music Rotation + Playable Spotify Embed */}
-                <div className="mt-6">
+                {/* 2. Interactive 3D Bookshelf (Middle — Between Movies and Music) */}
+                <Bookshelf3D lang={lang} withBase={withBase} />
+
+                {/* 3. Music Rotation + Playable Spotify Embed (Bottom) */}
+                <div className="mt-7">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
                       {lang === 'id' ? 'Musik & Rotasi Spotify' : 'Music & Spotify Rotation'}
@@ -1329,7 +1333,9 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
                 <div className="mt-6 flex justify-center">
                   <SoftPillButton onClick={() => navigateToView('anime')}>
-                    {lang === 'id' ? 'Lihat Detail Film & Album' : 'Explore Movies & Albums'}
+                    {lang === 'id'
+                      ? 'Lihat Detail Film, Buku & Album'
+                      : 'Explore Films, Books & Albums'}
                   </SoftPillButton>
                 </div>
               </div>
@@ -1386,7 +1392,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   onClick={() => navigateToView('anime')}
                   className="hover:text-neutral-900 dark:hover:text-white cursor-pointer"
                 >
-                  {lang === 'id' ? 'Film & Musik' : 'Movies & Music'}
+                  {lang === 'id' ? 'Tentang Diriku' : 'Beyond the Data'}
                 </button>
                 <span>·</span>
                 <button
