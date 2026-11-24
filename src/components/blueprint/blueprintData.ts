@@ -96,85 +96,6 @@ export interface BlueprintExperience {
 
 export const blueprintExperiences: BlueprintExperience[] = [
   {
-    id: 'kkn-digimapan',
-    title: 'KKN Digimapan — ITB Ahmad Dahlan Jakarta',
-    role: {
-      id: 'Divisi Acara (Events Division)',
-      en: 'Events Division · Community Service',
-    },
-    dates: { id: '2025', en: '2025' },
-    location: {
-      id: 'Desa Lebak Wangi, Kab. Tangerang',
-      en: 'Lebak Wangi Village, Tangerang Regency',
-    },
-    src: 'images/itb-ad-logo.webp',
-    type: { id: 'Lapangan', en: 'On-site' },
-    imageFit: 'contain',
-    points: {
-      id: [
-        'Koordinasi Acara: Menyusun rundown kegiatan dan mengoordinasikan jalannya acara pengabdian masyarakat KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi.',
-        'Inisiasi Literasi Digital SD: Mengusulkan dan memandu program pengenalan komputer tingkat Sekolah Dasar menggunakan Typingcore untuk latihan mengetik dasar serta Microsoft Paint untuk melatih koordinasi kursor.',
-        'Pendampingan Praktik: Mendampingi siswa secara bergiliran dalam kelompok kecil agar setiap anak dapat mempraktikkan pengoperasian laptop secara langsung.',
-      ],
-      en: [
-        'Event Coordination: Prepared activity rundowns and coordinated community service events for ITB Ahmad Dahlan Digimapan KKN in Lebak Wangi Village.',
-        'Elementary Digital Literacy: Initiated and mentored elementary computer literacy sessions using Typingcore for basic typing and Microsoft Paint for mouse cursor coordination.',
-        'Hands-on Mentorship: Guided students in rotating small groups so every child gained direct hands-on experience operating a laptop.',
-      ],
-    },
-    tech: ['Digital Literacy', 'Typingcore', 'Microsoft Paint', 'Event Planning', 'Team Collaboration'],
-    metrics: [
-      { label: { id: 'Sasaran', en: 'Target Audience' }, value: 'Siswa SD' },
-      { label: { id: 'Lokasi', en: 'Location' }, value: 'Lebak Wangi' },
-      { label: { id: 'Program', en: 'Program' }, value: 'Digimapan' },
-      { label: { id: 'Tahun', en: 'Year' }, value: '2025' },
-    ],
-    photos: [
-      {
-        src: 'images/gallery/kkn-1.webp',
-        caption: {
-          id: 'Foto bersama tim KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi',
-          en: 'ITB Ahmad Dahlan Digimapan KKN team in Lebak Wangi Village',
-        },
-      },
-      {
-        src: 'images/gallery/kkn-2.webp',
-        caption: {
-          id: 'Pendampingan siswa SD belajar mengetik dan menggunakan kursor laptop',
-          en: 'Mentoring elementary students on typing and laptop cursor control',
-        },
-      },
-      {
-        src: 'images/gallery/kkn-3.webp',
-        caption: {
-          id: 'Sesi praktik komputer dasar secara berkelompok bersama siswa SD',
-          en: 'Small-group basic computer practice session with elementary students',
-        },
-      },
-      {
-        src: 'images/gallery/kkn-4.webp',
-        caption: {
-          id: 'Antusiasme siswa SD saat mengikuti kelas literasi digital KKN Digimapan',
-          en: 'High student engagement during the KKN Digimapan digital literacy class',
-        },
-      },
-      {
-        src: 'images/gallery/kkn-5.webp',
-        caption: {
-          id: 'Dokumentasi kegiatan edukasi dan kebersamaan tim KKN bersama siswa',
-          en: 'Documentation of educational activities with students and KKN team',
-        },
-      },
-      {
-        src: 'images/gallery/kkn-6.webp',
-        caption: {
-          id: 'Penutupan rangkaian kegiatan KKN Digimapan ITB Ahmad Dahlan',
-          en: 'Closing ceremony of ITB Ahmad Dahlan Digimapan KKN program',
-        },
-      },
-    ],
-  },
-  {
     id: 'magang-paud',
     title: 'PAUD KB Flamboyan',
     role: {
@@ -184,61 +105,140 @@ export const blueprintExperiences: BlueprintExperience[] = [
     dates: { id: 'Mar 2025 – Mei 2025', en: 'Mar 2025 – May 2025' },
     location: { id: 'Tangerang, Indonesia', en: 'Tangerang, Indonesia' },
     src: 'images/experience/paud-1.webp',
-    type: { id: 'On-site', en: 'On-site' },
+    type: { id: 'Magang · On-site', en: 'Internship · On-site' },
     imageFit: 'cover',
     points: {
       id: [
-        'Pengembangan Website & CMS: Merancang dan membangun website landing page serta Content Management System untuk informasi sekolah, mencakup manajemen konten dinamis, data guru, dan kurikulum mata pelajaran.',
-        'Efisiensi Administrasi +50%: Meningkatkan efisiensi administrasi sekolah hingga 50% melalui digitalisasi pendataan profil guru dan silabus kegiatan ke dalam database MySQL terstruktur.',
-        'Desain Responsif: Mengembangkan tampilan website yang responsif di perangkat mobile dan desktop untuk mempermudah calon orang tua murid mengakses informasi sekolah.',
+        'Arsitektur Sistem & CMS: Merancang dan mengimplementasikan website profil resmi serta Content Management System (CMS) terpusat untuk mengelola informasi akademik, direktori pengajar, dan silabus kurikulum secara dinamis.',
+        'Optimalisasi Basis Data (+50% Efisiensi): Menstrukturkan skema database relasional MySQL untuk menggantikan pencatatan manual yang tersebar, memangkas waktu kerja administrasi sekolah hingga 50%.',
+        'Aksesibilitas Publik Responsif: Membangun antarmuka lintas perangkat (mobile & desktop) yang intuitif guna mempermudah orang tua murid mengakses jadwal kelas, profil guru, dan informasi pendaftaran.',
       ],
       en: [
-        'Website & CMS Development: Designed and built a landing page website and Content Management System for school information, covering dynamic content, teacher records, and class curriculum.',
-        '+50% Administrative Efficiency: Increased school administrative efficiency by up to 50% by digitizing teacher profiles and activity syllabi into a structured MySQL database.',
-        'Responsive Interface: Developed a responsive interface across mobile and desktop devices so prospective parents can easily access school information.',
+        'System Architecture & CMS: Designed and deployed an official school website and centralized Content Management System (CMS) to dynamically manage academic updates, teacher directories, and class curricula.',
+        'Database Optimization (+50% Efficiency): Structured a normalized MySQL relational database to replace fragmented manual records, reducing administrative processing time by up to 50%.',
+        'Responsive Public Access: Engineered a clean, mobile-first interface enabling prospective parents to seamlessly explore class schedules, educator profiles, and enrollment details.',
       ],
     },
-    tech: ['MySQL', 'SQL', 'Web CMS', 'HTML/CSS', 'Responsive UI', 'Data Structuring'],
+    tech: ['MySQL', 'SQL', 'Web CMS', 'Relational Schema', 'HTML/CSS', 'Responsive UI'],
     metrics: [
-      { label: { id: 'Efisiensi Waktu', en: 'Admin Time Cut' }, value: '50%' },
+      { label: { id: 'Efisiensi Admin', en: 'Admin Efficiency' }, value: '+50%' },
       { label: { id: 'Basis Data', en: 'Database' }, value: 'MySQL' },
-      { label: { id: 'Modul CMS', en: 'CMS Modules' }, value: '5 Halaman' },
-      { label: { id: 'Periode', en: 'Term' }, value: 'Mar–Mei 2025' },
+      { label: { id: 'Modul Sistem', en: 'CMS Modules' }, value: '5 Modul' },
+      { label: { id: 'Periode', en: 'Duration' }, value: 'Mar–Mei 2025' },
     ],
     photos: [
       {
         src: 'images/experience/paud-1.webp',
         caption: {
-          id: 'Beranda Website PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Website Hero Page',
+          id: 'Beranda Utama Website Resmi PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Official Website Hero Section',
         },
       },
       {
         src: 'images/experience/paud-2.webp',
         caption: {
-          id: 'Statistik Sekolah, Profil, Visi & Misi PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Statistics, Profile, Vision & Mission',
+          id: 'Ringkasan Statistik Sekolah, Profil, Visi & Misi PAUD KB Flamboyan',
+          en: 'School Key Statistics, Institutional Profile, Vision & Mission',
         },
       },
       {
         src: 'images/experience/paud-3.webp',
         caption: {
-          id: 'Direktori Guru Terstruktur PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Structured Teacher Directory',
+          id: 'Direktori Profil Tenaga Pendidik Terintegrasi Database MySQL',
+          en: 'Structured Educator Directory Backed by MySQL Database',
         },
       },
       {
         src: 'images/experience/paud-4.webp',
         caption: {
-          id: 'Jadwal Harian & Kurikulum Kelas PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Daily Class Schedule & Curriculum',
+          id: 'Manajemen Jadwal Harian & Kurikulum Kelas (Play Group, Kelas A, Kelas B)',
+          en: 'Daily Class Schedule & Curriculum Module (Play Group, Class A, Class B)',
         },
       },
       {
         src: 'images/experience/paud-5.webp',
         caption: {
-          id: 'Testimoni Orang Tua & Integrasi Peta Lokasi PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Parent Testimonials & Location Map',
+          id: 'Ulasan Orang Tua Murid & Integrasi Peta Lokasi Sekolah',
+          en: 'Parent Testimonials & Interactive Location Map Integration',
+        },
+      },
+    ],
+  },
+  {
+    id: 'kkn-digimapan',
+    title: 'KKN Digimapan — ITB Ahmad Dahlan Jakarta',
+    role: {
+      id: 'Divisi Acara · Pengabdian Masyarakat',
+      en: 'Events Division · Community Engagement',
+    },
+    dates: { id: '2025', en: '2025' },
+    location: {
+      id: 'Desa Lebak Wangi, Kab. Tangerang',
+      en: 'Lebak Wangi Village, Tangerang Regency',
+    },
+    src: 'images/itb-ad-logo.webp',
+    type: { id: 'Lapangan', en: 'Field Program' },
+    imageFit: 'contain',
+    points: {
+      id: [
+        'Inisiasi Program Literasi Digital SD: Menggagas dan memfasilitasi kurikulum pengenalan komputer dasar bagi siswa Sekolah Dasar menggunakan Typingcore (akurasi mengetik) serta Microsoft Paint (koordinasi motorik kursor).',
+        'Manajemen Operasional Acara: Menyusun alur kegiatan (rundown), jadwal lintas divisi, serta koordinasi pemangku kepentingan desa untuk memastikan seluruh program KKN Digimapan berjalan tepat sasaran.',
+        'Pendampingan Praktik Terukur: Menerapkan metode belajar kelompok kecil secara bergiliran sehingga 100% siswa peserta memperoleh pengalaman praktik langsung mengoperasikan perangkat laptop.',
+      ],
+      en: [
+        'Elementary Digital Literacy Initiative: Spearheaded and facilitated foundational computer literacy workshops for elementary students utilizing Typingcore (typing fluency) and Microsoft Paint (cursor motor control).',
+        'Program & Event Operations: Designed end-to-end event rundowns, cross-division schedules, and local stakeholder coordination to ensure smooth execution across all KKN Digimapan initiatives.',
+        'Structured Hands-on Mentorship: Implemented rotating small-group lab sessions ensuring every participating student gained direct, guided experience operating a laptop.',
+      ],
+    },
+    tech: ['Digital Literacy', 'Typingcore', 'Microsoft Paint', 'Program Coordination', 'Public Speaking'],
+    metrics: [
+      { label: { id: 'Sasaran Utama', en: 'Target Group' }, value: 'Siswa SD' },
+      { label: { id: 'Lokasi', en: 'Location' }, value: 'Lebak Wangi' },
+      { label: { id: 'Program', en: 'Initiative' }, value: 'Digimapan' },
+      { label: { id: 'Tahun', en: 'Year' }, value: '2025' },
+    ],
+    photos: [
+      {
+        src: 'images/gallery/kkn-1.webp',
+        caption: {
+          id: 'Tim Pelaksana KKN Digimapan ITB Ahmad Dahlan di Desa Lebak Wangi',
+          en: 'ITB Ahmad Dahlan Digimapan KKN Team in Lebak Wangi Village',
+        },
+      },
+      {
+        src: 'images/gallery/kkn-2.webp',
+        caption: {
+          id: 'Pendampingan Langsung Siswa SD Berlatih Mengetik & Mengarahkan Kursor',
+          en: 'Hands-on Mentoring for Elementary Students on Typing & Cursor Control',
+        },
+      },
+      {
+        src: 'images/gallery/kkn-3.webp',
+        caption: {
+          id: 'Sesi Praktik Komputer Dasar Berkelompok Menggunakan Typingcore & Paint',
+          en: 'Small-Group Computer Lab Session Using Typingcore & Microsoft Paint',
+        },
+      },
+      {
+        src: 'images/gallery/kkn-4.webp',
+        caption: {
+          id: 'Antusiasme Siswa Sekolah Dasar dalam Kelas Literasi Digital',
+          en: 'Student Participation During the Elementary Digital Literacy Workshop',
+        },
+      },
+      {
+        src: 'images/gallery/kkn-5.webp',
+        caption: {
+          id: 'Dokumentasi Kolaborasi Edukasi Tim KKN Bersama Siswa Desa Lebak Wangi',
+          en: 'Educational Collaboration Between KKN Facilitators and Local Students',
+        },
+      },
+      {
+        src: 'images/gallery/kkn-6.webp',
+        caption: {
+          id: 'Penutupan Rangkaian Program Pengabdian KKN Digimapan 2025',
+          en: 'Closing Ceremony of the 2025 KKN Digimapan Community Program',
         },
       },
     ],
@@ -264,8 +264,8 @@ export const blueprintProjects: BlueprintProject[] = [
   {
     slug: 'mobile-jkn',
     title: {
-      id: 'Analisis Sentimen & Dashboard Mobile JKN',
-      en: 'Mobile JKN Sentiment Analysis & Dashboard',
+      id: 'Analisis Sentimen & Dashboard Interaktif Mobile JKN',
+      en: 'Mobile JKN Sentiment Analysis & Interactive Dashboard',
     },
     imageTitle: 'Mobile JKN Streamlit Dashboard',
     src: 'images/projects/mobile-jkn-dashboard.webp',
@@ -273,53 +273,53 @@ export const blueprintProjects: BlueprintProject[] = [
       {
         src: 'images/projects/mobile-jkn-dashboard.webp',
         caption: {
-          id: 'Ringkasan Eksekutif — Dashboard Analisis Sentimen Mobile JKN (59.980 Ulasan Berlabel & Akurasi 94,38%)',
-          en: 'Executive Summary — Mobile JKN Sentiment Analysis Dashboard (59,980 Labeled Reviews & 94.38% Accuracy)',
+          id: 'Ringkasan Eksekutif — Dashboard Analisis Sentimen Mobile JKN (59.980 Ulasan Berlabel · Akurasi Uji 94,38%)',
+          en: 'Executive Summary — Mobile JKN Sentiment Dashboard (59,980 Labeled Reviews · 94.38% Test Accuracy)',
         },
       },
       {
         src: 'images/projects/mobile-jkn-2.webp',
         caption: {
-          id: 'Statistik Dataset — Distribusi Sentimen (52,5% Positif vs 47,5% Negatif) & Distribusi Rating 1–5 Bintang',
-          en: 'Dataset Statistics — Sentiment Distribution (52.5% Positive vs 47.5% Negative) & 1–5 Star Ratings',
+          id: 'Eksplorasi Dataset — Proporsi Sentimen Seimbang (31.470 Positif : 28.510 Negatif) & Distribusi Rating 1–5',
+          en: 'Dataset Exploration — Balanced Sentiment Split (31,470 Positive : 28,510 Negative) & 1–5 Star Distribution',
         },
       },
       {
         src: 'images/projects/mobile-jkn-3.webp',
         caption: {
-          id: 'Pembobotan Kata TF-IDF — 20 Bigram Teratas & Word Cloud Sentimen Positif/Negatif',
-          en: 'TF-IDF Word Weighting — Top 20 Bigrams & Positive/Negative Sentiment Word Clouds',
+          id: 'Ekstraksi Fitur TF-IDF — 20 Bigram Dominan Pemeta Kendala Login/Verifikasi & Word Cloud Sentimen',
+          en: 'TF-IDF Feature Extraction — Top 20 Bigrams Highlighting Login/Verification Pain Points & Word Clouds',
         },
       },
       {
         src: 'images/projects/mobile-jkn-4.webp',
         caption: {
-          id: 'Evaluasi & Model — Confusion Matrix Data Training/Testing, Kurva ROC (AUC = 0,965) & Log-Probability',
-          en: 'Model Evaluation — Training/Testing Confusion Matrix, ROC Curve (AUC = 0.965) & Log-Probability',
+          id: 'Evaluasi Model — Confusion Matrix (80:20), Presisi 91,15%, Recall 98,89%, F1 94,86% & ROC AUC 0,965',
+          en: 'Model Evaluation — Confusion Matrix (80:20), 91.15% Precision, 98.89% Recall, 94.86% F1 & 0.965 ROC AUC',
         },
       },
       {
         src: 'images/projects/mobile-jkn-5.webp',
         caption: {
-          id: 'Prediksi & Pelabelan Otomatis — Fitur Unggah File Excel (.xlsx) untuk Klasifikasi Sentimen Baru',
-          en: 'Automated Prediction & Labeling — Excel (.xlsx) Upload for Batch Sentiment Classification',
+          id: 'Inferensi Batch Otomatis — Modul Unggah File Excel (.xlsx) untuk Klasifikasi Sentimen Ulasan Baru',
+          en: 'Automated Batch Inference — Excel (.xlsx) Upload Module for Real-Time Sentiment Classification',
         },
       },
     ],
     description: {
-      id: 'Pipeline klasifikasi sentimen end-to-end berbasis Python terhadap 63.766 ulasan Google Play Store aplikasi Mobile JKN (Jan 2025 – Jan 2026) dengan Hybrid Labeling (InSet Lexicon), 15.000 fitur TF-IDF bigram, dan Multinomial Naive Bayes (akurasi 94,38%, F1-score 94,86%, AUC 0,965).',
-      en: 'End-to-end Python sentiment classification pipeline on 63,766 Mobile JKN Google Play Store reviews (Jan 2025 – Jan 2026) combining Hybrid Labeling (InSet Lexicon), 15,000 TF-IDF bigram features, and Multinomial Naive Bayes (94.38% accuracy, 94.86% F1-score, 0.965 AUC).',
+      id: 'Pipeline NLP & Machine Learning end-to-end pada 63.766 ulasan Google Play Store Mobile JKN (Jan 2025 – Jan 2026) menggunakan Hybrid Labeling (InSet Lexicon), 15.000 fitur TF-IDF bigram, dan Multinomial Naive Bayes (Akurasi 94,38%, F1-Score 94,86%, ROC AUC 0,965).',
+      en: 'End-to-end NLP & Machine Learning pipeline analyzing 63,766 Mobile JKN Google Play Store reviews (Jan 2025 – Jan 2026) via Hybrid Labeling (InSet Lexicon), 15,000 TF-IDF bigram features, and Multinomial Naive Bayes (94.38% Accuracy, 94.86% F1-Score, 0.965 ROC AUC).',
     },
     longDescription: {
       id: [
-        'Mengumpulkan 63.766 ulasan pengguna aplikasi Mobile JKN dari Google Play Store (periode Januari 2025 – Januari 2026) menggunakan kerangka kerja Knowledge Discovery in Database (KDD), lalu melakukan text preprocessing, normalisasi kata tidak baku, stopword removal, dan stemming selektif Sastrawi hingga menghasilkan 62.878 teks bersih.',
-        'Menerapkan metode Hybrid Labeling (menggabungkan rating bintang dan kamus InSet Lexicon) pada 59.980 ulasan berlabel seimbang (31.470 positif : 28.510 negatif), yang mengungkap bahwa 89% ulasan bintang 3 berisi keluhan nyata dan mengoreksi label negatif pada 41% ulasan bintang 4.',
-        'Mengekstraksi 15.000 fitur TF-IDF bigram dan melatih model Multinomial Naive Bayes (pembagian 80:20) hingga mencapai akurasi uji 94,38%, presisi 91,15%, recall 98,89%, F1-score 94,86%, dan ROC AUC 0,965, serta menyajikannya ke dalam dashboard interaktif Streamlit.',
+        'Akuisisi & Pembersihan Data Skala Besar: Mengolah 63.766 ulasan mentah pengguna aplikasi Mobile JKN dari Google Play Store (periode Januari 2025 – Januari 2026) menggunakan kerangka Knowledge Discovery in Databases (KDD). Melalui tahapan case folding, normalisasi kata tidak baku, penghapusan stopword, dan stemming selektif Sastrawi, diperoleh 62.878 teks bersih siap analisis.',
+        'Rekayasa Pelabelan Hibrida (Hybrid Labeling): Mengombinasikan skor rating bintang dengan kamus sentimen bahasa Indonesia InSet Lexicon untuk membentuk 59.980 data berlabel seimbang (31.470 positif : 28.510 negatif). Pendekatan ini mengungkap temuan krusial bahwa 89% ulasan bintang 3 mengandung keluhan fungsional nyata serta mengoreksi anomali sentimen negatif pada 41% ulasan bintang 4.',
+        'Pemodelan & Dampak Bisnis Terukur: Mengekstraksi 15.000 fitur TF-IDF bigram dan melatih algoritma Multinomial Naive Bayes (pembagian 80:20), menghasilkan Akurasi Uji 94,38%, Presisi 91,15%, Recall 98,89%, F1-Score 94,86%, dan ROC AUC 0,965. Hasil analisis disajikan pada dashboard interaktif Streamlit yang memetakan prioritas perbaikan utama aplikasi pada kendala login, OTP, dan verifikasi akun.',
       ],
       en: [
-        'Collected 63,766 Mobile JKN user reviews from Google Play Store (January 2025 – January 2026) following the Knowledge Discovery in Database (KDD) framework, performing text cleaning, slang normalization, stopword removal, and selective Sastrawi stemming across 62,878 cleaned texts.',
-        'Applied Hybrid Labeling (combining star ratings with the InSet Lexicon dictionary) to produce 59,980 balanced reviews (31,470 positive : 28,510 negative), revealing that 89% of 3-star reviews contain real complaints and correcting 41% of 4-star reviews to negative.',
-        'Extracted 15,000 TF-IDF bigram features and trained a Multinomial Naive Bayes classifier (80:20 split) achieving 94.38% test accuracy, 91.15% precision, 98.89% recall, 94.86% F1-score, and 0.965 ROC AUC, deployed in an interactive Streamlit dashboard.',
+        'Large-Scale Data Acquisition & Cleaning: Processed 63,766 raw Mobile JKN user reviews from the Google Play Store (January 2025 – January 2026) under the Knowledge Discovery in Databases (KDD) framework. Executed text cleaning, Indonesian slang normalization, stopword removal, and selective Sastrawi stemming to produce 62,878 clean records.',
+        'Hybrid Sentiment Labeling Engineering: Combined star ratings with the Indonesian InSet Lexicon dictionary to construct a balanced dataset of 59,980 labeled reviews (31,470 positive : 28,510 negative)—uncovering that 89% of 3-star reviews express genuine user complaints and correcting mislabeled negative sentiment across 41% of 4-star reviews.',
+        'Predictive Modeling & Product Insights: Extracted 15,000 TF-IDF bigram features and trained a Multinomial Naive Bayes classifier (80:20 split), achieving 94.38% Test Accuracy, 91.15% Precision, 98.89% Recall, 94.86% F1-Score, and 0.965 ROC AUC. Deployed findings into an interactive Streamlit dashboard pinpointing login, OTP, and account verification bottlenecks as top product priorities.',
       ],
     },
     tech: ['python', 'sklearn', 'pandas', 'numpy', 'streamlit', 'matplotlib', 'seaborn', 'nlp'],
@@ -327,7 +327,7 @@ export const blueprintProjects: BlueprintProject[] = [
     status: 'live',
     hasPin: true,
     metrics: [
-      { label: { id: 'Ulasan Diolah', en: 'Reviews Processed' }, value: '63.766' },
+      { label: { id: 'Ulasan Diolah', en: 'Reviews Analyzed' }, value: '63.766' },
       { label: { id: 'Akurasi Uji', en: 'Test Accuracy' }, value: '94,38%' },
       { label: { id: 'F1-Score', en: 'F1-Score' }, value: '94,86%' },
       { label: { id: 'ROC AUC', en: 'ROC AUC' }, value: '0,965' },
@@ -336,8 +336,8 @@ export const blueprintProjects: BlueprintProject[] = [
   {
     slug: 'paud-flamboyan',
     title: {
-      id: 'Website & CMS Sekolah — PAUD KB Flamboyan',
-      en: 'School Website & CMS — PAUD KB Flamboyan',
+      id: 'Website Profil & CMS Sekolah — PAUD KB Flamboyan',
+      en: 'School Profile Website & CMS — PAUD KB Flamboyan',
     },
     imageTitle: 'PAUD KB Flamboyan CMS',
     src: 'images/experience/paud-1.webp',
@@ -345,28 +345,28 @@ export const blueprintProjects: BlueprintProject[] = [
       {
         src: 'images/experience/paud-1.webp',
         caption: {
-          id: 'Halaman Utama (Hero) Website PAUD KB Flamboyan',
-          en: 'PAUD KB Flamboyan Landing Page Hero',
+          id: 'Halaman Utama (Hero) Website Profil PAUD KB Flamboyan',
+          en: 'PAUD KB Flamboyan Official Landing Page Hero',
         },
       },
       {
         src: 'images/experience/paud-2.webp',
         caption: {
-          id: 'Statistik Sekolah, Profil, Visi & Misi PAUD KB Flamboyan',
-          en: 'School Statistics, Profile, Vision & Mission Section',
+          id: 'Ringkasan Statistik Sekolah, Profil Institusi, Visi & Misi',
+          en: 'School Statistics, Institutional Profile, Vision & Mission',
         },
       },
       {
         src: 'images/experience/paud-3.webp',
         caption: {
-          id: 'Direktori & Pendataan Profil Guru Terstruktur',
-          en: 'Structured Teacher Profile Directory',
+          id: 'Direktori & Manajemen Data Profil Guru Terstruktur',
+          en: 'Structured Educator Profile Directory & Records',
         },
       },
       {
         src: 'images/experience/paud-4.webp',
         caption: {
-          id: 'Jadwal Harian & Silabus Kurikulum Interaktif per Kelas (Play Group, Kelas A, Kelas B)',
+          id: 'Jadwal Harian & Silabus Kurikulum per Kelas (Play Group, Kelas A, Kelas B)',
           en: 'Interactive Daily Schedule & Class Curriculum (Play Group, Class A, Class B)',
         },
       },
@@ -379,34 +379,34 @@ export const blueprintProjects: BlueprintProject[] = [
       },
     ],
     description: {
-      id: 'Website landing page dan Content Management System (CMS) berbasis MySQL untuk PAUD KB Flamboyan yang memusatkan informasi sekolah, direktori guru, dan jadwal kurikulum, meningkatkan efisiensi administrasi hingga 50%.',
-      en: 'MySQL-backed landing page and Content Management System (CMS) for PAUD KB Flamboyan centralizing school information, teacher directory, and class schedules, cutting administrative time by up to 50%.',
+      id: 'Sistem informasi web dan Content Management System (CMS) berbasis MySQL yang mengintegrasikan profil sekolah, direktori guru, serta jadwal kurikulum PAUD KB Flamboyan—meningkatkan efisiensi administrasi hingga 50%.',
+      en: 'MySQL-powered school website and Content Management System (CMS) centralizing institutional profiles, teacher records, and class schedules for PAUD KB Flamboyan—boosting administrative efficiency by up to 50%.',
     },
     longDescription: {
       id: [
-        'Merancang dan membangun sistem informasi web serta Content Management System (CMS) untuk PAUD KB Flamboyan guna menggantikan pencatatan profil guru, jadwal kelas, dan pengumuman yang sebelumnya tersebar secara manual.',
-        'Menstrukturkan basis data relasional MySQL untuk manajemen konten dinamis (profil sekolah, daftar pengajar, jadwal harian Play Group / Kelas A / Kelas B, serta informasi pendaftaran), sehingga meningkatkan efisiensi waktu administrasi sekolah hingga 50%.',
+        'Digitalisasi Operasional Sekolah: Merancang dan membangun platform web profil beserta Content Management System (CMS) bagi PAUD KB Flamboyan untuk mentransformasi pengelolaan data guru, jadwal pembelajaran, dan informasi pendaftaran dari pencatatan manual menjadi sistem digital terpusat.',
+        'Strukturisasi Database Relasional MySQL: Mendesain tabel relasional MySQL yang terukur untuk mengelola konten dinamis (statistik sekolah, direktori pengajar, serta kurikulum Play Group, Kelas A, dan Kelas B), memangkas waktu pembaruan administrasi sekolah hingga 50%.',
       ],
       en: [
-        'Designed and built a web information system and Content Management System (CMS) for PAUD KB Flamboyan to replace manual, scattered teacher profile records, class schedules, and school announcements.',
-        'Structured a relational MySQL database for dynamic content management (school profile, teacher directory, daily schedules for Play Group / Class A / Class B, and enrollment info), improving administrative efficiency by up to 50%.',
+        'School Operations Digitization: Engineered an integrated web portal and Content Management System (CMS) for PAUD KB Flamboyan, transforming scattered manual records for educator profiles, class schedules, and admissions into a single source of truth.',
+        'Relational MySQL Data Modeling: Designed normalized MySQL tables supporting dynamic updates across school statistics, teacher directories, and class syllabi (Play Group, Class A, and Class B), cutting administrative turnaround time by up to 50%.',
       ],
     },
     tech: ['mysql', 'sql', 'cms'],
     status: 'live',
     hasPin: true,
     metrics: [
-      { label: { id: 'Efisiensi Waktu', en: 'Admin Time Saved' }, value: '50%' },
+      { label: { id: 'Efisiensi Admin', en: 'Admin Efficiency' }, value: '+50%' },
       { label: { id: 'Basis Data', en: 'Database' }, value: 'MySQL' },
       { label: { id: 'Kelas Terdata', en: 'Classes Managed' }, value: '3 Kelas' },
-      { label: { id: 'Tahun', en: 'Year' }, value: '2025' },
+      { label: { id: 'Periode', en: 'Delivered' }, value: '2025' },
     ],
   },
 ];
 
 export const blueprintSkillGroups = [
   {
-    group: { id: 'Data & Analitik', en: 'Data & Analytics' },
+    group: { id: 'Data, Query & Pemrograman', en: 'Data, Querying & Programming' },
     skills: [
       { name: 'Python', icon: SiPython },
       { name: 'SQL', icon: Database },
@@ -419,21 +419,61 @@ export const blueprintSkillGroups = [
     ],
   },
   {
-    group: { id: 'Visualisasi, Dashboard & Metode', en: 'Visualization, Dashboard & Methods' },
+    group: { id: 'Analitik, Machine Learning & Visualisasi', en: 'Analytics, ML & Visualization' },
     skills: [
+      { name: 'Data Cleaning & EDA', icon: Table2 },
+      { name: 'Machine Learning & NLP', icon: BrainCircuit },
       { name: 'Streamlit', icon: SiStreamlit },
       { name: 'Matplotlib', icon: BarChart3 },
       { name: 'Seaborn', icon: LineChart },
-      { name: 'Data Cleaning & EDA', icon: Table2 },
-      { name: 'Machine Learning & NLP', icon: BrainCircuit },
     ],
   },
   {
-    group: { id: 'Lingkungan & Alat Kerja', en: 'Tools & Environment' },
+    group: { id: 'Lingkungan & Ekosistem Kerja', en: 'Tools & Environment' },
     skills: [
       { name: 'Jupyter Notebook', icon: SiJupyter },
       { name: 'Google Colab', icon: SiGooglecolab },
     ],
+  },
+];
+
+export interface BlueprintCertification {
+  id: string;
+  title: string;
+  issuer: string;
+  period: { id: string; en: string };
+  detail: { id: string; en: string };
+  credentialId?: string;
+  badge: string;
+  image: string;
+}
+
+// Strictly the 2 completed professional training certifications
+export const blueprintCertifications: BlueprintCertification[] = [
+  {
+    id: 'cert-dsarea-grade-a',
+    title: 'Data Analyst Bootcamp — DSAREA',
+    issuer: 'DSAREA',
+    period: { id: 'Okt – Nov 2025', en: 'Oct – Nov 2025' },
+    detail: {
+      id: 'Predikat A (Grade A · Skor 85–100)',
+      en: 'Grade A Distinction (Score 85–100)',
+    },
+    credentialId: '043/DSAREA/XI/2025',
+    badge: 'DSAREA · Grade A',
+    image: 'images/certs/cert-dsarea.webp',
+  },
+  {
+    id: 'cert-google-coursera',
+    title: 'Google IT Support Professional Certificate',
+    issuer: 'Coursera · Google',
+    period: { id: 'Jan – Mar 2025', en: 'Jan – Mar 2025' },
+    detail: {
+      id: '5 Kursus Spesialisasi Google',
+      en: '5-Course Google Career Specialization',
+    },
+    badge: 'Coursera · Google',
+    image: 'images/certs/cert-coursera.webp',
   },
 ];
 
@@ -450,8 +490,8 @@ export const blueprintHighlights: BlueprintHighlight[] = [
   {
     id: 'cert-dsarea-grade-a',
     title: {
-      id: 'Sertifikat Kelulusan Data Analyst Bootcamp DSAREA — Predikat A (Grade A · Skor 85–100)',
-      en: 'DSAREA Data Analyst Bootcamp Certificate of Completion — Grade A (Score 85–100)',
+      id: 'Data Analyst Bootcamp — DSAREA (Okt–Nov 2025 · Predikat A / Grade A · Skor 85–100 · ID: 043/DSAREA/XI/2025)',
+      en: 'Data Analyst Bootcamp — DSAREA (Oct–Nov 2025 · Grade A · Score 85–100 · ID: 043/DSAREA/XI/2025)',
     },
     badge: 'DSAREA · Grade A',
     image: 'images/certs/cert-dsarea.webp',
@@ -461,8 +501,8 @@ export const blueprintHighlights: BlueprintHighlight[] = [
   {
     id: 'cert-google-coursera',
     title: {
-      id: 'Google IT Support Professional Certificate — Coursera (5 Kursus Spesialisasi Google)',
-      en: 'Google IT Support Professional Certificate — Coursera (5-Course Google Specialization)',
+      id: 'Google IT Support Professional Certificate — Coursera (Jan–Mar 2025 · 5 Kursus Spesialisasi Google)',
+      en: 'Google IT Support Professional Certificate — Coursera (Jan–Mar 2025 · 5-Course Google Specialization)',
     },
     badge: 'Coursera · Google',
     image: 'images/certs/cert-coursera.webp',
@@ -471,7 +511,7 @@ export const blueprintHighlights: BlueprintHighlight[] = [
   },
 ];
 
-// Anime & Music data helpers
+// Movies & Music data helpers
 export type AnimeStatus = 'Watching' | 'Completed' | 'On hold' | 'Dropped';
 export type AnimeSectionId = 'watching' | 'favorites' | 'recent' | 'classics' | 'movies' | 'more';
 
@@ -492,12 +532,12 @@ export interface AnimeItem {
 }
 
 export const animeSectionDefs: { id: AnimeSectionId; title: { id: string; en: string } }[] = [
-  { id: 'watching', title: { id: 'Sedang Ditonton', en: 'Watching now' } },
-  { id: 'favorites', title: { id: 'Favorit Sepanjang Masa', en: 'All-time favorites' } },
-  { id: 'recent', title: { id: 'Baru Saja Ditonton', en: 'Recently watched' } },
-  { id: 'classics', title: { id: 'Klasik', en: 'Classics' } },
-  { id: 'movies', title: { id: 'Film Anime', en: 'Movies' } },
-  { id: 'more', title: { id: 'Lainnya yang Sudah Ditonton', en: 'Also watched' } },
+  { id: 'favorites', title: { id: 'Sinema & Serial Favorit', en: 'Favorite Films & Series' } },
+  { id: 'movies', title: { id: 'Animasi Pilihan', en: 'Animated Favorites' } },
+  { id: 'classics', title: { id: 'Aksi, Drama & Klasik Hangat', en: 'Action, Heartfelt & Classics' } },
+  { id: 'watching', title: { id: 'Sedang Ditonton', en: 'Currently Watching' } },
+  { id: 'recent', title: { id: 'Baru Ditonton', en: 'Recently Watched' } },
+  { id: 'more', title: { id: 'Tontonan Lainnya', en: 'More Watchlist' } },
 ];
 
 const allAnime = rawAnime as AnimeItem[];
@@ -515,14 +555,17 @@ export const animeSections = animeSectionDefs
 export const animeList = animeSections.flatMap((s) => s.items);
 export const animeWithCovers = animeList.filter((a) => a.cover);
 
+const totalRuntimeMinutes = animeList.reduce((sum, a) => sum + (a.runtime ?? 0), 0);
+
 export const animeStats = {
   total: animeList.length,
-  episodes: animeList.reduce((sum, a) => sum + (a.episodes ?? 0), 0),
+  minutes: totalRuntimeMinutes,
+  hours: Math.max(1, Math.round(totalRuntimeMinutes / 60)),
 };
 
 export const musicScenes = rawMusic.scenes as { scene: string; artists: string[] }[];
 export const allArtists = musicScenes.flatMap((s) => s.artists);
-export const featuredArtists = musicScenes.flatMap((s) => s.artists.slice(0, 3));
+export const featuredArtists = musicScenes.flatMap((s) => s.artists.slice(0, 4));
 export const nowPlaying = rawMusic.nowPlaying as {
   trackId: string;
   title: string;

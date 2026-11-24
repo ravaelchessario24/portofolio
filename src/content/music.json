@@ -1,143 +1,142 @@
 {
-  "_comment": "Array order is display order. Scenes list the artists shown as chips; nowPlaying is the embedded track (the id after /track/ in a Spotify share link). To add an album paste its Spotify album id with artist, year and scene, then run `npm run refresh-music` to fill in title and download the cover.",
+  "_comment": "Music rotation & Spotify track configuration for Muhammad Ravael Chessario Ramdoni.",
   "scenes": [
     {
-      "scene": "Western rap",
+      "scene": "Indonesian Pop / Indie",
       "artists": [
-        "Eminem",
-        "J. Cole",
+        "Lealona",
+        "The Jeblogs",
+        "Perunggu",
+        ".Feast",
+        "Hindia",
+        "Tulus",
+        "Raim Laode"
+      ]
+    },
+    {
+      "scene": "Hip-Hop & R&B",
+      "artists": [
+        "Kendrick Lamar",
+        "Don Toliver",
         "Travis Scott",
-        "XXXTENTACION",
-        "Nipsey Hussle",
-        "Jack Harlow"
+        "Frank Ocean",
+        "SZA",
+        "Metro Boomin",
+        "Daniel Caesar",
+        "The Weeknd"
       ]
     },
     {
-      "scene": "Desi hip-hop",
+      "scene": "Pop",
       "artists": [
-        "Seedhe Maut",
-        "KR$NA",
-        "Karma",
-        "Prabh Deep",
-        "Raftaar",
-        "Bohemia",
-        "Sikander Kahlon",
-        "Young Stunners"
-      ]
-    },
-    {
-      "scene": "Pop & R&B",
-      "artists": [
-        "Taylor Swift",
-        "Gracie Abrams",
-        "Dua Lipa",
-        "Tyla",
-        "ZAYN",
-        "Lana Del Rey",
-        "Selena Gomez",
-        "Ed Sheeran",
-        "Sia",
-        "Maroon 5"
-      ]
-    },
-    {
-      "scene": "Punjabi",
-      "artists": [
-        "Sidhu Moose Wala",
-        "Karan Aujla",
-        "Shubh",
-        "AP Dhillon",
-        "Parmish Verma",
-        "Talwiinder"
-      ]
-    },
-    {
-      "scene": "Haryanvi",
-      "artists": [
-        "Dhanda Nyoliwala",
-        "Khasa Aala Chahar",
-        "CHIEF",
-        "Lash Curry"
+        "Bruno Mars",
+        "LANY",
+        "Justin Bieber",
+        "Rex Orange County"
       ]
     }
   ],
   "nowPlaying": {
-    "trackId": "6HZILIRieu8S0iqY8kIKhj",
-    "title": "DNA.",
-    "artist": "Kendrick Lamar"
+    "trackId": "41jLKrK1nJisuz8JJ2t09Y",
+    "title": "Sekian, Terima Kasih",
+    "artist": "Lealona & The Jeblogs"
   },
   "albums": [
     {
-      "id": "4otkd9As6YaxxEkIjXPiZ6",
-      "artist": "Eminem",
-      "year": 2020,
-      "scene": "Western rap",
-      "title": "Music To Be Murdered By",
-      "cover": "/music/eminem-music-to-be-murdered-by.webp"
+      "id": "6xqtDhaQjqdAT9W3hYfXbI",
+      "artist": "Lealona & The Jeblogs",
+      "year": 2025,
+      "scene": "Indonesian Pop / Indie",
+      "title": "Sekian, Terima Kasih",
+      "cover": "/music/lealona-sekian-terima-kasih.webp"
     },
     {
-      "id": "47BiFcV59TQi2s9SkBo2pb",
-      "artist": "Eminem",
-      "year": 2010,
-      "scene": "Western rap",
-      "title": "Recovery",
-      "cover": "/music/eminem-recovery.webp"
-    },
-    {
-      "id": "41GuZcammIkupMPKH2OJ6I",
-      "artist": "Travis Scott",
-      "year": 2018,
-      "scene": "Western rap",
-      "title": "ASTROWORLD",
-      "cover": "/music/travis-scott-astroworld.webp"
-    },
-    {
-      "id": "1Sf8GsXG32t0jNrX11xqWx",
-      "artist": "Travis Scott",
-      "year": 2019,
-      "scene": "Western",
-      "title": "JACKBOYS",
-      "cover": "/music/travis-scott-jackboys.webp"
-    },
-    {
-      "id": "7txGsnDSqVMoRl6RQ9XyZP",
-      "artist": "Metro Boomin",
+      "id": "2ZI3XeIrCM1PsOtK3rlMth",
+      "artist": "Perunggu",
       "year": 2022,
-      "scene": "Western rap",
-      "title": "HEROES & VILLAINS",
-      "cover": "/music/metro-boomin-heroes-villains.webp"
+      "scene": "Indonesian Pop / Indie",
+      "title": "Memorandum",
+      "cover": "/music/perunggu-memorandum.webp"
     },
     {
-      "id": "0UMMIkurRUmkruZ3KGBLtG",
-      "artist": "J. Cole",
-      "year": 2014,
-      "scene": "Western rap",
-      "title": "2014 Forest Hills Drive",
-      "cover": "/music/j-cole-2014-forest-hills-drive.webp"
+      "id": "0y9i2KHDYh2gKfbpUNiM86",
+      "artist": ".Feast",
+      "year": 2024,
+      "scene": "Indonesian Pop / Indie",
+      "title": "Membangun & Menghancurkan",
+      "cover": "/music/feast-membangun-menghancurkan.webp"
     },
     {
-      "id": "16PSZwABl4VFJvfDFOPOoB",
-      "artist": "Seedhe Maut",
+      "id": "2kgo1jbmAmaANgE8EaIrKX",
+      "artist": "Hindia",
       "year": 2023,
-      "scene": "Desi hip-hop",
-      "title": "Lunch Break",
-      "cover": "/music/seedhe-maut-lunch-break.webp"
+      "scene": "Indonesian Pop / Indie",
+      "title": "Lagipula Hidup Akan Berakhir",
+      "cover": "/music/hindia-lagipula-hidup-akan-berakhir.webp"
     },
     {
-      "id": "1fNqSeMllriqw6YYFnkYC6",
-      "artist": "Karma",
+      "id": "3R4IAF9ApqYeUQrv1ddyoR",
+      "artist": "Tulus",
+      "year": 2022,
+      "scene": "Indonesian Pop / Indie",
+      "title": "Manusia",
+      "cover": "/music/tulus-manusia.webp"
+    },
+    {
+      "id": "6iRVSCVx0OkJvmkT6WIpc8",
+      "artist": "Raim Laode",
+      "year": 2022,
+      "scene": "Indonesian Pop / Indie",
+      "title": "Komang",
+      "cover": "/music/raim-laode-komang.webp"
+    },
+    {
+      "id": "6SWmGozzQDUaczHXMuE8Za",
+      "artist": "LANY",
+      "year": 2018,
+      "scene": "Pop",
+      "title": "Malibu Nights",
+      "cover": "/music/lany-malibu-nights.webp"
+    },
+    {
+      "id": "5dGWwsZ9iB2Xc3UKR0gif2",
+      "artist": "Justin Bieber",
       "year": 2021,
-      "scene": "Desi hip-hop",
-      "title": "Made You Proud",
-      "cover": "/music/karma-made-you-proud.webp"
+      "scene": "Pop",
+      "title": "Justice",
+      "cover": "/music/justin-bieber-justice.webp"
     },
     {
-      "id": "09JgaY8X1pjMhllG2HSdiF",
-      "artist": "Tyla",
-      "year": 2026,
-      "scene": "Pop & R&B",
-      "title": "A*POP",
-      "cover": "/music/tyla-a-pop.webp"
+      "id": "5CNckxfLf4TCoMOoxgAU8l",
+      "artist": "Rex Orange County",
+      "year": 2019,
+      "scene": "Pop",
+      "title": "Pony",
+      "cover": "/music/rex-orange-county-pony.webp"
+    },
+    {
+      "id": "0S0r2RFucaW9kVjBtcBOV1",
+      "artist": "Bruno Mars & Silk Sonic",
+      "year": 2021,
+      "scene": "Pop",
+      "title": "An Evening With Silk Sonic",
+      "cover": "/music/bruno-mars-silk-sonic.webp"
+    },
+    {
+      "id": "4eLPsYPBmXABThSJ821sqY",
+      "artist": "Kendrick Lamar",
+      "year": 2017,
+      "scene": "Hip-Hop & R&B",
+      "title": "DAMN.",
+      "cover": "/music/kendrick-lamar-damn.webp"
+    },
+    {
+      "id": "0Kzb3u6kMnOJOZXYFSk33F",
+      "artist": "Don Toliver",
+      "year": 2024,
+      "scene": "Hip-Hop & R&B",
+      "title": "HARDSTONE PSYCHO",
+      "cover": "/music/don-toliver-hardstone-psycho.webp"
     }
   ]
 }
