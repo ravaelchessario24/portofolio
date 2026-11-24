@@ -547,10 +547,6 @@ export function BlueprintLoader() {
       <div className="absolute top-0 bottom-0 left-2.5 sm:left-4 md:left-[15%] lg:left-[18%] xl:left-[26%] w-[1px] bg-white/50" />
       <div className="absolute top-0 bottom-0 right-2.5 sm:right-4 md:right-[15%] lg:right-[18%] xl:right-[26%] w-[1px] bg-white/50" />
 
-      {/* Horizontal Blueprint Lines — Exact 1:1 coordinates with PortfolioApp */}
-      <div className="absolute left-0 right-0 top-[18vh] sm:top-[22vh] h-[1px] bg-white/50" />
-      <div className="absolute left-0 right-0 top-[calc(18vh+106px)] sm:top-[calc(22vh+112px)] h-[1px] bg-white/50" />
-
       {/* Left Margin Dimension Rulers (Desktop) */}
       <div className="hidden md:flex flex-col items-end justify-center pr-2 absolute left-0 md:w-[15%] lg:w-[18%] xl:w-[26%] top-0 h-[22vh] font-mono text-[9px] text-white/75">
         <span>┬ 22vh</span>
@@ -596,26 +592,23 @@ export function BlueprintLoader() {
 
       {/* Center Column — Exact 1:1 coordinates with PortfolioApp */}
       <div className="mx-2.5 sm:mx-4 md:mx-[15%] lg:mx-[18%] xl:mx-[26%]">
-        {/* 1. Top Banner (Exact h-[18vh] sm:h-[22vh] — no offset!) */}
+        {/* 1. Top Banner (Exact h-[18vh] sm:h-[22vh]) */}
         <div
           className={`relative h-[18vh] sm:h-[22vh] w-full overflow-hidden transition-opacity duration-300 ${
             phase >= 1 ? 'opacity-100' : 'opacity-0'
           }`}
           style={hatchStyle}
         >
-          {/* Top-center dimension line */}
           <div className="absolute top-2 left-3 right-3 flex items-center justify-between text-[9px] font-mono text-white/80">
             <BpTag>BANNER 01</BpTag>
             <span className="hidden sm:inline-block px-1.5 py-0.5 bg-[#2355B8]/90 border border-white/40">
               ◄─── 100% × 22vh ───►
             </span>
-            {/* Clock position matching CurrentTime */}
             <div className="px-2 py-0.5 border border-white/85 bg-[#2355B8]/80 font-mono text-[11px] sm:text-xs font-bold text-white">
               TIME · WIB
             </div>
           </div>
 
-          {/* Center-right subject wireframe box matching samurai silhouette in banner */}
           <div className="absolute bottom-2 right-[18%] w-24 sm:w-32 h-[62%] border border-dashed border-white/65 flex items-end justify-center pb-1">
             <span className="px-1 bg-[#2355B8]/90 font-mono text-[8px] text-white/85">
               HERO_ART
@@ -623,16 +616,21 @@ export function BlueprintLoader() {
           </div>
         </div>
 
-        {/* 2. Profile Bar (Exact h-[106px] sm:h-[112px] flex) */}
+        {/* In-Flow Full-Bleed Horizontal Line 1 */}
+        <div className="relative w-full h-[1px]">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[1px] bg-white/50" />
+        </div>
+
+        {/* 2. Profile Bar (Exact min-h-[96px] sm:h-[112px] flex items-stretch) */}
         <div
-          className={`relative h-[106px] sm:h-[112px] flex transition-all duration-300 ${
+          className={`relative min-h-[96px] sm:h-[112px] flex items-stretch transition-all duration-300 ${
             phase >= 1 ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {/* Avatar Box — Exact h-full w-[94px] sm:w-[112px] shrink-0 p-[3px] */}
-          <div className="relative h-full w-[94px] sm:w-[112px] shrink-0 p-[3px] border-r border-white/50">
+          {/* Avatar Box */}
+          <div className="relative w-[88px] sm:w-[112px] shrink-0 p-[3px] border-r border-white/50 flex items-center justify-center">
             <div
-              className="w-full h-full rounded-[10px] border border-white/90 flex flex-col justify-between p-1.5"
+              className="w-full aspect-square sm:h-full rounded-[10px] border border-white/90 flex flex-col justify-between p-1.5"
               style={hatchStyle}
             >
               <BpTag>AVATAR</BpTag>
@@ -642,21 +640,18 @@ export function BlueprintLoader() {
             </div>
           </div>
 
-          {/* Right Header Controls + Name & Location */}
-          <div className="relative flex-1 flex flex-col justify-between px-2.5 sm:px-4 py-1.5 sm:py-2 min-w-0">
-            {/* Exact top-[42%] horizontal line */}
-            <div className="absolute left-0 right-0 top-[42%] h-[1px] bg-white/45" />
-
+          {/* Right Header Controls + In-Flow Divider + Name & Location */}
+          <div className="relative flex-1 flex flex-col justify-between min-w-0">
             {/* Top Row: Tagline + ID/EN + ⌘K + Theme */}
-            <div className="flex justify-between items-center gap-2">
-              <div className="flex items-center gap-1.5 min-w-0 flex-1">
+            <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-wrap sm:flex-nowrap justify-between items-center gap-x-2 gap-y-1">
+              <div className="order-2 sm:order-1 w-full sm:w-auto flex items-center gap-1.5 min-w-0 sm:flex-1">
                 <BpTag>COPY 01</BpTag>
                 <div
-                  className="h-4 w-48 sm:w-72 max-w-full border border-white/70"
+                  className="h-3.5 sm:h-4 flex-1 sm:w-72 max-w-full border border-white/70"
                   style={hatchStyle}
                 />
               </div>
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="order-1 sm:order-2 ml-auto sm:ml-0 flex items-center gap-1.5 shrink-0">
                 <div
                   className="h-5 w-11 border border-white/85 flex items-center justify-center font-mono text-[8px] text-white"
                   style={hatchStyle}
@@ -678,8 +673,11 @@ export function BlueprintLoader() {
               </div>
             </div>
 
+            {/* In-Flow Horizontal Divider */}
+            <div className="w-full h-[1px] bg-white/45" />
+
             {/* Bottom Row: Name + Location */}
-            <div className="pt-1 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-1 min-w-0">
+            <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-1 min-w-0">
               <div className="flex flex-col gap-0.5 flex-1 max-w-md">
                 <div className="flex items-center gap-1.5">
                   <BpTag>TITLE</BpTag>
@@ -687,7 +685,7 @@ export function BlueprintLoader() {
                     385 × 28
                   </span>
                 </div>
-                <div className="h-6 sm:h-7 w-full border border-white/90" style={hatchStyle} />
+                <div className="h-5 sm:h-7 w-full border border-white/90" style={hatchStyle} />
               </div>
 
               <div className="hidden sm:flex items-center gap-1.5 shrink-0">
@@ -696,6 +694,11 @@ export function BlueprintLoader() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* In-Flow Full-Bleed Horizontal Line 2 */}
+        <div className="relative w-full h-[1px]">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[1px] bg-white/50" />
         </div>
 
         {/* 3. Intro Bio, Bullet Points, CTA Buttons & Social Pills (Exact pt-5 px-4 pb-6) */}

@@ -30,6 +30,7 @@ import {
   blueprintCertifications,
   blueprintCoursework,
   blueprintHighlights,
+  blueprintProfileMeta,
   animeWithCovers,
   musicScenes,
   featuredArtists,
@@ -39,6 +40,7 @@ import {
   iconMap,
   pick,
 } from './blueprint/blueprintData';
+import { ClosingQuery } from './blueprint/ClosingQuery';
 import {
   type BlueprintView,
   ProjectDetailView,
@@ -181,7 +183,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
     const onPointerDown = (e: PointerEvent) => {
       const el = findInteractive(e.target);
-      if (el) {
+      if (el && !el.hasAttribute('data-cq-btn')) {
         triggerHapticAndSound('tap');
       }
     };
@@ -334,22 +336,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
         style={dashedY}
       />
 
-      {/* Horizontal Blueprint Lines */}
-      <div
-        className="absolute left-0 right-0 top-[18vh] sm:top-[22vh] h-[1px] z-20"
-        style={dashedX}
-      />
-      <div
-        className="absolute left-0 right-0 top-[calc(18vh+106px)] sm:top-[calc(22vh+112px)] h-[1px] z-20"
-        style={dashedX}
-      />
-
-      {/* Intersection Nodes (3px × 3px) */}
-      <div className="hidden md:block absolute md:left-[15%] lg:left-[18%] xl:left-[26%] top-[22vh] w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-      <div className="hidden md:block absolute md:right-[15%] lg:right-[18%] xl:right-[26%] top-[22vh] w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-      <div className="hidden md:block absolute md:left-[15%] lg:left-[18%] xl:left-[26%] top-[calc(22vh+112px)] w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-      <div className="hidden md:block absolute md:right-[15%] lg:right-[18%] xl:right-[26%] top-[calc(22vh+112px)] w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
-
       {/* Center Architectural Column */}
       <div className="mx-2.5 sm:mx-4 md:mx-[15%] lg:mx-[18%] xl:mx-[26%]">
         {/* Top Banner with Particles & Dot-Matrix Clock */}
@@ -372,10 +358,20 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
           <CurrentTime />
         </div>
 
-        {/* Profile Bar (106px on mobile so full tagline & full name fit without any truncation, 112px on sm+) */}
-        <div className="relative h-[106px] sm:h-[112px] flex">
+        {/* In-Flow Full-Bleed Horizontal Blueprint Line 1 (Below Banner) */}
+        <div className="relative w-full h-[1px] z-20">
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[1px]"
+            style={dashedX}
+          />
+          <div className="hidden md:block absolute left-0 top-0 w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+          <div className="hidden md:block absolute right-0 top-0 w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+        </div>
+
+        {/* Profile Bar — Dynamic height on mobile so it NEVER overlaps content below, 112px on sm+ */}
+        <div className="relative min-h-[96px] sm:h-[112px] flex items-stretch">
           {/* Avatar Box — Full Color */}
-          <div className="relative h-full w-[94px] sm:w-[112px] shrink-0 p-[3px]">
+          <div className="relative w-[88px] sm:w-[112px] shrink-0 p-[3px] flex items-center justify-center">
             <button
               type="button"
               onClick={() =>
@@ -387,7 +383,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     : 'B.Sc. in Information Technology — ITB Ahmad Dahlan Jakarta (GPA 3.77 / 4.00 · Cumlaude)',
                 )
               }
-              className="relative w-full h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700 bg-white"
+              className="relative w-full aspect-square sm:h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700 bg-white"
             >
               <img
                 src={withBase('images/ravael-square.webp')}
@@ -401,23 +397,21 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             />
           </div>
 
-          {/* Right Header Controls + Name & Location */}
-          <div className="relative flex-1 flex flex-col justify-between px-2.5 sm:px-4 py-1.5 sm:py-2 min-w-0">
-            <div className="absolute left-0 right-0 top-[46%] sm:top-[42%] h-[1px]" style={dashedX} />
-
-            {/* Top Action Row: Full Tagline (never cut off!) + ID|EN + ⌘K + Theme Toggle */}
-            <div className="flex justify-between items-center gap-1.5 sm:gap-2">
+          {/* Right Header Controls + In-Flow Divider + Name & Location */}
+          <div className="relative flex-1 flex flex-col justify-between min-w-0">
+            {/* Top Action Row: Tagline + ID|EN + ⌘K + Theme Toggle */}
+            <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-wrap sm:flex-nowrap justify-between items-center gap-x-2 gap-y-1">
               <button
                 type="button"
                 onClick={() => navigateToView('home')}
-                className="text-[10px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 leading-tight cursor-pointer text-left min-w-0 flex-1"
+                className="order-2 sm:order-1 w-full sm:w-auto text-[10.5px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 leading-snug cursor-pointer text-left min-w-0 sm:flex-1"
               >
                 {lang === 'id'
                   ? 'Seorang Data dan Tech Enthusiast yang suka vibe coding'
                   : 'A Data and Tech Enthusiast who loves vibe coding'}
               </button>
 
-              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+              <div className="order-1 sm:order-2 ml-auto sm:ml-0 flex items-center gap-1 sm:gap-1.5 shrink-0">
                 {/* ID | EN Switcher */}
                 <button
                   type="button"
@@ -464,11 +458,14 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               </div>
             </div>
 
-            {/* Bottom Name + Location Row (Single clean line on Desktop & iPhone without wrapping or truncation) */}
-            <div className="pt-1 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-x-2 gap-y-0.5 min-w-0">
+            {/* In-Flow Horizontal Dashed Divider between Tagline and Name */}
+            <div className="w-full h-[1px]" style={dashedX} />
+
+            {/* Bottom Name + Location Row */}
+            <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-x-2 gap-y-0.5 min-w-0">
               <h1
                 onClick={() => navigateToView('home')}
-                className="text-[13px] sm:text-[17px] md:text-[18px] lg:text-[20px] xl:text-[22px] font-bold tracking-tight leading-tight cursor-pointer sm:whitespace-nowrap"
+                className="text-[13.5px] sm:text-[17px] md:text-[18px] lg:text-[20px] xl:text-[22px] font-bold tracking-tight leading-snug cursor-pointer sm:whitespace-nowrap"
                 style={{
                   textShadow:
                     '-0.4px 0 rgba(255,0,80,0.22), 0.4px 0 rgba(0,200,255,0.22)',
@@ -477,11 +474,21 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 Muhammad Ravael Chessario Ramdoni
               </h1>
 
-              <span className="text-[10px] sm:text-xs text-neutral-500 font-medium tracking-wide shrink-0">
+              <span className="text-[10.5px] sm:text-xs text-neutral-500 font-medium tracking-wide shrink-0">
                 Tangerang, Indonesia
               </span>
             </div>
           </div>
+        </div>
+
+        {/* In-Flow Full-Bleed Horizontal Blueprint Line 2 (Below Profile Bar — Never Overlaps!) */}
+        <div className="relative w-full h-[1px] z-20">
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[1px]"
+            style={dashedX}
+          />
+          <div className="hidden md:block absolute left-0 top-0 w-[3px] h-[3px] -translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
+          <div className="hidden md:block absolute right-0 top-0 w-[3px] h-[3px] translate-x-[1px] -translate-y-[1px] bg-neutral-500/50 z-30" />
         </div>
 
         {/* ====================================================================
@@ -631,8 +638,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
               <p>
                 {lang === 'id'
-                  ? 'Saat ini terbuka untuk posisi Full-Time maupun Internship di bidang Data Analyst, Data Science, atau IT Helpdesk.'
-                  : 'Currently open to Full-Time and Internship positions in Data Analyst, Data Science, or IT Helpdesk.'}
+                  ? `Saat ini terbuka untuk posisi ${pick(blueprintProfileMeta.openTypes, lang)} di bidang ${pick(blueprintProfileMeta.openFields, lang)}.`
+                  : `Currently open to ${pick(blueprintProfileMeta.openTypes, lang)} positions in ${pick(blueprintProfileMeta.openFields, lang)}.`}
               </p>
 
               {/* CTA Buttons: FlipCoverButton + SoftPillButton */}
@@ -1331,20 +1338,9 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="w-full h-[1px] my-4" style={dashedX} />
 
             {/* ================================================================
-               7. MINIMAL QUOTE & DOT-MATRIX INTERACTIVE FOOTER
+               7. CLOSING QUERY SECTION (Replaces W. Edwards Deming Quote)
                ================================================================ */}
-            <section className="w-full py-6 px-4">
-              <div className="relative p-5 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700">
-                <p className="text-xs md:text-sm italic text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                  {lang === 'id'
-                    ? '“Tanpa data, Anda hanyalah orang lain yang memiliki opini.”'
-                    : '“Without data, you’re just another person with an opinion.”'}
-                </p>
-                <p className="mt-2 text-xs text-neutral-500 text-right font-mono">
-                  — W. Edwards Deming
-                </p>
-              </div>
-            </section>
+            <ClosingQuery lang={lang} />
           </>
         )}
 

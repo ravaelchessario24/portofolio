@@ -558,6 +558,47 @@ export const albums = (
   }[]
 ).filter((a) => a.cover);
 
+export const blueprintProfileMeta = {
+  shortName: 'Ravael',
+  openFields: {
+    id: 'Data Analyst, Data Science, IT Helpdesk',
+    en: 'Data Analyst, Data Science, IT Helpdesk',
+  },
+  openTypes: {
+    id: 'Full-Time, Internship',
+    en: 'Full-Time, Internship',
+  },
+};
+
+export const closingQueryI18n = {
+  id: {
+    eyebrow: 'Query terakhir',
+    heading: 'Satu query sebelum Anda pergi.',
+    subtext: 'Hasilnya hanya satu baris. Mungkin justru yang Anda cari.',
+    fileName: 'kontak.sql',
+    engine: 'MySQL',
+    statusIdle: 'siap dijalankan',
+    statusRunning: 'menjalankan…',
+    statusDone: '1 baris · 0,01 dtk',
+    btnIdle: 'Jalankan query',
+    btnRunning: 'Menjalankan…',
+    btnDone: 'Jalankan ulang',
+  },
+  en: {
+    eyebrow: 'Final query',
+    heading: 'One last query before you go.',
+    subtext: "Just one row. Maybe exactly what you're looking for.",
+    fileName: 'kontak.sql',
+    engine: 'MySQL',
+    statusIdle: 'ready to run',
+    statusRunning: 'running…',
+    statusDone: '1 row · 0.01 s',
+    btnIdle: 'Run query',
+    btnRunning: 'Running…',
+    btnDone: 'Run again',
+  },
+} as const;
+
 export type { Lang };
 export function pickText(val: { id: string; en: string } | string, lang: Lang): string {
   if (typeof val === 'string') return val;
