@@ -257,6 +257,38 @@ export const NOVEL_BOOKS: Book3DItem[] = [
     ),
   },
   {
+    id: 'bulan-tere-liye',
+    category: 'novel',
+    title: 'Bulan',
+    author: 'Tere Liye',
+    cover: 'books/bulan-tere-liye.webp',
+    height: 242,
+    spineWidth: 42,
+    spineBg: '#4C1D7A',
+    spineText: '#FFFFFF',
+    renderSpine: () => (
+      <div className="relative w-full h-full flex flex-col items-center justify-between py-3 select-none">
+        <div className="w-5 h-[1px] bg-white/50" />
+        <div
+          className="flex-1 flex items-center justify-center"
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+        >
+          <span className="text-[15.5px] font-black tracking-[0.16em] text-white uppercase">
+            BULAN
+          </span>
+        </div>
+        <div
+          className="pt-1 flex items-center justify-center"
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+        >
+          <span className="text-[8px] font-extrabold tracking-[0.15em] text-[#E9D5FF] uppercase">
+            TERE LIYE
+          </span>
+        </div>
+      </div>
+    ),
+  },
+  {
     id: 'hujan-tere-liye',
     category: 'novel',
     title: 'Hujan',
@@ -292,78 +324,35 @@ export const NOVEL_BOOKS: Book3DItem[] = [
     ),
   },
   {
-    id: 'fur-immer-dein-ian',
+    id: 'negeri-para-bedebah',
     category: 'novel',
-    title: 'Für Immer Dein, Ian.',
-    author: 'Valerie',
-    cover: 'books/fur-immer-dein-ian.webp',
-    height: 234,
-    spineWidth: 40,
-    spineBg: '#5C6843',
-    spineText: '#FDFBF7',
+    title: 'Negeri Para Bedebah',
+    author: 'Tere Liye',
+    cover: 'books/negeri-para-bedebah.webp',
+    height: 250,
+    spineWidth: 44,
+    spineBg: '#E1373A',
+    spineText: '#FFFFFF',
     renderSpine: () => (
       <div className="w-full h-full flex flex-col items-center justify-between py-3 select-none">
         <div
-          className="flex-1 flex items-center justify-center"
-          style={{
-            writingMode: 'vertical-rl',
-            textOrientation: 'mixed',
-            fontFamily: 'Georgia, "Times New Roman", serif',
-          }}
+          className="flex-1 flex items-center justify-center text-center"
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
-          <span className="text-[11.5px] italic font-semibold tracking-wide text-[#FDFBF7]">
-            Für Immer Dein, Ian.
+          <span className="text-[11px] font-black tracking-[0.09em] text-white uppercase">
+            NEGERI PARA BEDEBAH
           </span>
         </div>
         <div
           className="pt-1 flex items-center justify-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[7.5px] font-bold tracking-[0.16em] text-[#E6E2D3] uppercase">
-            VALERIE
-          </span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'harry-potter-philosophers-stone',
-    category: 'novel',
-    title: "Harry Potter and the Philosopher's Stone",
-    author: 'J.K. Rowling',
-    cover: 'books/harry-potter-philosophers-stone.webp',
-    height: 254,
-    spineWidth: 44,
-    spineBg: '#191718',
-    spineText: '#F5F5F4',
-    renderSpine: () => (
-      <div className="w-full h-full flex flex-col justify-between overflow-hidden select-none">
-        <div className="h-[22px] w-full bg-[#C82314] flex items-center justify-center">
-          <span className="text-[6.5px] font-bold tracking-widest text-white uppercase">
-            YEAR 1
-          </span>
-        </div>
-        <div
-          className="flex-1 flex items-center justify-center py-2"
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
             fontFamily: 'Georgia, "Times New Roman", serif',
           }}
         >
-          <span className="text-[11px] font-bold tracking-[0.06em] text-[#EAB308] uppercase leading-tight">
-            HARRY POTTER
-            <span className="text-[8px] font-normal text-white/85 normal-case italic block">
-              Philosopher&apos;s Stone
-            </span>
-          </span>
-        </div>
-        <div
-          className="pb-2.5 flex items-center justify-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[7px] font-mono tracking-[0.14em] text-[#E14B3B] uppercase font-bold">
-            J.K. ROWLING
+          <span className="text-[9px] italic font-bold text-[#141414]">
+            Tere Liye
           </span>
         </div>
       </div>
@@ -507,60 +496,24 @@ export function Bookshelf3D({
         </span>
       </div>
 
-      {/* 3D Bookshelf Stage — Divided cleanly into Non-Fiction (Left) and Novels (Right) */}
-      <div className="relative rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30 pt-5 pb-4 px-2 sm:px-4 overflow-x-auto">
-        <div className="min-w-[560px] flex flex-col items-center">
-          {/* Category Labels Row */}
-          <div className="w-full max-w-[660px] flex items-center justify-between px-3 mb-3 text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-            <span>
-              {lang === 'id'
-                ? '◄ Non-Fiksi & Pengembangan Diri (6)'
-                : '◄ Non-Fiction & Mindset (6)'}
-            </span>
-            <span>
-              {lang === 'id' ? 'Novel & Fiksi (4) ►' : 'Novels & Fiction (4) ►'}
-            </span>
-          </div>
-
-          {/* Books Row with Center Shelf Divider */}
-          <div className="flex items-end justify-center px-2">
-            {/* Left Group: 6 Non-Fiction Books */}
-            <div className="flex items-end gap-[5px] sm:gap-[6px]">
-              {NON_FICTION_BOOKS.map((book) => (
-                <Book3DButton
-                  key={book.id}
-                  book={book}
-                  isOpen={activeBookId === book.id}
-                  onToggle={handleBookClick}
-                  withBase={withBase}
-                />
-              ))}
-            </div>
-
-            {/* Clean Architectural Bookend Gap / Divider between Non-Fiction and Novels */}
-            <div
-              aria-hidden="true"
-              className="mx-4 sm:mx-6 h-[220px] flex flex-col items-center justify-end select-none"
-            >
-              <div className="w-[1px] h-full border-l border-dashed border-neutral-300 dark:border-neutral-700" />
-            </div>
-
-            {/* Right Group: 4 Novel Books */}
-            <div className="flex items-end gap-[5px] sm:gap-[6px]">
-              {NOVEL_BOOKS.map((book) => (
-                <Book3DButton
-                  key={book.id}
-                  book={book}
-                  isOpen={activeBookId === book.id}
-                  onToggle={handleBookClick}
-                  withBase={withBase}
-                />
-              ))}
-            </div>
+      {/* 3D Bookshelf Stage — All 10 books united in 1 row (6 Non-Fiction on left, 4 Novels on right) */}
+      <div className="relative rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30 pt-8 pb-5 px-2 sm:px-4 overflow-x-auto">
+        <div className="min-w-[540px] flex flex-col items-center">
+          {/* Books Row */}
+          <div className="flex items-end justify-center gap-[5px] sm:gap-[6px] px-2">
+            {BOOKSHELF_ITEMS.map((book) => (
+              <Book3DButton
+                key={book.id}
+                book={book}
+                isOpen={activeBookId === book.id}
+                onToggle={handleBookClick}
+                withBase={withBase}
+              />
+            ))}
           </div>
 
           {/* Minimalist Shelf Ledge */}
-          <div className="w-full max-w-[660px] h-[11px] rounded-full bg-[#e4e4e7] dark:bg-[#27272a] shadow-inner" />
+          <div className="w-full max-w-[650px] h-[11px] rounded-full bg-[#e4e4e7] dark:bg-[#27272a] shadow-inner" />
         </div>
       </div>
     </div>
