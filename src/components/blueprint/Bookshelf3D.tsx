@@ -8,12 +8,13 @@ export interface Book3DItem {
   title: string;
   author: string;
   cover: string;
+  spineImage?: string;
   height: number;
   spineWidth: number;
   spineBg: string;
   spineText: string;
   spineBorder?: string;
-  renderSpine: () => React.ReactNode;
+  renderSpine?: () => React.ReactNode;
 }
 
 export const NON_FICTION_BOOKS: Book3DItem[] = [
@@ -226,35 +227,11 @@ export const NOVEL_BOOKS: Book3DItem[] = [
     title: 'Bumi',
     author: 'Tere Liye',
     cover: 'books/bumi-tere-liye.webp',
+    spineImage: 'books/bumi-spine.webp',
     height: 242,
     spineWidth: 42,
-    spineBg: '#093B29',
+    spineBg: '#173A23',
     spineText: '#DFC784',
-    renderSpine: () => (
-      <div className="relative w-full h-full flex flex-col items-center justify-between py-3 select-none">
-        <div className="w-5 h-[1px] bg-[#DFC784]/60" />
-        <div
-          className="flex-1 flex items-center justify-center"
-          style={{
-            writingMode: 'vertical-rl',
-            textOrientation: 'mixed',
-            fontFamily: 'Georgia, "Times New Roman", serif',
-          }}
-        >
-          <span className="text-[16px] font-bold tracking-[0.18em] text-[#DFC784] uppercase">
-            BUMI
-          </span>
-        </div>
-        <div
-          className="pt-1 flex items-center justify-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[8px] font-bold tracking-[0.15em] text-[#DFC784]/90 uppercase">
-            TERE LIYE
-          </span>
-        </div>
-      </div>
-    ),
   },
   {
     id: 'bulan-tere-liye',
@@ -262,101 +239,35 @@ export const NOVEL_BOOKS: Book3DItem[] = [
     title: 'Bulan',
     author: 'Tere Liye',
     cover: 'books/bulan-tere-liye.webp',
+    spineImage: 'books/bulan-spine.webp',
     height: 242,
     spineWidth: 42,
-    spineBg: '#4C1D7A',
-    spineText: '#FFFFFF',
-    renderSpine: () => (
-      <div className="relative w-full h-full flex flex-col items-center justify-between py-3 select-none">
-        <div className="w-5 h-[1px] bg-white/50" />
-        <div
-          className="flex-1 flex items-center justify-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[15.5px] font-black tracking-[0.16em] text-white uppercase">
-            BULAN
-          </span>
-        </div>
-        <div
-          className="pt-1 flex items-center justify-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[8px] font-extrabold tracking-[0.15em] text-[#E9D5FF] uppercase">
-            TERE LIYE
-          </span>
-        </div>
-      </div>
-    ),
+    spineBg: '#093C64',
+    spineText: '#DFC784',
   },
   {
-    id: 'hujan-tere-liye',
+    id: 'matahari-tere-liye',
     category: 'novel',
-    title: 'Hujan',
+    title: 'Matahari',
     author: 'Tere Liye',
-    cover: 'books/hujan-tere-liye.webp',
-    height: 238,
-    spineWidth: 40,
-    spineBg: '#3A9AD9',
-    spineText: '#FFFFFF',
-    renderSpine: () => (
-      <div className="w-full h-full flex flex-col items-center justify-between py-3 select-none">
-        <div
-          className="flex-1 flex items-center justify-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[15.5px] font-extrabold tracking-[0.16em] text-white uppercase drop-shadow-xs">
-            HUJAN
-          </span>
-        </div>
-        <div
-          className="pt-1 flex items-center justify-center"
-          style={{
-            writingMode: 'vertical-rl',
-            textOrientation: 'mixed',
-            fontFamily: 'Georgia, "Times New Roman", serif',
-          }}
-        >
-          <span className="text-[9.5px] italic font-semibold text-[#0B3C5D]">
-            Tere Liye
-          </span>
-        </div>
-      </div>
-    ),
+    cover: 'books/matahari-tere-liye.webp',
+    spineImage: 'books/matahari-spine.webp',
+    height: 242,
+    spineWidth: 42,
+    spineBg: '#6B241A',
+    spineText: '#DFC784',
   },
   {
-    id: 'negeri-para-bedebah',
+    id: 'bintang-tere-liye',
     category: 'novel',
-    title: 'Negeri Para Bedebah',
+    title: 'Bintang',
     author: 'Tere Liye',
-    cover: 'books/negeri-para-bedebah.webp',
-    height: 250,
-    spineWidth: 44,
-    spineBg: '#E1373A',
-    spineText: '#FFFFFF',
-    renderSpine: () => (
-      <div className="w-full h-full flex flex-col items-center justify-between py-3 select-none">
-        <div
-          className="flex-1 flex items-center justify-center text-center"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        >
-          <span className="text-[11px] font-black tracking-[0.09em] text-white uppercase">
-            NEGERI PARA BEDEBAH
-          </span>
-        </div>
-        <div
-          className="pt-1 flex items-center justify-center"
-          style={{
-            writingMode: 'vertical-rl',
-            textOrientation: 'mixed',
-            fontFamily: 'Georgia, "Times New Roman", serif',
-          }}
-        >
-          <span className="text-[9px] italic font-bold text-[#141414]">
-            Tere Liye
-          </span>
-        </div>
-      </div>
-    ),
+    cover: 'books/bintang-tere-liye.webp',
+    spineImage: 'books/bintang-spine.webp',
+    height: 242,
+    spineWidth: 42,
+    spineBg: '#532550',
+    spineText: '#DFC784',
   },
 ];
 
@@ -418,7 +329,16 @@ function Book3DButton({
           }}
           className="relative rounded-t-[2px] overflow-hidden shadow-md"
         >
-          {book.renderSpine()}
+          {book.spineImage ? (
+            <img
+              src={withBase(book.spineImage)}
+              alt=""
+              className="w-full h-full object-fill block select-none"
+              draggable={false}
+            />
+          ) : (
+            book.renderSpine?.()
+          )}
 
           <div
             aria-hidden="true"

@@ -1270,7 +1270,7 @@ export function CommandMenuModal({
           </button>
         </div>
 
-        <div className="max-h-80 overflow-y-auto p-2 space-y-1">
+        <div data-lenis-prevent className="max-h-80 overflow-y-auto p-2 space-y-1">
           {filtered.map((item, idx) => (
             <button
               key={idx}

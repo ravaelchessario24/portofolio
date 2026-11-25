@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Lenis from 'lenis';
 import {
   ArrowUpRight,
   ChevronDown,
@@ -83,6 +84,40 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   } | null>(null);
 
   const scrollLockUntilRef = useRef<number>(0);
+  const lenisRef = useRef<Lenis | null>(null);
+
+  // Initialize Lenis smooth scrolling (respecting prefers-reduced-motion)
+  useEffect(() => {
+    if (
+      typeof window === 'undefined' ||
+      (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    ) {
+      return;
+    }
+
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+    });
+
+    lenisRef.current = lenis;
+
+    let rafId = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
 
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const withBase = useCallback(
@@ -248,23 +283,35 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
   const navigateToView = useCallback((nextView: BlueprintView) => {
     setView(nextView);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { duration: 0.9 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   const openProjectDetail = useCallback((slug: string) => {
     setActiveProjectSlug(slug);
     setView('project-detail');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { duration: 0.9 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   const scrollToSection = useCallback((sectionId: string) => {
     setActiveSection(sectionId);
-    scrollLockUntilRef.current = Date.now() + 700;
+    scrollLockUntilRef.current = Date.now() + 1100;
     setView('home');
     setTimeout(() => {
       const el = document.getElementById(sectionId);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (lenisRef.current) {
+          lenisRef.current.scrollTo(el, { offset: -16, duration: 1.1 });
+        } else {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     }, 40);
   }, []);
