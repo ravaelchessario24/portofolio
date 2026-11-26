@@ -16,11 +16,18 @@ interface ClosingQueryProps {
 
 export function ClosingQuery({ lang }: ClosingQueryProps) {
   const [state, setState] = useState<QueryState>('idle');
+  const [renderResult, setRenderResult] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [isMac, setIsMac] = useState(false);
   const [isInView, setIsInView] = useState(false);
+
   const sectionRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const runTimerRef = useRef<number | null>(null);
-  const replayTimerRef = useRef<number | null>(null);
+  const closeTimerRef = useRef<number | null>(null);
+  const scrollTimerRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   const t = closingQueryI18n[lang];
   const namaVal = blueprintProfileMeta.shortName;
@@ -33,7 +40,9 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
     }
     return () => {
       if (runTimerRef.current) window.clearTimeout(runTimerRef.current);
-      if (replayTimerRef.current) window.clearTimeout(replayTimerRef.current);
+      if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+      if (rafRef.current) window.cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -51,15 +60,27 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
     return () => observer.disconnect();
   }, []);
 
+  const ensureCardBottomVisible = useCallback((prefersReducedMotion: boolean) => {
+    const cardEl = cardRef.current;
+    if (!cardEl || typeof window === 'undefined') return;
+    const rect = cardEl.getBoundingClientRect();
+    if (rect.bottom > window.innerHeight) {
+      cardEl.scrollIntoView({
+        block: 'nearest',
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
+    }
+  }, []);
+
   const executeQuery = useCallback(() => {
-    if (state === 'running') return;
+    if (state === 'running' || isClosing) return;
 
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Sound & haptic feedback on press (respecting sound switch)
+    // Subtle tap sound + 10ms vibration on press (respecting sound switch)
     if (isSoundEnabled()) {
       triggerHapticAndSound('tap');
       try {
@@ -70,34 +91,57 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
     }
 
     if (runTimerRef.current) window.clearTimeout(runTimerRef.current);
-    if (replayTimerRef.current) window.clearTimeout(replayTimerRef.current);
-
-    if (prefersReducedMotion) {
-      setState('done');
-      if (isSoundEnabled()) {
-        triggerHapticAndSound('hover');
-      }
-      return;
-    }
+    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+    if (rafRef.current) window.cancelAnimationFrame(rafRef.current);
 
     const startRunning = () => {
+      setIsClosing(false);
+      setIsExpanded(false);
+      setRenderResult(false);
       setState('running');
+
       runTimerRef.current = window.setTimeout(() => {
         setState('done');
+        setRenderResult(true);
+
         if (isSoundEnabled()) {
           triggerHapticAndSound('hover');
+        }
+
+        if (prefersReducedMotion) {
+          setIsExpanded(true);
+          scrollTimerRef.current = window.setTimeout(() => {
+            ensureCardBottomVisible(true);
+          }, 20);
+        } else {
+          rafRef.current = window.requestAnimationFrame(() => {
+            rafRef.current = window.requestAnimationFrame(() => {
+              setIsExpanded(true);
+              scrollTimerRef.current = window.setTimeout(() => {
+                ensureCardBottomVisible(false);
+              }, 360);
+            });
+          });
         }
       }, 450);
     };
 
     if (state === 'done') {
-      // Briefly re-blur row before running again
-      setState('idle');
-      replayTimerRef.current = window.setTimeout(startRunning, 80);
+      if (prefersReducedMotion) {
+        startRunning();
+      } else {
+        // Collapse result block over 250ms first, then enter running -> done
+        setIsClosing(true);
+        setIsExpanded(false);
+        closeTimerRef.current = window.setTimeout(() => {
+          startRunning();
+        }, 250);
+      }
     } else {
       startRunning();
     }
-  }, [state]);
+  }, [state, isClosing, ensureCardBottomVisible]);
 
   // Keyboard shortcut: Ctrl+Enter or ⌘+Enter while section is visible in viewport
   useEffect(() => {
@@ -112,13 +156,12 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isInView, executeQuery]);
 
-  const isDone = state === 'done';
-  const isRunning = state === 'running';
-  const valueClass = isDone ? 'cq-result-sharp' : 'cq-result-blur';
+  const isDone = state === 'done' && !isClosing;
+  const isRunning = state === 'running' || isClosing;
   const statusText =
     state === 'idle'
       ? t.statusIdle
-      : state === 'running'
+      : isRunning
         ? t.statusRunning
         : t.statusDone;
 
@@ -147,15 +190,17 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
       </p>
 
       {/* Monochrome SQL Card */}
-      <div className="mt-8 max-w-[720px] w-full mx-auto rounded-[16px] bg-[#0a0a0a] text-[#fafafa] overflow-hidden text-left border border-transparent dark:border-white/[0.12]">
-        {/* 1. Card Header */}
-        <div className="flex items-center justify-between px-[24px] py-[14px] font-mono text-[12px] text-[#a3a3a3] border-b border-[#262626]">
+      <div
+        ref={cardRef}
+        className="mt-8 max-w-[720px] w-full mx-auto rounded-[16px] bg-[#0a0a0a] text-[#fafafa] overflow-hidden text-left border border-transparent dark:border-white/[0.12]"
+      >
+        {/* 1. Card Header: only "kontak.sql" on the left */}
+        <div className="flex items-center px-[24px] py-[14px] font-mono text-[12px] text-[#a3a3a3] border-b border-[#262626]">
           <span>{t.fileName}</span>
-          <span>{t.engine}</span>
         </div>
 
         {/* 2. Static SQL Code */}
-        <pre className="m-0 p-[24px] font-mono text-[13px] sm:text-[14px] leading-[1.9] text-[#d4d4d4] border-b border-[#262626] overflow-x-auto">
+        <pre className="m-0 p-[24px] font-mono text-[13px] sm:text-[14px] leading-[1.9] text-[#d4d4d4] overflow-x-auto">
           <code>
             <span className="text-white font-medium">SELECT</span> nama, bidang, tipe{'\n'}
             <span className="text-white font-medium">FROM</span>
@@ -165,49 +210,55 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
           </code>
         </pre>
 
-        {/* 3. Result Table (aria-live="polite") */}
+        {/* 3. Result Block (aria-live="polite" container always present; content only rendered after run) */}
         <div aria-live="polite" aria-busy={isRunning}>
-          {/* Desktop / Tablet Table (>= 640px) */}
-          <div className="hidden sm:block">
-            <div className="grid grid-cols-[0.8fr_2.2fr_1.2fr] gap-[12px] px-[24px] py-[12px] font-mono text-[13px] text-[#a3a3a3] border-b border-[#262626]">
-              <span>nama</span>
-              <span>bidang</span>
-              <span>tipe</span>
-            </div>
-            <div
-              className={`grid grid-cols-[0.8fr_2.2fr_1.2fr] gap-[12px] px-[24px] py-[15px] font-mono text-[13px] text-[#fafafa] border-b border-[#262626] cq-row-bg ${
-                isDone ? 'bg-[#141414]' : 'bg-transparent'
-              }`}
-            >
-              <span className={valueClass}>{namaVal}</span>
-              <span className={valueClass}>{bidangVal}</span>
-              <span className={valueClass}>{tipeVal}</span>
-            </div>
-          </div>
-
-          {/* Mobile Stacked Label-Above-Value (< 640px) */}
           <div
-            className={`block sm:hidden px-[24px] py-[16px] font-mono text-[13px] border-b border-[#262626] space-y-3.5 cq-row-bg ${
-              isDone ? 'bg-[#141414]' : 'bg-transparent'
-            }`}
+            className="cq-result-grid"
+            data-expanded={isExpanded ? 'true' : 'false'}
+            data-closing={isClosing ? 'true' : 'false'}
           >
-            <div>
-              <div className="text-[#a3a3a3] text-[12px] mb-0.5">nama</div>
-              <div className={`text-[#fafafa] ${valueClass}`}>{namaVal}</div>
-            </div>
-            <div>
-              <div className="text-[#a3a3a3] text-[12px] mb-0.5">bidang</div>
-              <div className={`text-[#fafafa] ${valueClass}`}>{bidangVal}</div>
-            </div>
-            <div>
-              <div className="text-[#a3a3a3] text-[12px] mb-0.5">tipe</div>
-              <div className={`text-[#fafafa] ${valueClass}`}>{tipeVal}</div>
+            <div className="overflow-hidden">
+              {renderResult && (
+                <div className="font-mono text-[13px] border-t border-[#262626]">
+                  {/* Desktop / Tablet Result Table (>= 640px) */}
+                  <div className="hidden sm:block">
+                    <div className="cq-result-header grid grid-cols-[0.8fr_2.2fr_1.2fr] gap-[12px] px-[24px] py-[12px] text-[#a3a3a3] border-b border-[#262626]">
+                      <span>nama</span>
+                      <span>bidang</span>
+                      <span>tipe</span>
+                    </div>
+                    <div className="cq-result-data grid grid-cols-[0.8fr_2.2fr_1.2fr] gap-[12px] px-[24px] py-[14px] text-[#fafafa]">
+                      <span>{namaVal}</span>
+                      <span>{bidangVal}</span>
+                      <span>{tipeVal}</span>
+                    </div>
+                  </div>
+
+                  {/* Mobile Stacked Label-Above-Value (< 640px) */}
+                  <div className="block sm:hidden cq-result-data px-[24px] py-[14px] space-y-3.5">
+                    <div>
+                      <div className="cq-result-header text-[#a3a3a3] text-[12px] mb-0.5">nama</div>
+                      <div className="text-[#fafafa]">{namaVal}</div>
+                    </div>
+                    <div>
+                      <div className="cq-result-header text-[#a3a3a3] text-[12px] mb-0.5">
+                        bidang
+                      </div>
+                      <div className="text-[#fafafa]">{bidangVal}</div>
+                    </div>
+                    <div>
+                      <div className="cq-result-header text-[#a3a3a3] text-[12px] mb-0.5">tipe</div>
+                      <div className="text-[#fafafa]">{tipeVal}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* 4. Card Footer */}
-        <div className="px-[24px] py-[16px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="border-t border-[#262626] px-[24px] py-[16px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <span className="font-mono text-[12px] text-[#a3a3a3]">{statusText}</span>
 
           {isDone ? (
