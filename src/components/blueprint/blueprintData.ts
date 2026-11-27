@@ -23,6 +23,7 @@ import {
 import type { Lang } from '../../lib/content';
 import rawAnime from '../../content/anime.json';
 import rawMusic from '../../content/music.json';
+import rawMemories from '../../content/memories.json';
 
 export type TechIcon = ComponentType<{ className?: string }>;
 
@@ -612,6 +613,47 @@ export const closingQueryI18n = {
     btnRunning: 'Running…',
     btnDone: 'Run again',
   },
+} as const;
+
+export interface MemoryLayout {
+  fx: number;
+  fy: number;
+  w: number;
+  hw: number;
+  rot: number;
+}
+
+export interface MemoryMood {
+  bpm: number;
+  prog: number[][];
+}
+
+export interface MemoryItem {
+  id: string;
+  caption: { id: string; en: string };
+  image: string;
+  audio: string;
+  synthOnly?: boolean;
+  song: { title: string; artist: string };
+  layout: MemoryLayout;
+  mood: MemoryMood;
+}
+
+export const memoriesList = rawMemories.memories as MemoryItem[];
+export const memoryEdges = rawMemories.edges as [string, string][];
+
+export const memoriesI18n = {
+  folderAria: { id: 'Buka papan kenangan', en: 'Open memories board' },
+  tooltip: { id: 'klik untuk lihat kenangan', en: 'click to view memories' },
+  boardTitle: { id: 'papan kenangan', en: 'the board' },
+  boardSub: { id: 'kenangan, di seutas benang', en: 'memories, on a string' },
+  closeAria: { id: 'Tutup papan kenangan', en: 'Close memories board' },
+  slotLine1: { id: 'taruh kenangan di sini', en: 'drop a memory here' },
+  slotLine2: { id: 'dengarkan bunyinya', en: 'see what it sounds like' },
+  playTitle: { id: 'putar lagunya', en: 'play song' },
+  editTitle: { id: 'ubah keterangan', en: 'edit caption' },
+  hideTitle: { id: 'sembunyikan dari papan', en: 'hide from board' },
+  ejectTitle: { id: 'keluarkan dari pemutar', en: 'eject memory' },
 } as const;
 
 export type { Lang };

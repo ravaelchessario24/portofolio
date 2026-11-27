@@ -44,6 +44,7 @@ import {
 } from './blueprint/blueprintData';
 import { ClosingQuery } from './blueprint/ClosingQuery';
 import { Bookshelf3D } from './blueprint/Bookshelf3D';
+import { MemoriesFolder } from './blueprint/MemoriesFolder';
 import {
   type BlueprintView,
   ProjectDetailView,
@@ -1261,8 +1262,14 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             {/* ================================================================
                6. TENTANG DIRIKU SECTION (#movies — Films + Interactive 3D Bookshelf + Music)
                ================================================================ */}
-            <section id="movies" className="w-full py-2 scroll-mt-16">
+            <section id="movies" className="relative w-full py-2 scroll-mt-16">
               <div className="px-4">
+                <MemoriesFolder
+                  lang={lang}
+                  isDark={isDark}
+                  withBase={withBase}
+                  lenisRef={lenisRef}
+                />
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Tentang Diriku' : 'Beyond the Data'}
                 </h2>

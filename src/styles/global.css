@@ -342,6 +342,667 @@
   animation: bp-px-l2 10s infinite backwards;
 }
 
+/* ==========================================================================
+   Memories Folder + The Board
+   ========================================================================== */
+.mem-folder-anchor {
+  position: relative;
+  right: auto;
+  margin: 0 0 18px;
+  width: 150px;
+}
+
+@media (min-width: 1024px) {
+  .mem-folder-anchor {
+    position: absolute;
+    top: 8px;
+    right: calc(100% + 16px);
+    margin: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .mem-folder-anchor {
+    right: calc(100% + 16px + 2vw);
+  }
+}
+
+.mem-folder {
+  position: relative;
+  width: 150px;
+  height: 120px;
+  cursor: pointer;
+  perspective: 700px;
+  border: 0;
+  padding: 0;
+  background: none;
+  display: block;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mem-folder:focus-visible {
+  outline: 2px dashed rgba(232, 106, 146, 0.85);
+  outline-offset: 6px;
+  border-radius: 14px;
+}
+
+.mem-f-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mem-f-back {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 6%;
+  height: 74%;
+  background: linear-gradient(180deg, #67b6ff 0%, #3d92f2 100%);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 10px 24px -10px rgba(30, 110, 230, 0.6);
+}
+
+.mem-f-back::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -9px;
+  width: 42%;
+  height: 16px;
+  background: #67b6ff;
+  border-radius: 9px 9px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.mem-f-paper {
+  position: absolute;
+  bottom: 22%;
+  width: 40%;
+  aspect-ratio: 3 / 4;
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 4px;
+  box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.4s;
+  transform-origin: 50% 100%;
+}
+
+.mem-f-paper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  background: #ccd2de;
+}
+
+.mem-f-paper.p1 {
+  left: 12%;
+  transform: translateY(6px) rotate(-7deg);
+  z-index: 3;
+}
+
+.mem-f-paper.p2 {
+  left: 32%;
+  transform: translateY(8px) rotate(-1deg);
+  z-index: 2;
+}
+
+.mem-f-paper.p3 {
+  left: 50%;
+  transform: translateY(10px) rotate(5deg);
+  z-index: 1;
+}
+
+.mem-f-front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(150, 200, 255, 0.55) 0%,
+    rgba(70, 150, 245, 0.78) 100%
+  );
+  -webkit-backdrop-filter: blur(7px) saturate(1.4);
+  backdrop-filter: blur(7px) saturate(1.4);
+  border-radius: 10px 10px 14px 14px;
+  z-index: 5;
+  clip-path: polygon(0 14%, 36% 14%, 44% 0, 100% 0, 100% 100%, 0 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.4s;
+}
+
+.mem-f-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.35) 0%, transparent 38%);
+}
+
+.mem-folder.hot .mem-f-front {
+  transform: rotateX(-34deg);
+  background: linear-gradient(
+    180deg,
+    rgba(170, 212, 255, 0.45) 0%,
+    rgba(80, 158, 245, 0.72) 100%
+  );
+}
+
+.mem-folder.hot .mem-f-paper.p1 {
+  transform: translateY(-16px) rotate(-12deg);
+}
+
+.mem-folder.hot .mem-f-paper.p2 {
+  transform: translateY(-22px) rotate(-2deg);
+  transition-delay: 0.03s;
+}
+
+.mem-folder.hot .mem-f-paper.p3 {
+  transform: translateY(-14px) rotate(9deg);
+  transition-delay: 0.06s;
+}
+
+.mem-folder:active .mem-f-inner {
+  transform: scale(0.96);
+}
+
+.mem-folder-label {
+  margin-top: 10px;
+  font-family: var(--font-geist-mono);
+  font-size: 10.5px;
+  color: #737373;
+  letter-spacing: 0.04em;
+  text-align: center;
+  width: 150px;
+}
+
+.dark .mem-folder-label {
+  color: #8a8a8a;
+}
+
+.mem-tip {
+  position: fixed;
+  z-index: 70;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  font-family: var(--font-geist-mono);
+  font-size: 13px;
+  color: #111111;
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow:
+    0 6px 20px -6px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  filter: blur(6px);
+  scale: 0.9;
+  transition:
+    opacity 0.25s,
+    filter 0.25s,
+    scale 0.25s;
+  white-space: nowrap;
+}
+
+.mem-tip.show {
+  opacity: 1;
+  filter: blur(0);
+  scale: 1;
+}
+
+.mem-board {
+  --board-bg: #f3f3f4;
+  --board-glow: #ffffff;
+  --board-fg: #262626;
+  --board-muted: #8a8a93;
+  --board-string: 232, 106, 146;
+  --board-frame: #ffffff;
+  --board-slot-bg: rgba(255, 255, 255, 0.9);
+  --board-close-border: rgba(0, 0, 0, 0.08);
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, var(--board-glow) 0%, var(--board-bg) 70%);
+  color: var(--board-fg);
+  font-family: var(--font-geist-sans);
+  opacity: 0;
+  filter: blur(18px);
+  transition:
+    opacity 0.45s ease,
+    filter 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.6s;
+}
+
+.mem-board.is-dark {
+  --board-bg: #0e0e10;
+  --board-glow: #1a1a1d;
+  --board-fg: #ededed;
+  --board-muted: #7a7a84;
+  --board-string: 244, 114, 162;
+  --board-frame: #f5f5f5;
+  --board-slot-bg: rgba(30, 30, 33, 0.85);
+  --board-close-border: rgba(255, 255, 255, 0.12);
+}
+
+.mem-board.open {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity 0.45s ease,
+    filter 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s;
+}
+
+.mem-board-head {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  z-index: 5;
+  user-select: none;
+}
+
+.mem-board-head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.mem-board-head p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--board-muted);
+}
+
+.mem-board-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 6;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--board-close-border);
+  background: var(--board-slot-bg);
+  color: var(--board-fg);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+}
+
+.mem-board-close:hover {
+  transform: rotate(90deg) scale(1.06);
+}
+
+.mem-board-close:focus-visible {
+  outline: 2px solid rgb(var(--board-string));
+  outline-offset: 3px;
+}
+
+.mem-strings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mem-strings path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.mem-slot {
+  position: absolute;
+  z-index: 2;
+  border-radius: 18px;
+  background: var(--board-slot-bg);
+  box-shadow:
+    0 18px 40px -18px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 12px;
+  color: var(--board-muted);
+  font-size: 13px;
+  line-height: 1.55;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s,
+    outline-color 0.3s;
+  outline: 1.5px dashed transparent;
+  outline-offset: 6px;
+  user-select: none;
+}
+
+.mem-slot.near {
+  transform: translate(-50%, -50%) scale(1.06) !important;
+  outline-color: rgba(var(--board-string), 0.75);
+}
+
+.mem-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  will-change: transform;
+  transition: opacity 0.35s ease;
+}
+
+.mem-card.dragging {
+  cursor: grabbing;
+  z-index: 20;
+}
+
+.mem-card .mem-frame {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  background: var(--board-frame);
+  border-radius: 12px;
+  box-shadow:
+    0 10px 24px -12px rgba(0, 0, 0, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+  transition:
+    box-shadow 0.25s,
+    padding 0.35s,
+    border-radius 0.35s;
+}
+
+.mem-card:hover .mem-frame,
+.mem-card.dragging .mem-frame {
+  box-shadow:
+    0 22px 40px -16px rgba(0, 0, 0, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.mem-card .mem-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  pointer-events: none;
+  background: #d9d9de;
+  transition: border-radius 0.35s;
+}
+
+.mem-card .mem-cap {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--board-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.25s;
+  outline: none;
+}
+
+.mem-card .mem-cap[contenteditable="true"] {
+  color: var(--board-fg);
+  background: var(--board-slot-bg);
+  border-radius: 6px;
+  padding: 1px 4px;
+  overflow: visible;
+  user-select: text;
+}
+
+.mem-card .mem-tools {
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(4px) scale(0.9);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
+}
+
+.mem-card:hover .mem-tools,
+.mem-card:focus-within .mem-tools {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .mem-card .mem-tools {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+.mem-card.dragging .mem-tools,
+.mem-card.in-slot .mem-tools {
+  display: none;
+}
+
+.mem-tools button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  background: #3f3f46;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+
+.mem-tools button:hover {
+  transform: scale(1.12);
+  background: #18181b;
+}
+
+.mem-tools button.music {
+  background: #4c4870;
+}
+
+.mem-card .mem-ov {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s 0.1s;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
+  border-radius: 0 0 16px 16px;
+}
+
+.mem-card.in-slot {
+  z-index: 12;
+}
+
+.mem-card.in-slot .mem-ov {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mem-card.in-slot .mem-cap {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mem-card.in-slot .mem-frame {
+  padding: 0;
+  border-radius: 16px;
+}
+
+.mem-card.in-slot .mem-frame img {
+  border-radius: 16px;
+}
+
+.mem-ov .mem-ov-t {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.mem-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.mem-eq i {
+  width: 2.5px;
+  height: 30%;
+  background: #ffffff;
+  border-radius: 2px;
+  display: block;
+}
+
+.mem-ov .mem-ov-x {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mem-ov .mem-ov-x:hover {
+  background: rgba(255, 255, 255, 0.44);
+}
+
+.mem-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.mem-ghost.on {
+  opacity: 0.35;
+}
+
+.mem-ghost .mem-frame {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  background: var(--board-frame);
+  border-radius: 12px;
+}
+
+.mem-ghost img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  filter: grayscale(0.4);
+}
+
+@keyframes mem-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.mem-now {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translate(-50%, 12px);
+  z-index: 15;
+  font-family: var(--font-geist-mono);
+  font-size: 11.5px;
+  color: var(--board-fg);
+  background: var(--board-slot-bg);
+  padding: 7px 14px;
+  border-radius: 999px;
+  box-shadow:
+    0 6px 18px -8px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: calc(100vw - 32px);
+}
+
+.mem-now.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.mem-now .mem-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: rgb(var(--board-string));
+  animation: mem-pulse 1.2s infinite;
+}
+
+.mem-now-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cq-pulse-btn {
     animation: none !important;
@@ -366,5 +1027,12 @@
   .bp-px-label-clean {
     animation: none !important;
     opacity: 1 !important;
+  }
+  .mem-board,
+  .mem-tip {
+    filter: none !important;
+  }
+  .mem-now .mem-dot {
+    animation: none !important;
   }
 }

@@ -1,0 +1,591 @@
+{
+  "_comment": "TODO: Jika ingin memakai potongan lagu asli (.mp3 20-30 dtk), taruh file di public/memories/audio/<id>.mp3 lalu ubah synthOnly menjadi false (atau hapus field synthOnly). Untuk foto ke-11 (IMG_0383.HEIC), konversi ke .webp di public/memories/ lalu tambahkan item baru.",
+  "memories": [
+    {
+      "id": "sidang-skom",
+      "caption": {
+        "id": "resmi S.Kom",
+        "en": "officially S.Kom"
+      },
+      "image": "/memories/sidang-skom.webp",
+      "audio": "/memories/audio/sidang-skom.mp3",
+      "song": {
+        "title": "Hati-Hati di Jalan",
+        "artist": "Tulus"
+      },
+      "layout": {
+        "fx": 0.12,
+        "fy": 0.22,
+        "w": 118,
+        "hw": 1.22,
+        "rot": -3
+      },
+      "mood": {
+        "bpm": 76,
+        "prog": [
+          [
+            60,
+            64,
+            67,
+            71
+          ],
+          [
+            57,
+            60,
+            64,
+            67
+          ],
+          [
+            65,
+            69,
+            72,
+            76
+          ],
+          [
+            62,
+            65,
+            69,
+            72
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "wisuda",
+      "caption": {
+        "id": "wisuda cumlaude",
+        "en": "cumlaude graduation"
+      },
+      "image": "/memories/wisuda.webp",
+      "audio": "/memories/audio/wisuda.mp3",
+      "song": {
+        "title": "Diri",
+        "artist": "Tulus"
+      },
+      "layout": {
+        "fx": 0.245,
+        "fy": 0.15,
+        "w": 152,
+        "hw": 0.72,
+        "rot": -2
+      },
+      "mood": {
+        "bpm": 82,
+        "prog": [
+          [
+            62,
+            66,
+            69,
+            73
+          ],
+          [
+            59,
+            62,
+            66,
+            69
+          ],
+          [
+            67,
+            71,
+            74,
+            78
+          ],
+          [
+            64,
+            67,
+            71,
+            74
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "gallery",
+      "caption": {
+        "id": "ruang tenang",
+        "en": "quiet gallery"
+      },
+      "image": "/memories/gallery.webp",
+      "audio": "/memories/audio/gallery.mp3",
+      "song": {
+        "title": "Pink + White",
+        "artist": "Frank Ocean"
+      },
+      "layout": {
+        "fx": 0.46,
+        "fy": 0.165,
+        "w": 128,
+        "hw": 1.06,
+        "rot": 4
+      },
+      "mood": {
+        "bpm": 80,
+        "prog": [
+          [
+            65,
+            69,
+            72,
+            76
+          ],
+          [
+            64,
+            67,
+            71,
+            74
+          ],
+          [
+            62,
+            65,
+            69,
+            72
+          ],
+          [
+            60,
+            64,
+            67,
+            71
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "kkn-desa",
+      "caption": {
+        "id": "cerita di desa",
+        "en": "village days"
+      },
+      "image": "/memories/kkn-desa.webp",
+      "audio": "/memories/audio/kkn-desa.mp3",
+      "song": {
+        "title": "Secukupnya",
+        "artist": "Hindia"
+      },
+      "layout": {
+        "fx": 0.835,
+        "fy": 0.25,
+        "w": 174,
+        "hw": 1.24,
+        "rot": -4
+      },
+      "mood": {
+        "bpm": 92,
+        "prog": [
+          [
+            67,
+            71,
+            74,
+            78
+          ],
+          [
+            64,
+            67,
+            71,
+            74
+          ],
+          [
+            60,
+            64,
+            67,
+            71
+          ],
+          [
+            62,
+            66,
+            69,
+            74
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "keluarga",
+      "caption": {
+        "id": "rumah pulang",
+        "en": "home & family"
+      },
+      "image": "/memories/keluarga.webp",
+      "audio": "/memories/audio/keluarga.mp3",
+      "song": {
+        "title": "Komang",
+        "artist": "Raim Laode"
+      },
+      "layout": {
+        "fx": 0.86,
+        "fy": 0.53,
+        "w": 198,
+        "hw": 0.74,
+        "rot": 2
+      },
+      "mood": {
+        "bpm": 70,
+        "prog": [
+          [
+            67,
+            71,
+            74,
+            78
+          ],
+          [
+            62,
+            66,
+            69,
+            73
+          ],
+          [
+            60,
+            64,
+            67,
+            71
+          ],
+          [
+            60,
+            63,
+            67,
+            70
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "court-day",
+      "caption": {
+        "id": "hari di lapangan",
+        "en": "court day"
+      },
+      "image": "/memories/court-day.webp",
+      "audio": "/memories/audio/court-day.mp3",
+      "song": {
+        "title": "Sekian, Terima Kasih",
+        "artist": "Lealona & The Jeblogs"
+      },
+      "layout": {
+        "fx": 0.13,
+        "fy": 0.48,
+        "w": 154,
+        "hw": 1.25,
+        "rot": -4
+      },
+      "mood": {
+        "bpm": 90,
+        "prog": [
+          [
+            60,
+            64,
+            67,
+            72
+          ],
+          [
+            67,
+            71,
+            74,
+            79
+          ],
+          [
+            69,
+            72,
+            76,
+            81
+          ],
+          [
+            65,
+            69,
+            72,
+            77
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "commute",
+      "caption": {
+        "id": "perjalanan malam",
+        "en": "late commute"
+      },
+      "image": "/memories/commute.webp",
+      "audio": "/memories/audio/commute.mp3",
+      "song": {
+        "title": "33x",
+        "artist": "Perunggu"
+      },
+      "layout": {
+        "fx": 0.115,
+        "fy": 0.72,
+        "w": 134,
+        "hw": 0.98,
+        "rot": -5
+      },
+      "mood": {
+        "bpm": 74,
+        "prog": [
+          [
+            58,
+            62,
+            65,
+            69
+          ],
+          [
+            63,
+            67,
+            70,
+            74
+          ],
+          [
+            60,
+            63,
+            67,
+            70
+          ],
+          [
+            65,
+            69,
+            72,
+            75
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "langit-siang",
+      "caption": {
+        "id": "langit siang",
+        "en": "clear skies"
+      },
+      "image": "/memories/langit-siang.webp",
+      "audio": "/memories/audio/langit-siang.mp3",
+      "song": {
+        "title": "Best Friend",
+        "artist": "Rex Orange County"
+      },
+      "layout": {
+        "fx": 0.235,
+        "fy": 0.78,
+        "w": 106,
+        "hw": 1.3,
+        "rot": 3
+      },
+      "mood": {
+        "bpm": 96,
+        "prog": [
+          [
+            62,
+            65,
+            69,
+            72
+          ],
+          [
+            67,
+            70,
+            74,
+            77
+          ],
+          [
+            60,
+            64,
+            67,
+            71
+          ],
+          [
+            65,
+            69,
+            72,
+            76
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "kawan-kampus",
+      "caption": {
+        "id": "kawan seperjuangan",
+        "en": "day ones"
+      },
+      "image": "/memories/kawan-kampus.webp",
+      "audio": "/memories/audio/kawan-kampus.mp3",
+      "song": {
+        "title": "Nina",
+        "artist": ".Feast"
+      },
+      "layout": {
+        "fx": 0.39,
+        "fy": 0.78,
+        "w": 156,
+        "hw": 1.02,
+        "rot": -4
+      },
+      "mood": {
+        "bpm": 84,
+        "prog": [
+          [
+            64,
+            67,
+            71,
+            74
+          ],
+          [
+            60,
+            64,
+            67,
+            71
+          ],
+          [
+            67,
+            71,
+            74,
+            78
+          ],
+          [
+            62,
+            66,
+            69,
+            74
+          ]
+        ]
+      },
+      "synthOnly": true
+    },
+    {
+      "id": "satu-angkatan",
+      "caption": {
+        "id": "satu angkatan",
+        "en": "the whole crew"
+      },
+      "image": "/memories/satu-angkatan.webp",
+      "audio": "/memories/audio/satu-angkatan.mp3",
+      "song": {
+        "title": "Malibu Nights",
+        "artist": "LANY"
+      },
+      "layout": {
+        "fx": 0.76,
+        "fy": 0.78,
+        "w": 190,
+        "hw": 0.78,
+        "rot": -9
+      },
+      "mood": {
+        "bpm": 72,
+        "prog": [
+          [
+            56,
+            60,
+            63,
+            67
+          ],
+          [
+            53,
+            56,
+            60,
+            63
+          ],
+          [
+            61,
+            65,
+            68,
+            72
+          ],
+          [
+            58,
+            63,
+            67,
+            70
+          ]
+        ]
+      },
+      "synthOnly": true
+    }
+  ],
+  "edges": [
+    [
+      "sidang-skom",
+      "wisuda"
+    ],
+    [
+      "wisuda",
+      "gallery"
+    ],
+    [
+      "gallery",
+      "kkn-desa"
+    ],
+    [
+      "kkn-desa",
+      "keluarga"
+    ],
+    [
+      "kkn-desa",
+      "keluarga"
+    ],
+    [
+      "court-day",
+      "slot"
+    ],
+    [
+      "court-day",
+      "slot"
+    ],
+    [
+      "slot",
+      "keluarga"
+    ],
+    [
+      "slot",
+      "keluarga"
+    ],
+    [
+      "slot",
+      "kkn-desa"
+    ],
+    [
+      "court-day",
+      "keluarga"
+    ],
+    [
+      "commute",
+      "langit-siang"
+    ],
+    [
+      "langit-siang",
+      "kawan-kampus"
+    ],
+    [
+      "langit-siang",
+      "kawan-kampus"
+    ],
+    [
+      "kawan-kampus",
+      "satu-angkatan"
+    ],
+    [
+      "satu-angkatan",
+      "keluarga"
+    ],
+    [
+      "commute",
+      "slot"
+    ],
+    [
+      "langit-siang",
+      "satu-angkatan"
+    ],
+    [
+      "kawan-kampus",
+      "slot"
+    ],
+    [
+      "satu-angkatan",
+      "slot"
+    ],
+    [
+      "sidang-skom",
+      "court-day"
+    ]
+  ]
+}
