@@ -1044,7 +1044,7 @@ export function ContactPageView({
           </a>
 
           <a
-            href="https://www.linkedin.com/in/muhammad-ravael-chessario-ramdoni-47b37728b"
+            href="https://www.linkedin.com/in/ravaelchessario/"
             target="_blank"
             rel="noopener noreferrer"
             className="block p-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 transition"

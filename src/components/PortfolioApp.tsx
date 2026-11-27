@@ -730,7 +730,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
                 <div data-bp="pills" className="flex flex-wrap gap-2">
                   <a
-                    href="https://www.linkedin.com/in/muhammad-ravael-chessario-ramdoni-47b37728b"
+                    href="https://www.linkedin.com/in/ravaelchessario/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60 transition"
