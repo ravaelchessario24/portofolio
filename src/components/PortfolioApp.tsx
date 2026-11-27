@@ -22,6 +22,7 @@ import {
   SoftPillButton,
   FlipCoverButton,
   BlueprintLoader,
+  PointText,
 } from './blueprint/BlueprintHelpers';
 import {
   type Lang,
@@ -336,6 +337,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
       {view === 'home' && (
         <div className="fixed inset-0 z-40 pointer-events-none hidden lg:block">
           <nav
+            data-bp="index"
             aria-label="Blueprint Section Index"
             className="absolute top-[22vh] left-[calc(82%+24px)] xl:left-[calc(74%+32px)] pointer-events-auto flex flex-col gap-3.5 mt-3"
           >
@@ -348,6 +350,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 <button
                   key={item.href}
                   type="button"
+                  data-bp="navitem"
                   aria-current={isActive ? 'location' : undefined}
                   onClick={() => scrollToSection(item.href)}
                   className={`group text-[12px] tracking-[0.04em] transition-colors duration-300 ease-out flex items-center text-left cursor-pointer bg-transparent border-0 p-0 ${
@@ -385,10 +388,11 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
       />
 
       {/* Center Architectural Column */}
-      <div className="mx-2.5 sm:mx-4 md:mx-[15%] lg:mx-[18%] xl:mx-[26%]">
+      <div data-bp="column" className="mx-2.5 sm:mx-4 md:mx-[15%] lg:mx-[18%] xl:mx-[26%]">
         {/* Top Banner with Particles & Dot-Matrix Clock */}
         <div
           onClick={() => navigateToView('home')}
+          data-bp="banner"
           className="relative h-[18vh] sm:h-[22vh] w-full overflow-hidden cursor-pointer"
         >
           <img
@@ -417,7 +421,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
         </div>
 
         {/* Profile Bar — Dynamic height on mobile so it NEVER overlaps content below, 112px on sm+ */}
-        <div className="relative min-h-[96px] sm:h-[112px] flex items-stretch">
+        <div data-bp="profile" className="relative min-h-[96px] sm:h-[112px] flex items-stretch">
           {/* Avatar Box — Full Color */}
           <div className="relative w-[88px] sm:w-[112px] shrink-0 p-[3px] flex items-center justify-center">
             <button
@@ -431,6 +435,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     : 'B.Sc. in Information Technology — ITB Ahmad Dahlan Jakarta (GPA 3.77 / 4.00 · Cumlaude)',
                 )
               }
+              data-bp="avatar"
               className="relative w-full aspect-square sm:h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700 bg-white"
             >
               <img
@@ -452,6 +457,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               <button
                 type="button"
                 onClick={() => navigateToView('home')}
+                data-bp="tagline"
                 className="order-2 sm:order-1 w-full sm:w-auto text-[10.5px] sm:text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 leading-snug cursor-pointer text-left min-w-0 sm:flex-1"
               >
                 {lang === 'id'
@@ -459,7 +465,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   : 'A Data and Tech Enthusiast who loves vibe coding'}
               </button>
 
-              <div className="order-1 sm:order-2 ml-auto sm:ml-0 flex items-center gap-1 sm:gap-1.5 shrink-0">
+              <div data-bp="controls" className="order-1 sm:order-2 ml-auto sm:ml-0 flex items-center gap-1 sm:gap-1.5 shrink-0">
                 {/* ID | EN Switcher */}
                 <button
                   type="button"
@@ -513,6 +519,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-x-2 gap-y-0.5 min-w-0">
               <h1
                 onClick={() => navigateToView('home')}
+                data-bp="title"
                 className="text-[13.5px] sm:text-[17px] md:text-[18px] lg:text-[20px] xl:text-[22px] font-bold tracking-tight leading-snug cursor-pointer sm:whitespace-nowrap"
                 style={{
                   textShadow:
@@ -522,7 +529,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 Muhammad Ravael Chessario Ramdoni
               </h1>
 
-              <span className="text-[10.5px] sm:text-xs text-neutral-500 font-medium tracking-wide shrink-0">
+              <span data-bp="loc" className="text-[10.5px] sm:text-xs text-neutral-500 font-medium tracking-wide shrink-0">
                 Tangerang, Indonesia
               </span>
             </div>
@@ -599,25 +606,31 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
           <>
             {/* INTRO BIO & SOCIAL PILLS */}
             <div className="pt-5 px-4 pb-6 text-xs md:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-3">
-              <p>
+              <p data-bp="bio">
                 {lang === 'id' ? (
                   <>
-                    Lulusan{' '}
+                    Halo, saya{' '}
+                    <strong className="text-neutral-900 dark:text-neutral-100">Ravael</strong>
+                    , lulusan{' '}
                     <strong className="text-neutral-900 dark:text-neutral-100">
-                      S1 Teknologi Informasi — ITB Ahmad Dahlan Jakarta
+                      S1 Teknologi Informasi ITB Ahmad Dahlan Jakarta
                     </strong>{' '}
                     (IPK{' '}
                     <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       3,77 / 4,00
                     </span>{' '}
-                    · <strong className="text-neutral-900 dark:text-neutral-100">Cumlaude</strong>) dengan spesialisasi pada{' '}
+                    · <strong className="text-neutral-900 dark:text-neutral-100">Cumlaude</strong>
+                    ). Saya senang menjembatani data mentah yang berantakan dengan keputusan yang harus diambil, berbekal{' '}
                     <span className="underline decoration-dotted">
                       Data Analytics, SQL, Python, Machine Learning, dan Dukungan Sistem TI
                     </span>
-                    . Berfokus menerjemahkan puluhan ribu data mentah menjadi temuan terukur yang mendukung pengambilan keputusan produk dan operasional bisnis.
+                    . Ringkasnya: data dirapikan, temuan dibuat jelas, keputusan jadi lebih yakin.
                   </>
                 ) : (
                   <>
+                    Hi, I'm{' '}
+                    <strong className="text-neutral-900 dark:text-neutral-100">Ravael</strong>
+                    , a{' '}
                     <strong className="text-neutral-900 dark:text-neutral-100">
                       B.Sc. in Information Technology graduate from ITB Ahmad Dahlan Jakarta
                     </strong>{' '}
@@ -625,20 +638,21 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       3.77 / 4.00
                     </span>{' '}
-                    · <strong className="text-neutral-900 dark:text-neutral-100">Cumlaude</strong>) specializing in{' '}
+                    · <strong className="text-neutral-900 dark:text-neutral-100">Cumlaude</strong>
+                    ). I like bridging messy raw data and the decisions that depend on it, armed with{' '}
                     <span className="underline decoration-dotted">
                       Data Analytics, SQL, Python, Machine Learning, and IT Systems Support
                     </span>
-                    . Focused on transforming tens of thousands of raw records into clear, decision-ready product and business insights.
+                    . In short: clean the data, make the findings obvious, and make the decision easier to trust.
                   </>
                 )}
               </p>
 
               <ul className="space-y-1.5 pl-4 list-disc">
-                <li>
+                <li data-bp="bullet">
                   {lang === 'id' ? (
                     <>
-                      Merancang pipeline NLP end-to-end & dashboard Streamlit terhadap{' '}
+                      Membedah{' '}
                       <button
                         type="button"
                         onClick={() => openProjectDetail('mobile-jkn')}
@@ -646,16 +660,16 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                       >
                         63.766 ulasan aplikasi Mobile JKN
                       </button>{' '}
-                      (59.980 ulasan berlabel seimbang, Akurasi Uji{' '}
+                      dari hulu ke hilir: pipeline NLP, model klasifikasi, sampai dashboard Streamlit interaktif. Dari 59.980 data berlabel seimbang, modelnya meraih akurasi uji{' '}
                       <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                         94,38%
-                      </span>
-                      , F1-Score <span className="font-mono">94,86%</span>, ROC AUC{' '}
-                      <span className="font-mono">0,965</span>) untuk memetakan prioritas perbaikan fitur login & verifikasi akun.
+                      </span>{' '}
+                      (F1-Score <span className="font-mono">94,86%</span>, ROC AUC{' '}
+                      <span className="font-mono">0,965</span>) dan menunjukkan prioritas perbaikan yang jelas: login, OTP, dan verifikasi akun.
                     </>
                   ) : (
                     <>
-                      Engineered an end-to-end NLP pipeline & Streamlit dashboard across{' '}
+                      Dissected{' '}
                       <button
                         type="button"
                         onClick={() => openProjectDetail('mobile-jkn')}
@@ -663,35 +677,31 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                       >
                         63,766 Mobile JKN app reviews
                       </button>{' '}
-                      (59,980 balanced rows,{' '}
+                      end to end: an NLP pipeline, a classifier, and an interactive Streamlit dashboard. From 59,980 balanced labeled rows, the model reached{' '}
                       <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                         94.38%
                       </span>{' '}
-                      Test Accuracy, <span className="font-mono">94.86%</span> F1-Score,{' '}
-                      <span className="font-mono">0.965</span> ROC AUC) to prioritize login & account verification fixes.
+                      test accuracy (<span className="font-mono">94.86%</span> F1-Score,{' '}
+                      <span className="font-mono">0.965</span> ROC AUC) and pointed to a clear fix list: login, OTP, and account verification.
                     </>
                   )}
                 </li>
-                <li>
+                <li data-bp="bullet">
                   {lang === 'id'
-                    ? 'Meraih Predikat A (Grade A · Skor 85–100) pada Data Analyst Bootcamp DSAREA serta menyelesaikan 5 kursus spesialisasi Google IT Support Professional Certificate (Coursera).'
-                    : 'Earned Grade A distinction (Score 85–100) in the DSAREA Data Analyst Bootcamp and completed the 5-course Google IT Support Professional Certificate on Coursera.'}
+                    ? 'Mengasah fondasi lewat Data Analyst Bootcamp DSAREA (Predikat A, skor 85–100) dan Google IT Support Professional Certificate di Coursera (5 kursus spesialisasi), supaya paham datanya sekaligus sistem tempat data itu hidup.'
+                    : 'Sharpened the fundamentals through the DSAREA Data Analyst Bootcamp (Grade A, score 85–100) and the 5-course Google IT Support Professional Certificate on Coursera, so I understand the data and the systems it lives in.'}
                 </li>
-                <li>
+                <li data-bp="bullet">
                   {lang === 'id'
-                    ? 'Membangun Website Profil & CMS berbasis MySQL pada magang PAUD KB Flamboyan (+50% efisiensi administrasi sekolah) serta menginisiasi program literasi digital SD pada KKN Digimapan.'
-                    : 'Built a MySQL-backed Website & CMS during my internship at PAUD KB Flamboyan (+50% administrative efficiency) and spearheaded elementary digital literacy sessions during KKN Digimapan.'}
+                    ? 'Membangun website profil dan CMS berbasis MySQL untuk PAUD KB Flamboyan saat magang (administrasi sekolah hingga 50% lebih efisien), lalu menginisiasi program literasi digital untuk siswa SD pada KKN Digimapan.'
+                    : 'Built a MySQL-backed website and CMS for PAUD KB Flamboyan during my internship (up to 50% more efficient school administration), then started a digital literacy program for elementary students during KKN Digimapan.'}
                 </li>
               </ul>
 
-              <p>
-                {lang === 'id'
-                  ? `Saat ini terbuka untuk posisi ${pick(blueprintProfileMeta.openTypes, lang)} di bidang ${pick(blueprintProfileMeta.openFields, lang)}.`
-                  : `Currently open to ${pick(blueprintProfileMeta.openTypes, lang)} positions in ${pick(blueprintProfileMeta.openFields, lang)}.`}
-              </p>
+              <p data-bp="open">{pick(blueprintProfileMeta.openSentence, lang)}</p>
 
               {/* CTA Buttons: FlipCoverButton + SoftPillButton */}
-              <div className="pt-2 flex flex-wrap items-center gap-3">
+              <div data-bp="cta" className="pt-2 flex flex-wrap items-center gap-3">
                 <FlipCoverButton
                   label={
                     lang === 'id'
@@ -714,11 +724,11 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               <div className="pt-4">
                 <p className="mb-2 text-xs text-neutral-500">
                   {lang === 'id'
-                    ? 'Tautan langsung profil profesional & dokumen CV:'
-                    : 'Direct professional links & Curriculum Vitae:'}
+                    ? 'Cari saya di sini, atau langsung ambil CV-nya:'
+                    : 'Find me here, or grab my résumé:'}
                 </p>
 
-                <div className="flex flex-wrap gap-2">
+                <div data-bp="pills" className="flex flex-wrap gap-2">
                   <a
                     href="https://www.linkedin.com/in/muhammad-ravael-chessario-ramdoni-47b37728b"
                     target="_blank"
@@ -767,13 +777,13 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                ================================================================ */}
             <section id="experience" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+                <h2 data-bp="section" className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Pengalaman' : 'Experience'}
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Rekam jejak magang pengembangan sistem basis data dan inisiatif literasi digital lapangan.'
-                    : 'Database-driven web systems internship and community digital literacy leadership.'}
+                    ? 'Dua pengalaman, dua dunia berbeda: merancang sistem basis data di balik layar, lalu memfasilitasi literasi digital langsung di desa.'
+                    : 'Two experiences, two different worlds: designing a database-backed system behind the screen, then facilitating digital literacy right in the village.'}
                 </p>
 
                 <div className="mt-4 space-y-4">
@@ -782,6 +792,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     return (
                       <div
                         key={exp.id}
+                        data-bp={index === 0 ? 'card' : undefined}
                         onClick={() => setOpenExpIndex(isOpen ? null : index)}
                         className="p-3.5 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 transition hover:border-neutral-400 dark:hover:border-neutral-600 cursor-pointer"
                       >
@@ -836,7 +847,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                             <ul className="text-xs text-neutral-600 dark:text-neutral-400 space-y-1.5 pl-4 list-disc">
                               {exp.points[lang].map((point, i) => (
                                 <li key={i} className="leading-relaxed">
-                                  {point}
+                                  <PointText text={point} />
                                 </li>
                               ))}
                             </ul>
@@ -909,8 +920,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Klik kartu proyek untuk meninjau 5 tangkapan layar antarmuka, metrik evaluasi model, dan studi kasus mendalam.'
-                    : 'Click any project card to inspect all 5 interface screenshots, model evaluation metrics, and full case study.'}
+                    ? 'Proyek yang saya kerjakan dari data mentah sampai dashboard, lengkap dengan tangkapan layar, metrik evaluasi, dan cerita di balik implementasinya.'
+                    : 'Projects I take from raw data all the way to a dashboard, with screenshots, evaluation metrics, and the story behind the implementation.'}
                 </p>
               </div>
 
@@ -1060,8 +1071,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Perangkat analitik, pengolahan data, dan pemodelan yang digunakan dalam proyek riset maupun produksi.'
-                    : 'Core analytical stack, query languages, and modeling libraries applied across research and production.'}
+                    ? 'Perangkat yang saya pakai untuk membersihkan, menganalisis, dan memodelkan data di proyek-proyek di atas.'
+                    : 'The tools I use to clean, analyze, and model data across the projects above.'}
                 </p>
 
                 <div className="mt-4 space-y-4">
@@ -1104,8 +1115,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Kualifikasi akademik S1 Teknologi Informasi dan sertifikasi pelatihan kompetensi profesional.'
-                    : 'Academic qualification in Information Technology and professional training certifications.'}
+                    ? 'Fondasi akademik S1 Teknologi Informasi, ditambah sertifikasi pelatihan yang saya selesaikan di luar kelas.'
+                    : 'My academic foundation in Information Technology, plus the training certifications I completed outside the classroom.'}
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1212,8 +1223,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">Highlights</h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Pencapaian sertifikasi pelatihan profesional yang telah diselesaikan (klik kartu untuk memperbesar sertifikat).'
-                    : 'Completed professional training certifications and achievements (click any card to zoom certificate).'}
+                    ? 'Dua sertifikasi pelatihan yang sudah saya tuntaskan, lengkap dengan sertifikat aslinya.'
+                    : 'Two training certifications I have completed, shown with the original certificates.'}
                 </p>
 
                 <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1257,8 +1268,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </h2>
                 <p className="mt-1 text-xs md:text-sm text-neutral-500">
                   {lang === 'id'
-                    ? 'Sisi personal saya di luar dunia data — mulai dari film favorit, bacaan di rak buku, hingga musik yang menemani sesi vibe coding.'
-                    : 'A closer look at who I am beyond the data — from favorite films and my interactive bookshelf to music on rotation during vibe coding.'}
+                    ? 'Di luar spreadsheet, inilah yang menemani saya: film yang rela saya tonton ulang, buku yang saya baca berkali-kali, dan lagu yang mengiringi sesi vibe coding.'
+                    : 'Outside the spreadsheets, this is what keeps me company: films I will happily rewatch, books I keep rereading, and songs behind my vibe-coding sessions.'}
                 </p>
 
                 {/* 1. Movies Poster Grid (Top) */}

@@ -20,6 +20,7 @@ import {
   Briefcase,
   Award,
   Tv,
+  Download,
 } from 'lucide-react';
 import {
   type Lang,
@@ -36,9 +37,11 @@ import {
   techNames,
   iconMap,
   pick,
+  blueprintProfileMeta,
 } from './blueprintData';
-import { dashedX, dashedY } from './BlueprintHelpers';
+import { dashedX, dashedY, PointText } from './BlueprintHelpers';
 import { Bookshelf3D } from './Bookshelf3D';
+import { RavaelPixelArt } from './RavaelPixelArt';
 
 export type BlueprintView =
   | 'home'
@@ -120,6 +123,17 @@ export function ProjectDetailView({
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             )}
+            {project.downloads?.map((d) => (
+              <a
+                key={d.file}
+                href={withBase(d.file)}
+                download
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>{pick(d.label, lang)}</span>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -243,7 +257,9 @@ export function ProjectDetailView({
         </h2>
         <div className="space-y-3 text-xs md:text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {project.longDescription[lang].map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
+            <p key={idx}>
+              <PointText text={paragraph} />
+            </p>
           ))}
         </div>
       </div>
@@ -304,8 +320,8 @@ export function AllProjectsView({
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Klik kartu proyek untuk melihat 5 tangkapan layar lengkap, metrik evaluasi, dan detail implementasi.'
-            : 'Click any project card to inspect all 5 screenshots, evaluation metrics, and implementation details.'}
+            ? 'Semua proyek dan studi kasus saya, lengkap dengan tangkapan layar, metrik evaluasi, dan detail implementasi.'
+            : 'All my projects and case studies, complete with screenshots, evaluation metrics, and implementation details.'}
         </p>
       </div>
 
@@ -434,8 +450,8 @@ export function ExperienceTimelineView({
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Detail kontribusi lapangan, magang pengembangan web, serta dokumentasi kegiatan.'
-            : 'Field contributions, web development internship, and activity documentation.'}
+            ? 'Kontribusi saya di lapangan dan di balik layar, lengkap dengan dokumentasi kegiatannya.'
+            : 'My contributions in the field and behind the screen, with the activity documentation to match.'}
         </p>
       </div>
 
@@ -477,7 +493,7 @@ export function ExperienceTimelineView({
             <ul className="mt-4 space-y-2 text-xs md:text-sm text-neutral-700 dark:text-neutral-300 list-disc pl-5">
               {exp.points[lang].map((pt, i) => (
                 <li key={i} className="leading-relaxed">
-                  {pt}
+                  <PointText text={pt} />
                 </li>
               ))}
             </ul>
@@ -485,7 +501,7 @@ export function ExperienceTimelineView({
             {exp.photos && exp.photos.length > 0 && (
               <div className="mt-4">
                 <p className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 mb-2">
-                  {lang === 'id' ? 'Dokumentasi Foto (Klik untuk perbesar)' : 'Photo Documentation (Click to zoom)'}
+                  {lang === 'id' ? 'Dokumentasi Foto' : 'Photo Documentation'}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   {exp.photos.map((photo) => (
@@ -564,8 +580,8 @@ export function AllHighlightsView({
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Dua sertifikasi pelatihan kompetensi utama yang telah diselesaikan (klik kartu untuk memperbesar sertifikat).'
-            : 'Two completed professional training certifications (click any card to zoom certificate).'}
+            ? 'Dua sertifikasi pelatihan yang sudah saya tuntaskan, lengkap dengan sertifikat aslinya.'
+            : 'Two training certifications I have completed, shown with the original certificates.'}
         </p>
       </div>
 
@@ -635,8 +651,8 @@ export function AllAnimeMusicView({
         </h1>
         <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
           {lang === 'id'
-            ? 'Sisi personal di luar dunia data: daftar film pilihan, rak buku interaktif, dan rotasi lagu yang menemani sesi vibe coding.'
-            : 'Personal interests beyond the data: curated films, interactive bookshelf, and music rotation during vibe coding.'}
+            ? 'Di luar spreadsheet, inilah yang menemani saya: film yang rela saya tonton ulang, buku yang saya baca berkali-kali, dan lagu yang mengiringi sesi vibe coding.'
+            : 'Outside the spreadsheets, this is what keeps me company: films I will happily rewatch, books I keep rereading, and songs behind my vibe-coding sessions.'}
         </p>
       </div>
 
@@ -912,7 +928,7 @@ export function ContactPageView({
   };
 
   return (
-    <div className="w-full pb-16">
+    <div className="w-full">
       <div className="px-4 md:px-6 pt-6 pb-4">
         <button
           type="button"
@@ -927,9 +943,7 @@ export function ContactPageView({
           {lang === 'id' ? 'Hubungi Saya' : 'Get in Touch'}
         </h1>
         <p className="mt-1.5 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
-          {lang === 'id'
-            ? 'Saat ini terbuka untuk posisi Full-Time maupun Internship di bidang Data Analyst, Data Science, atau IT Helpdesk.'
-            : 'Currently open to Full-Time and Internship opportunities in Data Analyst, Data Science, or IT Helpdesk roles.'}
+          {pick(blueprintProfileMeta.openSentence, lang)}
         </p>
       </div>
 
@@ -1057,13 +1071,9 @@ export function ContactPageView({
         </div>
       </div>
 
-      <div className="w-full h-[1px] my-4" style={dashedX} />
+      <div className="w-full h-[1px] mt-2" style={dashedX} />
 
-      <div className="px-4 md:px-6 pt-4 text-center select-none overflow-hidden">
-        <div className="text-6xl sm:text-8xl font-black tracking-tighter text-neutral-200/80 dark:text-neutral-800/80 font-mono">
-          RAVAEL
-        </div>
-      </div>
+      <RavaelPixelArt />
     </div>
   );
 }

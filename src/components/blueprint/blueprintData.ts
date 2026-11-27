@@ -109,14 +109,14 @@ export const blueprintExperiences: BlueprintExperience[] = [
     imageFit: 'cover',
     points: {
       id: [
-        'Arsitektur Sistem & CMS: Merancang dan mengimplementasikan website profil resmi serta Content Management System (CMS) terpusat untuk mengelola informasi akademik, direktori pengajar, dan silabus kurikulum secara dinamis.',
-        'Optimalisasi Basis Data (+50% Efisiensi): Menstrukturkan skema database relasional MySQL untuk menggantikan pencatatan manual yang tersebar, memangkas waktu kerja administrasi sekolah hingga 50%.',
-        'Aksesibilitas Publik Responsif: Membangun antarmuka lintas perangkat (mobile & desktop) yang intuitif guna mempermudah orang tua murid mengakses jadwal kelas, profil guru, dan informasi pendaftaran.',
+        'Website & CMS Terpusat: Saya merancang dan membangun website profil resmi PAUD beserta CMS-nya, sehingga informasi akademik, direktori pengajar, dan silabus kurikulum dapat dikelola secara dinamis dari satu tempat.',
+        'Basis Data Pengganti Catatan Manual: Saya menyusun skema database relasional MySQL untuk menggantikan pencatatan manual yang tersebar, dan waktu kerja administrasi sekolah berkurang hingga 50%.',
+        'Nyaman di Semua Layar: Saya membangun antarmuka yang mudah dibuka dari ponsel maupun desktop, supaya orang tua murid bisa melihat jadwal kelas, profil guru, dan informasi pendaftaran tanpa repot.',
       ],
       en: [
-        'System Architecture & CMS: Designed and deployed an official school website and centralized Content Management System (CMS) to dynamically manage academic updates, teacher directories, and class curricula.',
-        'Database Optimization (+50% Efficiency): Structured a normalized MySQL relational database to replace fragmented manual records, reducing administrative processing time by up to 50%.',
-        'Responsive Public Access: Engineered a clean, mobile-first interface enabling prospective parents to seamlessly explore class schedules, educator profiles, and enrollment details.',
+        "One Central Website & CMS: I designed and built the school's official website together with its CMS, so academic updates, the teacher directory, and class curricula can be managed dynamically from one place.",
+        'A Database Replacing Scattered Notes: I structured a relational MySQL schema to replace fragmented manual records, cutting administrative processing time by up to 50%.',
+        'Comfortable on Every Screen: I built an interface that opens smoothly on phones and desktops, so parents can check class schedules, teacher profiles, and enrollment details without hassle.',
       ],
     },
     tech: ['MySQL', 'SQL', 'Web CMS', 'Relational Schema', 'HTML/CSS', 'Responsive UI'],
@@ -181,14 +181,14 @@ export const blueprintExperiences: BlueprintExperience[] = [
     imageFit: 'contain',
     points: {
       id: [
-        'Inisiasi Program Literasi Digital SD: Menggagas dan memfasilitasi kurikulum pengenalan komputer dasar bagi siswa Sekolah Dasar menggunakan Typingcore (akurasi mengetik) serta Microsoft Paint (koordinasi motorik kursor).',
-        'Manajemen Operasional Acara: Menyusun alur kegiatan (rundown), jadwal lintas divisi, serta koordinasi pemangku kepentingan desa untuk memastikan seluruh program KKN Digimapan berjalan tepat sasaran.',
-        'Pendampingan Praktik Terukur: Menerapkan metode belajar kelompok kecil secara bergiliran sehingga 100% siswa peserta memperoleh pengalaman praktik langsung mengoperasikan perangkat laptop.',
+        'Literasi Digital untuk Siswa SD: Saya menggagas dan memfasilitasi pengenalan komputer dasar bagi siswa Sekolah Dasar, memakai Typingcore untuk melatih ketepatan mengetik dan Microsoft Paint untuk melatih koordinasi kursor.',
+        'Acara yang Berjalan Rapi: Saya menyusun rundown dan jadwal lintas divisi, serta berkoordinasi dengan pemangku kepentingan desa agar seluruh program KKN Digimapan tepat sasaran.',
+        'Praktik yang Merata: Dengan belajar kelompok kecil secara bergiliran, 100% siswa peserta mendapat pengalaman langsung mengoperasikan laptop.',
       ],
       en: [
-        'Elementary Digital Literacy Initiative: Spearheaded and facilitated foundational computer literacy workshops for elementary students utilizing Typingcore (typing fluency) and Microsoft Paint (cursor motor control).',
-        'Program & Event Operations: Designed end-to-end event rundowns, cross-division schedules, and local stakeholder coordination to ensure smooth execution across all KKN Digimapan initiatives.',
-        'Structured Hands-on Mentorship: Implemented rotating small-group lab sessions ensuring every participating student gained direct, guided experience operating a laptop.',
+        'Digital Literacy for Elementary Students: I initiated and facilitated foundational computer workshops for elementary students, using Typingcore to build typing accuracy and Microsoft Paint to build cursor coordination.',
+        'Events That Run Smoothly: I drafted the rundown and cross-division schedule and coordinated with village stakeholders so every KKN Digimapan program landed as planned.',
+        'Practice for Everyone: With rotating small-group sessions, 100% of participating students got hands-on time operating a laptop.',
       ],
     },
     tech: [
@@ -261,6 +261,7 @@ export interface BlueprintProject {
   longDescription: { id: string[]; en: string[] };
   tech: TechKey[];
   live?: string;
+  downloads?: { file: string; label: { id: string; en: string } }[];
   status: 'live' | 'building' | 'research' | 'coming-soon';
   hasPin: boolean;
   isComingSoon?: boolean;
@@ -314,23 +315,33 @@ export const blueprintProjects: BlueprintProject[] = [
       },
     ],
     description: {
-      id: 'Pipeline NLP & Machine Learning end-to-end pada 63.766 ulasan Google Play Store Mobile JKN (Jan 2025 – Jan 2026) menggunakan Hybrid Labeling (InSet Lexicon), 15.000 fitur TF-IDF bigram, dan Multinomial Naive Bayes (Akurasi 94,38%, F1-Score 94,86%, ROC AUC 0,965).',
-      en: 'End-to-end NLP & Machine Learning pipeline analyzing 63,766 Mobile JKN Google Play Store reviews (Jan 2025 – Jan 2026) via Hybrid Labeling (InSet Lexicon), 15,000 TF-IDF bigram features, and Multinomial Naive Bayes (94.38% Accuracy, 94.86% F1-Score, 0.965 ROC AUC).',
+      id: 'Apa kata 63.766 ulasan tentang Mobile JKN? Saya membangun pipeline NLP end-to-end untuk menjawabnya: ulasan Google Play Store (Jan 2025 – Jan 2026) dilabeli dengan Hybrid Labeling (InSet Lexicon), diubah menjadi 15.000 fitur TF-IDF bigram, lalu diklasifikasi dengan Multinomial Naive Bayes (akurasi 94,38%, F1-Score 94,86%, ROC AUC 0,965).',
+      en: 'What do 63,766 Mobile JKN reviews really say? I built an end-to-end NLP pipeline to find out: Google Play Store reviews (Jan 2025 – Jan 2026) were labeled with Hybrid Labeling (InSet Lexicon), turned into 15,000 TF-IDF bigram features, and classified with Multinomial Naive Bayes (94.38% accuracy, 94.86% F1-Score, 0.965 ROC AUC).',
     },
     longDescription: {
       id: [
-        'Akuisisi & Pembersihan Data Skala Besar: Mengolah 63.766 ulasan mentah pengguna aplikasi Mobile JKN dari Google Play Store (periode Januari 2025 – Januari 2026) menggunakan kerangka Knowledge Discovery in Databases (KDD). Melalui tahapan case folding, normalisasi kata tidak baku, penghapusan stopword, dan stemming selektif Sastrawi, diperoleh 62.878 teks bersih siap analisis.',
-        'Rekayasa Pelabelan Hibrida (Hybrid Labeling): Mengombinasikan skor rating bintang dengan kamus sentimen bahasa Indonesia InSet Lexicon untuk membentuk 59.980 data berlabel seimbang (31.470 positif : 28.510 negatif). Pendekatan ini mengungkap temuan krusial bahwa 89% ulasan bintang 3 mengandung keluhan fungsional nyata serta mengoreksi anomali sentimen negatif pada 41% ulasan bintang 4.',
-        'Pemodelan & Dampak Bisnis Terukur: Mengekstraksi 15.000 fitur TF-IDF bigram dan melatih algoritma Multinomial Naive Bayes (pembagian 80:20), menghasilkan Akurasi Uji 94,38%, Presisi 91,15%, Recall 98,89%, F1-Score 94,86%, dan ROC AUC 0,965. Hasil analisis disajikan pada dashboard interaktif Streamlit yang memetakan prioritas perbaikan utama aplikasi pada kendala login, OTP, dan verifikasi akun.',
+        'Data Besar, Dibersihkan Sampai Siap Pakai: Saya mengumpulkan 63.766 ulasan mentah pengguna Mobile JKN dari Google Play Store (Januari 2025 – Januari 2026) dan mengolahnya dengan kerangka Knowledge Discovery in Databases (KDD). Lewat case folding, normalisasi kata tidak baku, penghapusan stopword, dan stemming selektif Sastrawi, tersisa 62.878 teks bersih yang siap dianalisis.',
+        'Pelabelan Hibrida, karena Bintang Saja Tidak Cukup: Saya menggabungkan skor rating bintang dengan kamus sentimen bahasa Indonesia InSet Lexicon, menghasilkan 59.980 data berlabel yang seimbang (31.470 positif : 28.510 negatif). Pendekatan ini membuka dua temuan penting: 89% ulasan bintang 3 ternyata berisi keluhan fungsional yang nyata, dan 41% ulasan bintang 4 justru bernada negatif.',
+        'Model yang Akurat, Temuan yang Bisa Ditindaklanjuti: Dari 15.000 fitur TF-IDF bigram, saya melatih Multinomial Naive Bayes dengan pembagian data 80:20 dan memperoleh akurasi uji 94,38%, presisi 91,15%, recall 98,89%, F1-Score 94,86%, serta ROC AUC 0,965. Hasilnya saya sajikan lewat dashboard Streamlit interaktif yang memetakan prioritas perbaikan aplikasi: kendala login, OTP, dan verifikasi akun.',
       ],
       en: [
-        'Large-Scale Data Acquisition & Cleaning: Processed 63,766 raw Mobile JKN user reviews from the Google Play Store (January 2025 – January 2026) under the Knowledge Discovery in Databases (KDD) framework. Executed text cleaning, Indonesian slang normalization, stopword removal, and selective Sastrawi stemming to produce 62,878 clean records.',
-        'Hybrid Sentiment Labeling Engineering: Combined star ratings with the Indonesian InSet Lexicon dictionary to construct a balanced dataset of 59,980 labeled reviews (31,470 positive : 28,510 negative)—uncovering that 89% of 3-star reviews express genuine user complaints and correcting mislabeled negative sentiment across 41% of 4-star reviews.',
-        'Predictive Modeling & Product Insights: Extracted 15,000 TF-IDF bigram features and trained a Multinomial Naive Bayes classifier (80:20 split), achieving 94.38% Test Accuracy, 91.15% Precision, 98.89% Recall, 94.86% F1-Score, and 0.965 ROC AUC. Deployed findings into an interactive Streamlit dashboard pinpointing login, OTP, and account verification bottlenecks as top product priorities.',
+        'Big Data, Cleaned Until It Is Ready: I collected 63,766 raw Mobile JKN user reviews from the Google Play Store (January 2025 – January 2026) and processed them within the Knowledge Discovery in Databases (KDD) framework. Through case folding, slang normalization, stopword removal, and selective Sastrawi stemming, 62,878 clean texts were left ready for analysis.',
+        'Hybrid Labeling, Because Stars Alone Are Not Enough: I combined star ratings with the Indonesian InSet Lexicon sentiment dictionary to build a balanced set of 59,980 labeled reviews (31,470 positive : 28,510 negative). This surfaced two key findings: 89% of 3-star reviews actually contain real functional complaints, and 41% of 4-star reviews are in fact negative in tone.',
+        "An Accurate Model, Findings You Can Act On: From 15,000 TF-IDF bigram features, I trained a Multinomial Naive Bayes classifier with an 80:20 split and reached 94.38% test accuracy, 91.15% precision, 98.89% recall, 94.86% F1-Score, and 0.965 ROC AUC. I presented the results in an interactive Streamlit dashboard that maps the app's fix priorities: login, OTP, and account verification issues.",
       ],
     },
     tech: ['python', 'sklearn', 'pandas', 'numpy', 'streamlit', 'matplotlib', 'seaborn', 'nlp'],
     live: 'https://ravaelchessario24.github.io/mobile-jkn-landing-page/',
+    // Taruh file-nya di public/files/ (nama file boleh diganti, sesuaikan di sini).
+    downloads: [
+      {
+        file: 'files/mobile-jkn-hybrid-labeling.xlsx',
+        label: {
+          id: 'Unduh Hasil Hybrid Labeling (.xlsx)',
+          en: 'Download Hybrid Labeling Data (.xlsx)',
+        },
+      },
+    ],
     status: 'live',
     hasPin: true,
     metrics: [
@@ -567,6 +578,10 @@ export const blueprintProfileMeta = {
   openTypes: {
     id: 'Full-Time, Internship',
     en: 'Full-Time, Internship',
+  },
+  openSentence: {
+    id: 'Saat ini saya terbuka untuk peluang Full-Time maupun Internship di bidang Data Analyst, Data Science, atau IT Helpdesk.',
+    en: 'I am currently open to full-time and internship opportunities in Data Analyst, Data Science, or IT Helpdesk roles.',
   },
 };
 

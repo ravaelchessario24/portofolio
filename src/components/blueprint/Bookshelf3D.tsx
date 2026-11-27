@@ -351,15 +351,13 @@ export function Bookshelf3D({
     <div className="mt-7">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
-          {lang === 'id' ? 'Rak Buku Interaktif' : 'Interactive Bookshelf'}
+          {lang === 'id' ? 'Buku yang akan saya baca berulang kali' : 'Books I would happily reread'}
         </h3>
-        <span className="text-[11px] font-mono text-neutral-400">
-          {activeBook
-            ? `${activeBook.title} — ${activeBook.author}`
-            : lang === 'id'
-              ? 'Klik punggung buku untuk membuka sampul 3D'
-              : 'Click any book spine to open 3D cover'}
-        </span>
+        {activeBook && (
+          <span className="text-[11px] font-mono text-neutral-400">
+            {`${activeBook.title} — ${activeBook.author}`}
+          </span>
+        )}
       </div>
 
       {/* 3D Bookshelf Stage */}

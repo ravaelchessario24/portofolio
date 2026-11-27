@@ -491,14 +491,149 @@ function BpTag({
   );
 }
 
+export function PointText({ text }: { text: string }) {
+  const idx = text.indexOf(': ');
+  if (idx <= 0 || idx > 64) return <>{text}</>;
+  return (
+    <>
+      <strong className="font-semibold text-neutral-900 dark:text-neutral-100">
+        {text.slice(0, idx)}
+      </strong>
+      {text.slice(idx)}
+    </>
+  );
+}
+
+/* ==========================================================================
+   BLUEPRINT LOADER (responsif)
+   Kotak-kotak blueprint TIDAK lagi memakai ukuran tetap. Setiap elemen asli yang
+   ditandai atribut data-bp="..." diukur lewat getBoundingClientRect(), lalu
+   kerangkanya digambar tepat di atasnya. Hasilnya sejajar 1:1 di semua ukuran
+   layar, dari ponsel kecil sampai monitor lebar.
+   ========================================================================== */
+type BpBox = {
+  key: string;
+  tag: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  group: 1 | 2;
+  strong?: boolean;
+  dot?: boolean;
+  round?: boolean;
+};
+
+type BpLayout = {
+  boxes: BpBox[];
+  marginW: number;
+  banner: { y: number; h: number; bottom: number } | null;
+  profile: { y: number; h: number; bottom: number } | null;
+  indexAt: { x: number; y: number } | null;
+};
+
+type BpSpec = {
+  tag: string;
+  group: 1 | 2;
+  strong?: boolean;
+  dot?: boolean;
+  round?: boolean;
+  children?: boolean;
+};
+
+const BP_SPEC: Record<string, BpSpec> = {
+  banner: { tag: 'BANNER 01', group: 1 },
+  avatar: { tag: 'AVATAR', group: 1, round: true },
+  tagline: { tag: 'COPY 01', group: 1 },
+  controls: { tag: 'CONTROLS', group: 1 },
+  title: { tag: 'TITLE', group: 1 },
+  loc: { tag: 'LOC', group: 1 },
+  navitem: { tag: 'NAV', group: 1 },
+  bio: { tag: 'COPY 02 · BIO', group: 2 },
+  bullet: { tag: 'BULLET', group: 2, dot: true },
+  open: { tag: 'STATUS', group: 2 },
+  cta: { tag: 'CTA', group: 2, strong: true, round: true, children: true },
+  pills: { tag: 'LINK', group: 2, round: true, children: true },
+  section: { tag: 'SECTION 01', group: 2 },
+  card: { tag: 'CARD 01', group: 2, round: true },
+};
+
+function measureBlueprint(): BpLayout {
+  const vh = window.innerHeight;
+  const boxes: BpBox[] = [];
+  const counters: Record<string, number> = {};
+
+  const push = (key: string, el: Element, tag: string) => {
+    const spec = BP_SPEC[key];
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4 || r.bottom < 0 || r.top > vh) return;
+    boxes.push({
+      key: `${key}-${boxes.length}`,
+      tag,
+      x: r.left,
+      y: r.top,
+      w: r.width,
+      h: r.height,
+      group: spec.group,
+      strong: spec.strong,
+      dot: spec.dot,
+      round: spec.round,
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-bp]').forEach((el) => {
+    const key = el.dataset.bp || '';
+    const spec = BP_SPEC[key];
+    if (!spec) return;
+    if (spec.children) {
+      Array.from(el.children).forEach((child) => {
+        counters[key] = (counters[key] || 0) + 1;
+        push(key, child, `${spec.tag} 0${counters[key]}`);
+      });
+      return;
+    }
+    if (key === 'navitem') {
+      push(key, el, (el.textContent || '').trim() || spec.tag);
+      return;
+    }
+    if (key === 'bullet') {
+      counters[key] = (counters[key] || 0) + 1;
+      push(key, el, `BULLET 0${counters[key]}`);
+      return;
+    }
+    push(key, el, spec.tag);
+  });
+
+  const rectOf = (k: string) => {
+    const el = document.querySelector<HTMLElement>(`[data-bp="${k}"]`);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return r.width < 4 || r.height < 4 ? null : r;
+  };
+  const col = rectOf('column');
+  const banner = rectOf('banner');
+  const profile = rectOf('profile');
+  const index = rectOf('index');
+
+  return {
+    boxes,
+    marginW: col ? col.left : 0,
+    banner: banner ? { y: banner.top, h: banner.height, bottom: banner.bottom } : null,
+    profile: profile ? { y: profile.top, h: profile.height, bottom: profile.bottom } : null,
+    indexAt: index ? { x: index.left, y: index.top } : null,
+  };
+}
+
 export function BlueprintLoader() {
-  // phase 0: blue grid + main column ticks
-  // phase 1: banner + 112px profile bar + right INDEX draw in
-  // phase 2: bio copy 01-03 + CTA buttons + 4 social pills + Pengalaman card draw in
-  // phase 3: overlay becomes semi-transparent over the live portfolio (aligned 1:1)
-  // phase 4: top-to-bottom wipe reveal
-  // phase 5: unmounted
+  // phase 0: grid biru + garis kolom
+  // phase 1: banner, bilah profil, dan INDEX tergambar (posisi hasil ukur DOM asli)
+  // phase 2: bio, poin, tombol, tautan, dan kartu Pengalaman tergambar
+  // phase 3: overlay jadi semi-transparan di atas halaman asli (sejajar 1:1)
+  // phase 4: wipe dari atas ke bawah
+  // phase 5: dilepas
   const [phase, setPhase] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+  const [layout, setLayout] = useState<BpLayout | null>(null);
+  const done = phase === 5;
 
   useEffect(() => {
     const prefersReduced =
@@ -526,7 +661,33 @@ export function BlueprintLoader() {
     };
   }, []);
 
-  if (phase === 5) return null;
+  // Ukur ulang saat layar berubah ukuran, di-scroll, font selesai dimuat, atau kolom berubah tinggi.
+  useEffect(() => {
+    if (done) return;
+    let raf = 0;
+    const run = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setLayout(measureBlueprint()));
+    };
+    run();
+    window.addEventListener('resize', run);
+    window.addEventListener('scroll', run, { passive: true });
+    const fonts = (document as Document & { fonts?: { ready?: Promise<unknown> } }).fonts;
+    fonts?.ready?.then(run);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(run) : null;
+    const col = document.querySelector('[data-bp="column"]');
+    if (col && ro) ro.observe(col);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', run);
+      window.removeEventListener('scroll', run);
+      ro?.disconnect();
+    };
+  }, [done]);
+
+  if (done) return null;
+
+  const L = layout;
 
   return (
     <div
@@ -540,282 +701,113 @@ export function BlueprintLoader() {
           'clip-path 720ms cubic-bezier(0.65, 0, 0.35, 1), background-color 360ms ease',
       }}
     >
-      {/* Top Wipe Edge Line */}
+      {/* Garis wipe atas */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-white shadow-[0_0_12px_rgba(255,255,255,0.95)]" />
 
-      {/* Architectural Vertical Guidelines — Exact 1:1 coordinates with PortfolioApp */}
+      {/* Garis kolom: breakpoint identik dengan halaman, jadi selalu pas */}
       <div className="absolute top-0 bottom-0 left-2.5 sm:left-4 md:left-[15%] lg:left-[18%] xl:left-[26%] w-[1px] bg-white/50" />
       <div className="absolute top-0 bottom-0 right-2.5 sm:right-4 md:right-[15%] lg:right-[18%] xl:right-[26%] w-[1px] bg-white/50" />
 
-      {/* Left Margin Dimension Rulers (Desktop) */}
-      <div className="hidden md:flex flex-col items-end justify-center pr-2 absolute left-0 md:w-[15%] lg:w-[18%] xl:w-[26%] top-0 h-[22vh] font-mono text-[9px] text-white/75">
-        <span>┬ 22vh</span>
-        <span className="my-1 h-10 w-[1px] bg-white/35 mr-2" />
-        <span>┴ BANNER</span>
-      </div>
-      <div className="hidden md:flex flex-col items-end justify-center pr-2 absolute left-0 md:w-[15%] lg:w-[18%] xl:w-[26%] top-[22vh] h-[112px] font-mono text-[9px] text-white/75">
-        <span>┬ 112px</span>
-        <span className="my-0.5 h-6 w-[1px] bg-white/35 mr-2" />
-        <span>┴ HEADER</span>
-      </div>
-
-      {/* Right Fixed INDEX Schematic — Exact 1:1 position with RightNavbar */}
-      <div
-        className={`hidden lg:flex flex-col gap-3.5 absolute top-[22vh] left-[calc(82%+24px)] xl:left-[calc(74%+32px)] mt-3 transition-all duration-300 ${
-          phase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-        }`}
-      >
-        <BpTag>INDEX</BpTag>
-        {[
-          { label: 'Pengalaman', active: true, w: 'w-20' },
-          { label: 'Proyek', active: false, w: 'w-14' },
-          { label: 'Keahlian', active: false, w: 'w-16' },
-          { label: 'Pendidikan', active: false, w: 'w-20' },
-          { label: 'Highlights', active: false, w: 'w-18' },
-          { label: 'Tentang Diriku', active: false, w: 'w-24' },
-        ].map((item) => (
-          <div key={item.label} className="flex items-center gap-2">
-            {item.active && <span className="w-4 h-[1.5px] bg-white" />}
-            <div
-              className={`h-3.5 ${item.w} border ${
-                item.active ? 'border-white' : 'border-white/55'
-              } flex items-center px-1`}
-              style={hatchStyle}
-            >
-              <span className="font-mono text-[8px] text-white/90 truncate">
-                {item.label}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Center Column — Exact 1:1 coordinates with PortfolioApp */}
-      <div className="mx-2.5 sm:mx-4 md:mx-[15%] lg:mx-[18%] xl:mx-[26%]">
-        {/* 1. Top Banner (Exact h-[18vh] sm:h-[22vh]) */}
+      {/* Garis horizontal penuh: di bawah banner dan di bawah bilah profil (hasil ukur) */}
+      {L?.banner && (
         <div
-          className={`relative h-[18vh] sm:h-[22vh] w-full overflow-hidden transition-opacity duration-300 ${
-            phase >= 1 ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={hatchStyle}
-        >
-          <div className="absolute top-2 left-3 right-3 flex items-center justify-between text-[9px] font-mono text-white/80">
-            <BpTag>BANNER 01</BpTag>
-            <span className="hidden sm:inline-block px-1.5 py-0.5 bg-[#2355B8]/90 border border-white/40">
-              ◄─── 100% × 22vh ───►
-            </span>
-            <div className="px-2 py-0.5 border border-white/85 bg-[#2355B8]/80 font-mono text-[11px] sm:text-xs font-bold text-white">
-              TIME · WIB
-            </div>
-          </div>
-
-          <div className="absolute bottom-2 right-[18%] w-24 sm:w-32 h-[62%] border border-dashed border-white/65 flex items-end justify-center pb-1">
-            <span className="px-1 bg-[#2355B8]/90 font-mono text-[8px] text-white/85">
-              HERO_ART
-            </span>
-          </div>
-        </div>
-
-        {/* In-Flow Full-Bleed Horizontal Line 1 */}
-        <div className="relative w-full h-[1px]">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[1px] bg-white/50" />
-        </div>
-
-        {/* 2. Profile Bar (Exact min-h-[96px] sm:h-[112px] flex items-stretch) */}
+          className="absolute left-0 right-0 h-[1px] bg-white/50"
+          style={{ top: L.banner.bottom }}
+        />
+      )}
+      {L?.profile && (
         <div
-          className={`relative min-h-[96px] sm:h-[112px] flex items-stretch transition-all duration-300 ${
-            phase >= 1 ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          {/* Avatar Box */}
-          <div className="relative w-[88px] sm:w-[112px] shrink-0 p-[3px] border-r border-white/50 flex items-center justify-center">
-            <div
-              className="w-full aspect-square sm:h-full rounded-[10px] border border-white/90 flex flex-col justify-between p-1.5"
-              style={hatchStyle}
-            >
-              <BpTag>AVATAR</BpTag>
-              <span className="self-end px-1 bg-white text-[#1D47A0] font-mono text-[8px] font-bold">
-                106×106
-              </span>
-            </div>
-          </div>
+          className="absolute left-0 right-0 h-[1px] bg-white/50"
+          style={{ top: L.profile.bottom }}
+        />
+      )}
 
-          {/* Right Header Controls + In-Flow Divider + Name & Location */}
-          <div className="relative flex-1 flex flex-col justify-between min-w-0">
-            {/* Top Row: Tagline + ID/EN + ⌘K + Theme */}
-            <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-wrap sm:flex-nowrap justify-between items-center gap-x-2 gap-y-1">
-              <div className="order-2 sm:order-1 w-full sm:w-auto flex items-center gap-1.5 min-w-0 sm:flex-1">
-                <BpTag>COPY 01</BpTag>
-                <div
-                  className="h-3.5 sm:h-4 flex-1 sm:w-72 max-w-full border border-white/70"
-                  style={hatchStyle}
-                />
-              </div>
-              <div className="order-1 sm:order-2 ml-auto sm:ml-0 flex items-center gap-1.5 shrink-0">
-                <div
-                  className="h-5 w-11 border border-white/85 flex items-center justify-center font-mono text-[8px] text-white"
-                  style={hatchStyle}
-                >
-                  ID/EN
-                </div>
-                <div
-                  className="h-5 w-7 border border-white/85 flex items-center justify-center font-mono text-[8px] text-white"
-                  style={hatchStyle}
-                >
-                  ⌘K
-                </div>
-                <div
-                  className="h-5 w-6 border border-white/85 flex items-center justify-center font-mono text-[8px] text-white"
-                  style={hatchStyle}
-                >
-                  ☼
-                </div>
-              </div>
-            </div>
-
-            {/* In-Flow Horizontal Divider */}
-            <div className="w-full h-[1px] bg-white/45" />
-
-            {/* Bottom Row: Name + Location */}
-            <div className="px-2.5 sm:px-4 py-1.5 sm:py-2 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-1 min-w-0">
-              <div className="flex flex-col gap-0.5 flex-1 max-w-md">
-                <div className="flex items-center gap-1.5">
-                  <BpTag>TITLE</BpTag>
-                  <span className="px-1 bg-white text-[#1D47A0] font-mono text-[8px] font-bold">
-                    385 × 28
-                  </span>
-                </div>
-                <div className="h-5 sm:h-7 w-full border border-white/90" style={hatchStyle} />
-              </div>
-
-              <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-                <BpTag>LOC</BpTag>
-                <div className="h-4 w-28 border border-white/70" style={hatchStyle} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* In-Flow Full-Bleed Horizontal Line 2 */}
-        <div className="relative w-full h-[1px]">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-[1px] bg-white/50" />
-        </div>
-
-        {/* 3. Intro Bio, Bullet Points, CTA Buttons & Social Pills (Exact pt-5 px-4 pb-6) */}
-        <div
-          className={`pt-5 px-4 pb-6 space-y-3 transition-all duration-300 ${
-            phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-          }`}
-        >
-          {/* Lead Paragraph Box */}
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <BpTag>COPY 02 · BIO SUMMARY</BpTag>
-              <span className="font-mono text-[8.5px] text-white/80">100% × 56</span>
-            </div>
-            <div className="w-full h-14 border border-white/80" style={hatchStyle} />
-          </div>
-
-          {/* 3 Bullet Points Boxes */}
-          <div className="space-y-1.5 pl-4">
-            {[
-              { tag: 'BULLET 01 · MOBILE JKN 63.766 REVIEWS', h: 'h-10' },
-              { tag: 'BULLET 02 · DSAREA GRADE A & COURSERA', h: 'h-8' },
-              { tag: 'BULLET 03 · PAUD CMS & KKN DIGIMAPAN', h: 'h-8' },
-            ].map((b) => (
-              <div key={b.tag} className="relative">
-                <span className="absolute -left-3 top-2 w-1.5 h-1.5 rounded-full bg-white/80" />
-                <div
-                  className={`w-full ${b.h} border border-white/70 flex items-center justify-between px-2`}
-                  style={hatchStyle}
-                >
-                  <span className="font-mono text-[8px] text-white/85">{b.tag}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Open to opportunities line */}
-          <div className="w-3/4 h-4 border border-white/60" style={hatchStyle} />
-
-          {/* CTA Buttons Row: [Lihat Studi Kasus Mobile JKN] + [Hubungi Saya] */}
-          <div className="pt-2 flex flex-wrap items-center gap-3">
-            <div
-              className="h-8 w-48 rounded-[10px] border-2 border-white flex items-center justify-between px-2.5"
-              style={hatchStyle}
-            >
-              <BpTag>CTA 01</BpTag>
-              <span className="font-mono text-[8.5px] text-white">192 × 32</span>
-            </div>
-            <div
-              className="h-8 w-28 rounded-[6px] border border-white/85 flex items-center justify-between px-2"
-              style={hatchStyle}
-            >
-              <BpTag>CTA 02</BpTag>
-              <span className="font-mono text-[8.5px] text-white">112 × 32</span>
-            </div>
-          </div>
-
-          {/* Social & CV Pills Row (4 Pills: LinkedIn, Email, Tangerang ID, Unduh CV) */}
-          <div className="pt-4 space-y-2">
-            <div className="w-56 h-3.5 border border-white/50" style={hatchStyle} />
-            <div className="flex flex-wrap gap-2">
-              {[
-                { label: 'LINKEDIN', w: 'w-20' },
-                { label: 'EMAIL · RAVAELCHESSARIO', w: 'w-44' },
-                { label: 'TANGERANG, ID', w: 'w-28' },
-                { label: 'CV PDF', w: 'w-28' },
-              ].map((p) => (
-                <div
-                  key={p.label}
-                  className={`h-7 ${p.w} rounded-md border border-white/80 flex items-center justify-center px-2`}
-                  style={hatchStyle}
-                >
-                  <span className="font-mono text-[8px] text-white truncate">{p.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Horizontal Divider */}
-        <div className="w-full h-[1px] my-4 bg-white/45" />
-
-        {/* 4. Pengalaman Section Schematic */}
-        <div
-          className={`px-4 py-2 space-y-3 transition-all duration-300 ${
-            phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-          }`}
-        >
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <BpTag>SECTION 01</BpTag>
-              <div className="h-6 w-36 border border-white/85" style={hatchStyle} />
-            </div>
-            <div className="h-3.5 w-80 max-w-full border border-white/55" style={hatchStyle} />
-          </div>
-
-          {/* Experience Card 1 Wireframe */}
+      {/* Penggaris dimensi di margin kiri (hanya jika margin cukup lebar) */}
+      {L && L.banner && L.marginW >= 96 && (
+        <>
           <div
-            className="p-3.5 rounded-lg border border-dashed border-white/80 space-y-3"
-            style={hatchStyle}
+            className="absolute flex flex-col items-end justify-center pr-2 font-mono text-[9px] text-white/75 transition-opacity duration-300"
+            style={{
+              left: 0,
+              width: L.marginW - 4,
+              top: L.banner.y,
+              height: L.banner.h,
+              opacity: phase >= 1 ? 1 : 0,
+            }}
           >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-md border border-white/90 flex items-center justify-center font-mono text-[8px] text-white">
-                  LOGO
-                </div>
-                <div className="space-y-1">
-                  <div className="w-40 h-4 border border-white/85" />
-                  <div className="w-28 h-3 border border-white/60" />
-                </div>
-              </div>
-              <div className="hidden sm:block w-28 h-7 border border-white/65" />
-            </div>
-            <div className="w-full h-14 border border-white/60" />
+            <span>┬ {Math.round(L.banner.h)}px</span>
+            <span className="my-1 h-10 w-[1px] bg-white/35 mr-2" />
+            <span>┴ BANNER</span>
           </div>
+          {L.profile && (
+            <div
+              className="absolute flex flex-col items-end justify-center pr-2 font-mono text-[9px] text-white/75 transition-opacity duration-300"
+              style={{
+                left: 0,
+                width: L.marginW - 4,
+                top: L.profile.y,
+                height: L.profile.h,
+                opacity: phase >= 1 ? 1 : 0,
+              }}
+            >
+              <span>┬ {Math.round(L.profile.h)}px</span>
+              <span className="my-0.5 h-6 w-[1px] bg-white/35 mr-2" />
+              <span>┴ HEADER</span>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Label INDEX di atas daftar navigasi kanan */}
+      {L?.indexAt && (
+        <div
+          className="absolute transition-opacity duration-300"
+          style={{ left: L.indexAt.x, top: L.indexAt.y, opacity: phase >= 1 ? 1 : 0 }}
+        >
+          <BpTag>INDEX</BpTag>
         </div>
-      </div>
+      )}
+
+      {/* Kotak kerangka: posisi dan ukuran = elemen asli */}
+      {L?.boxes.map((b, i) => {
+        const shown = b.group === 1 ? phase >= 1 : phase >= 2;
+        const showTag = b.w >= 56 && b.h >= 16;
+        const showSize = b.w >= 120 && b.h >= 30;
+        return (
+          <div
+            key={b.key}
+            className={`absolute box-border ${
+              b.strong ? 'border-2 border-white' : 'border border-white/75'
+            }`}
+            style={{
+              ...hatchStyle,
+              left: b.x,
+              top: b.y,
+              width: b.w,
+              height: b.h,
+              borderRadius: b.round ? 8 : 0,
+              opacity: shown ? 1 : 0,
+              transform: shown ? 'translateY(0)' : 'translateY(6px)',
+              transition: 'opacity 300ms ease, transform 300ms ease',
+              transitionDelay: shown ? `${Math.min(i, 10) * 30}ms` : '0ms',
+            }}
+          >
+            {b.dot && (
+              <span className="absolute -left-3 top-2 w-1.5 h-1.5 rounded-full bg-white/80" />
+            )}
+            {showTag && (
+              <div className="absolute top-0.5 left-0.5 max-w-full overflow-hidden">
+                <BpTag>{b.tag}</BpTag>
+              </div>
+            )}
+            {showSize && (
+              <span className="absolute bottom-0.5 right-1 font-mono text-[8px] text-white/85">
+                {Math.round(b.w)} × {Math.round(b.h)}
+              </span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
