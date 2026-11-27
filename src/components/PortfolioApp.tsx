@@ -428,7 +428,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               type="button"
               onClick={() =>
                 openLightbox(
-                  withBase('images/ravael-square.webp'),
+                  withBase('images/ravael-profile.webp'),
                   'Muhammad Ravael Chessario Ramdoni',
                   lang === 'id'
                     ? 'S1 Teknologi Informasi — ITB Ahmad Dahlan Jakarta (IPK 3,77 / 4,00 · Cumlaude)'
@@ -439,7 +439,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               className="relative w-full aspect-square sm:h-full rounded-[10px] overflow-hidden block cursor-zoom-in border border-neutral-300 dark:border-neutral-700 bg-white"
             >
               <img
-                src={withBase('images/ravael-square.webp')}
+                src={withBase('images/ravael-profile.webp')}
                 alt="Muhammad Ravael Chessario Ramdoni"
                 className="w-full h-full object-cover transition-transform duration-500 ease-out hover:scale-105"
               />
