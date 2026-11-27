@@ -2,13 +2,19 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Lenis from 'lenis';
 import {
   ArrowUpRight,
+  Award,
+  Briefcase,
   ChevronDown,
   ExternalLink,
   FileText,
+  FolderGit2,
+  Home,
+  Layers,
   Mail,
-  MapPin,
   Moon,
+  Search,
   Sun,
+  Tv,
   X,
 } from 'lucide-react';
 import { FaLinkedin } from 'react-icons/fa6';
@@ -32,7 +38,6 @@ import {
   blueprintCertifications,
   blueprintCoursework,
   blueprintHighlights,
-  blueprintProfileMeta,
   animeWithCovers,
   musicScenes,
   featuredArtists,
@@ -79,6 +84,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
   const [showAllMusicArtists, setShowAllMusicArtists] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('experience');
+  const [isAtTop, setIsAtTop] = useState<boolean>(true);
   const [lightbox, setLightbox] = useState<{
     src: string;
     title: string;
@@ -160,10 +166,12 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
     let rafId = 0;
 
     const computeActive = () => {
-      if (Date.now() < scrollLockUntilRef.current) return;
-
       const vh = window.innerHeight;
       const scrollY = window.scrollY;
+      setIsAtTop(scrollY < 160);
+
+      if (Date.now() < scrollLockUntilRef.current) return;
+
       const docHeight = document.documentElement.scrollHeight;
 
       if (scrollY < 80) {
@@ -285,6 +293,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
   const navigateToView = useCallback((nextView: BlueprintView) => {
     setView(nextView);
+    setIsAtTop(true);
     if (lenisRef.current) {
       lenisRef.current.scrollTo(0, { duration: 0.9 });
     } else {
@@ -304,6 +313,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
   const scrollToSection = useCallback((sectionId: string) => {
     setActiveSection(sectionId);
+    setIsAtTop(false);
     scrollLockUntilRef.current = Date.now() + 1100;
     setView('home');
     setTimeout(() => {
@@ -312,7 +322,8 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
         if (lenisRef.current) {
           lenisRef.current.scrollTo(el, { offset: -16, duration: 1.1 });
         } else {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - 16);
+          window.scrollTo({ top: y, behavior: 'smooth' });
         }
       }
     }, 40);
@@ -699,8 +710,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 </li>
               </ul>
 
-              <p data-bp="open">{pick(blueprintProfileMeta.openSentence, lang)}</p>
-
               {/* CTA Buttons: FlipCoverButton + SoftPillButton */}
               <div data-bp="cta" className="pt-2 flex flex-wrap items-center gap-3">
                 <FlipCoverButton
@@ -722,13 +731,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
               </div>
 
               {/* Social & CV Pills */}
-              <div className="pt-4">
-                <p className="mb-2 text-xs text-neutral-500">
-                  {lang === 'id'
-                    ? 'Cari saya di sini, atau langsung ambil CV-nya:'
-                    : 'Find me here, or grab my résumé:'}
-                </p>
-
+              <div className="pt-1">
                 <div data-bp="pills" className="flex flex-wrap gap-2">
                   <a
                     href="https://www.linkedin.com/in/ravaelchessario/"
@@ -746,16 +749,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   >
                     <Mail className="w-3.5 h-3.5" />
                     ravaelchessario@gmail.com
-                  </a>
-
-                  <a
-                    href="https://maps.google.com/?q=Tangerang,Indonesia"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/60 transition"
-                  >
-                    <MapPin className="w-3.5 h-3.5" />
-                    Tangerang, ID
                   </a>
 
                   <a
@@ -781,11 +774,6 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 <h2 data-bp="section" className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Pengalaman' : 'Experience'}
                 </h2>
-                <p className="mt-1 text-xs md:text-sm text-neutral-500">
-                  {lang === 'id'
-                    ? 'Dua pengalaman, dua dunia berbeda: merancang sistem basis data di balik layar, lalu memfasilitasi literasi digital langsung di desa.'
-                    : 'Two experiences, two different worlds: designing a database-backed system behind the screen, then facilitating digital literacy right in the village.'}
-                </p>
 
                 <div className="mt-4 space-y-4">
                   {blueprintExperiences.map((exp, index) => {
@@ -793,7 +781,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                     return (
                       <div
                         key={exp.id}
-                        data-bp={index === 0 ? 'card' : undefined}
+                        data-bp="card"
                         onClick={() => setOpenExpIndex(isOpen ? null : index)}
                         className="p-3.5 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 transition hover:border-neutral-400 dark:hover:border-neutral-600 cursor-pointer"
                       >
@@ -901,7 +889,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   })}
                 </div>
 
-                <div className="mt-6 flex justify-center">
+                <div data-bp="cta" className="mt-6 flex justify-center">
                   <SoftPillButton onClick={() => navigateToView('experience')}>
                     {lang === 'id' ? 'Lihat Dokumentasi Lengkap' : 'View Full Timeline'}
                   </SoftPillButton>
@@ -915,15 +903,10 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                2. PROJECTS SECTION (2-column blueprint cards)
                ================================================================ */}
             <section id="projects" className="w-full py-2 scroll-mt-16">
-              <div className="px-4 pb-4">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-                  {lang === 'id' ? 'Proyek Pilihan' : 'Featured Projects'}
+              <div className="px-4 pb-3.5">
+                <h2 data-bp="section" className="text-xl md:text-2xl font-bold tracking-tight">
+                  {lang === 'id' ? 'Proyek' : 'Projects'}
                 </h2>
-                <p className="mt-1 text-xs md:text-sm text-neutral-500">
-                  {lang === 'id'
-                    ? 'Proyek yang saya kerjakan dari data mentah sampai dashboard, lengkap dengan tangkapan layar, metrik evaluasi, dan cerita di balik implementasinya.'
-                    : 'Projects I take from raw data all the way to a dashboard, with screenshots, evaluation metrics, and the story behind the implementation.'}
-                </p>
               </div>
 
               <div className="relative">
@@ -947,7 +930,10 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                         }`}
                       >
                         {/* Framed Preview Container */}
-                        <div className="relative aspect-[15/10] w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 p-1.5 bg-neutral-100/60 dark:bg-neutral-900/40">
+                        <div
+                          data-bp="card"
+                          className="relative aspect-[15/10] w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 p-1.5 bg-neutral-100/60 dark:bg-neutral-900/40"
+                        >
                           {isComingSoon ? (
                             <div
                               className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-dashed border-neutral-300 dark:border-neutral-700 flex flex-col items-center justify-center p-4 text-center"
@@ -1053,7 +1039,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 <div className="w-full h-[1px]" style={dashedX} />
               </div>
 
-              <div className="mt-6 flex justify-center">
+              <div data-bp="cta" className="mt-6 flex justify-center">
                 <SoftPillButton onClick={() => navigateToView('projects')}>
                   {lang === 'id' ? 'Lihat Semua Proyek' : 'View All Projects'}
                 </SoftPillButton>
@@ -1067,14 +1053,9 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                ================================================================ */}
             <section id="skills" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+                <h2 data-bp="section" className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Keahlian & Teknologi' : 'Skills & Technologies'}
                 </h2>
-                <p className="mt-1 text-xs md:text-sm text-neutral-500">
-                  {lang === 'id'
-                    ? 'Perangkat yang saya pakai untuk membersihkan, menganalisis, dan memodelkan data di proyek-proyek di atas.'
-                    : 'The tools I use to clean, analyze, and model data across the projects above.'}
-                </p>
 
                 <div className="mt-4 space-y-4">
                   {blueprintSkillGroups.map((grp, idx) => (
@@ -1221,14 +1202,11 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                ================================================================ */}
             <section id="highlights" className="w-full py-2 scroll-mt-16">
               <div className="px-4">
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">Highlights</h2>
-                <p className="mt-1 text-xs md:text-sm text-neutral-500">
-                  {lang === 'id'
-                    ? 'Dua sertifikasi pelatihan yang sudah saya tuntaskan, lengkap dengan sertifikat aslinya.'
-                    : 'Two training certifications I have completed, shown with the original certificates.'}
-                </p>
+                <h2 data-bp="section" className="text-xl md:text-2xl font-bold tracking-tight">
+                  Highlights
+                </h2>
 
-                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {blueprintHighlights.map((item) => (
                     <div
                       key={item.id}
@@ -1270,14 +1248,9 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                   withBase={withBase}
                   lenisRef={lenisRef}
                 />
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+                <h2 data-bp="section" className="text-xl md:text-2xl font-bold tracking-tight">
                   {lang === 'id' ? 'Tentang Diriku' : 'Beyond the Data'}
                 </h2>
-                <p className="mt-1 text-xs md:text-sm text-neutral-500">
-                  {lang === 'id'
-                    ? 'Di luar spreadsheet, inilah yang menemani saya: film yang rela saya tonton ulang, buku yang saya baca berkali-kali, dan lagu yang mengiringi sesi vibe coding.'
-                    : 'Outside the spreadsheets, this is what keeps me company: films I will happily rewatch, books I keep rereading, and songs behind my vibe-coding sessions.'}
-                </p>
 
                 {/* 1. Movies Poster Grid (Top) */}
                 <div className="mt-4">
@@ -1331,15 +1304,12 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                 {/* 2. Interactive 3D Bookshelf (Middle — Between Movies and Music) */}
                 <Bookshelf3D lang={lang} withBase={withBase} />
 
-                {/* 3. Music Rotation + Playable Spotify Embed (Bottom) */}
+                {/* 3. Favorite Music + Playable Spotify Embed (Bottom) */}
                 <div className="mt-7">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
-                      {lang === 'id' ? 'Musik & Rotasi Spotify' : 'Music & Spotify Rotation'}
+                      {lang === 'id' ? 'Musik Favorit' : 'Favorite Music'}
                     </h3>
-                    <span className="text-[11px] text-neutral-400">
-                      {nowPlaying.title} — {nowPlaying.artist}
-                    </span>
                   </div>
 
                   <div className="p-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 space-y-3">
@@ -1419,7 +1389,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
 
         {/* Interactive Dot-Matrix Footer */}
         <FooterBackground>
-          <footer className="w-full py-10 px-4 text-xs text-neutral-500">
+          <footer className="w-full pt-10 pb-28 lg:pb-16 px-4 text-xs text-neutral-500">
             <div className="flex flex-col items-center text-center space-y-2.5">
               <p className="text-neutral-700 dark:text-neutral-300 font-medium">
                 {lang === 'id'
@@ -1475,6 +1445,140 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
             </div>
           </footer>
         </FooterBackground>
+      </div>
+
+      {/* Progressive Bottom Blur (Fixed Viewport Bottom Edge, Pointer-Events-None) */}
+      <div aria-hidden="true" className="bp-bottom-blur">
+        <div className="bp-bottom-blur-layer" data-step="1" />
+        <div className="bp-bottom-blur-layer" data-step="2" />
+        <div className="bp-bottom-blur-layer" data-step="3" />
+        <div className="bp-bottom-blur-layer" data-step="4" />
+      </div>
+
+      {/* Floating Bottom Navbar for Small & Medium Devices (< lg / < 1024px) */}
+      <div
+        className="fixed inset-x-0 bottom-3.5 z-40 flex justify-center px-2.5 pointer-events-none lg:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <nav
+          data-bp="mobilenav"
+          aria-label={lang === 'id' ? 'Navigasi Cepat' : 'Quick Navigation'}
+          className="pointer-events-auto inline-flex items-center gap-0.5 sm:gap-1 p-1.5 rounded-full bg-white/82 dark:bg-neutral-900/84 backdrop-blur-xl backdrop-saturate-150 border border-neutral-300/80 dark:border-neutral-700/85 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.22)] dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.65)]"
+        >
+          {[
+            {
+              key: 'top',
+              label: lang === 'id' ? 'Atas' : 'Top',
+              icon: Home,
+              active: view === 'home' && isAtTop,
+              onClick: () => navigateToView('home'),
+            },
+            {
+              key: 'experience',
+              label: lang === 'id' ? 'Pengalaman' : 'Experience',
+              icon: Briefcase,
+              active: (view === 'home' && !isAtTop && activeSection === 'experience') || view === 'experience',
+              onClick: () => scrollToSection('experience'),
+            },
+            {
+              key: 'projects',
+              label: lang === 'id' ? 'Proyek' : 'Projects',
+              icon: FolderGit2,
+              active:
+                (view === 'home' && !isAtTop && activeSection === 'projects') ||
+                view === 'projects' ||
+                view === 'project-detail',
+              onClick: () => scrollToSection('projects'),
+            },
+            {
+              key: 'skills',
+              label: lang === 'id' ? 'Keahlian' : 'Skills',
+              icon: Layers,
+              active:
+                view === 'home' &&
+                !isAtTop &&
+                (activeSection === 'skills' || activeSection === 'education'),
+              onClick: () => scrollToSection('skills'),
+            },
+            {
+              key: 'highlights',
+              label: 'Highlights',
+              icon: Award,
+              active:
+                (view === 'home' && !isAtTop && activeSection === 'highlights') ||
+                view === 'highlights',
+              onClick: () => scrollToSection('highlights'),
+            },
+            {
+              key: 'movies',
+              label: lang === 'id' ? 'Tentang' : 'Beyond',
+              icon: Tv,
+              active:
+                (view === 'home' && !isAtTop && activeSection === 'movies') || view === 'anime',
+              onClick: () => scrollToSection('movies'),
+            },
+            {
+              key: 'contact',
+              label: lang === 'id' ? 'Kontak' : 'Contact',
+              icon: Mail,
+              active: view === 'contact',
+              onClick: () => navigateToView('contact'),
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.key}
+                type="button"
+                onClick={item.onClick}
+                aria-label={item.label}
+                title={item.label}
+                aria-current={item.active ? 'location' : undefined}
+                className={`h-[33px] sm:h-9 rounded-full inline-flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                  item.active
+                    ? 'w-[33px] sm:w-auto sm:px-3 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs'
+                    : 'w-[33px] sm:w-9 text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-800/70'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                {item.active && (
+                  <span className="hidden sm:inline text-[11px] font-medium tracking-tight whitespace-nowrap">
+                    {item.label}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          <span
+            aria-hidden="true"
+            className="w-[1px] h-4 mx-0.5 bg-neutral-300/80 dark:bg-neutral-700/80 shrink-0"
+          />
+
+          <button
+            type="button"
+            onClick={() => setCmdOpen(true)}
+            aria-label={lang === 'id' ? 'Menu Cepat & Pencarian' : 'Command Menu & Search'}
+            title={lang === 'id' ? 'Menu Cepat (⌘K)' : 'Command Menu (⌘K)'}
+            className="w-[33px] h-[33px] sm:w-9 sm:h-9 rounded-full inline-flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-800/70 transition-colors cursor-pointer"
+          >
+            <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={lang === 'id' ? 'Ganti Tema Terang / Gelap' : 'Toggle Theme'}
+            title={lang === 'id' ? 'Ganti Tema' : 'Toggle Theme'}
+            className="w-[33px] h-[33px] sm:w-9 sm:h-9 rounded-full inline-flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-800/70 transition-colors cursor-pointer"
+          >
+            {isDark ? (
+              <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            ) : (
+              <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            )}
+          </button>
+        </nav>
       </div>
 
       {/* Command Menu Modal (⌘K) */}

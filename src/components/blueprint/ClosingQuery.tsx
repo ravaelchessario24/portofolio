@@ -169,25 +169,15 @@ export function ClosingQuery({ lang }: ClosingQueryProps) {
     <section
       ref={sectionRef}
       aria-labelledby="closing-query-heading"
-      className="w-full pt-[72px] pb-12 px-4 text-center"
+      className="w-full pt-[56px] pb-12 px-4 text-center"
     >
-      {/* Eyebrow */}
-      <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[#555555] dark:text-[#a3a3a3] m-0">
-        {t.eyebrow}
-      </p>
-
       {/* Heading H2 */}
       <h2
         id="closing-query-heading"
-        className="mt-2.5 text-[26px] sm:text-[32px] font-semibold tracking-[-0.02em] leading-tight text-neutral-900 dark:text-neutral-100"
+        className="text-[26px] sm:text-[32px] font-semibold tracking-[-0.02em] leading-tight text-neutral-900 dark:text-neutral-100"
       >
         {t.heading}
       </h2>
-
-      {/* Subtext */}
-      <p className="mt-2.5 text-[15px] text-[#555555] dark:text-[#a3a3a3] max-w-[480px] mx-auto leading-relaxed">
-        {t.subtext}
-      </p>
 
       {/* Monochrome SQL Card */}
       <div

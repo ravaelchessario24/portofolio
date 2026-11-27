@@ -4,8 +4,6 @@
     {
       "scene": "Indonesian Pop / Indie",
       "artists": [
-        "Lealona",
-        "The Jeblogs",
         "Perunggu",
         ".Feast",
         "Hindia",
@@ -29,6 +27,7 @@
     {
       "scene": "Pop",
       "artists": [
+        "Bad Bunny",
         "Bruno Mars",
         "LANY",
         "Justin Bieber",
@@ -37,18 +36,18 @@
     }
   ],
   "nowPlaying": {
-    "trackId": "41jLKrK1nJisuz8JJ2t09Y",
-    "title": "Sekian, Terima Kasih",
-    "artist": "Lealona & The Jeblogs"
+    "trackId": "3sK8wGT43QFpWrvNQsrQya",
+    "title": "DtMF",
+    "artist": "Bad Bunny"
   },
   "albums": [
     {
-      "id": "6xqtDhaQjqdAT9W3hYfXbI",
-      "artist": "Lealona & The Jeblogs",
+      "id": "5K79FLRUCSysQnVESLcTdb",
+      "artist": "Bad Bunny",
       "year": 2025,
-      "scene": "Indonesian Pop / Indie",
-      "title": "Sekian, Terima Kasih",
-      "cover": "/music/lealona-sekian-terima-kasih.webp"
+      "scene": "Pop",
+      "title": "DeBÍ TiRAR MáS FOToS",
+      "cover": "/music/bad-bunny-debi-tirar-mas-fotos.webp"
     },
     {
       "id": "perunggu-dalam-dinamika",

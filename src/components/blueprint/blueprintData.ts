@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import { createElement, type ComponentType } from 'react';
 import {
   Database,
   FileSpreadsheet,
@@ -19,6 +19,7 @@ import {
   SiStreamlit,
   SiJupyter,
   SiGooglecolab,
+  SiClaude,
 } from 'react-icons/si';
 import type { Lang } from '../../lib/content';
 import rawAnime from '../../content/anime.json';
@@ -423,6 +424,28 @@ export const blueprintSkillGroups = [
       { name: 'Google Colab', icon: SiGooglecolab },
     ],
   },
+  {
+    group: { id: 'Workflow & AI', en: 'Workflow & AI' },
+    skills: [
+      {
+        name: 'Antigravity',
+        icon: ({ className }: { className?: string }) =>
+          createElement(
+            'svg',
+            {
+              viewBox: '0 0 24 24',
+              fill: 'currentColor',
+              className,
+              'aria-hidden': 'true',
+            },
+            createElement('path', {
+              d: 'M12 2.75L3.6 20.1a.95.95 0 0 0 1.28 1.26L12 17.85l7.12 3.51a.95.95 0 0 0 1.28-1.26L12 2.75zm0 4.65l4.35 9.15L12 14.42l-4.35 2.13L12 7.4z',
+            }),
+          ),
+      },
+      { name: 'Claude', icon: SiClaude },
+    ],
+  },
 ];
 
 export interface BlueprintCertification {
@@ -520,7 +543,7 @@ export interface AnimeItem {
 }
 
 export const animeSectionDefs: { id: AnimeSectionId; title: { id: string; en: string } }[] = [
-  { id: 'favorites', title: { id: 'Sinema & Serial Favorit', en: 'Favorite Films & Series' } },
+  { id: 'favorites', title: { id: 'Film & Serial Favorit', en: 'Favorite Films & Series' } },
   { id: 'movies', title: { id: 'Animasi Pilihan', en: 'Animated Favorites' } },
   { id: 'classics', title: { id: 'Aksi, Drama & Klasik Hangat', en: 'Action, Heartfelt & Classics' } },
   { id: 'watching', title: { id: 'Sedang Ditonton', en: 'Currently Watching' } },
@@ -580,17 +603,11 @@ export const blueprintProfileMeta = {
     id: 'Full-Time, Internship',
     en: 'Full-Time, Internship',
   },
-  openSentence: {
-    id: 'Saat ini saya terbuka untuk peluang Full-Time maupun Internship di bidang Data Analyst, Data Science, atau IT Helpdesk.',
-    en: 'I am currently open to full-time and internship opportunities in Data Analyst, Data Science, or IT Helpdesk roles.',
-  },
 };
 
 export const closingQueryI18n = {
   id: {
-    eyebrow: 'Query terakhir',
-    heading: 'Satu query sebelum Anda pergi.',
-    subtext: 'Hasilnya hanya satu baris. Mungkin justru yang Anda cari.',
+    heading: 'Satu query sebelum kamu pergi.',
     fileName: 'kontak.sql',
     engine: 'MySQL',
     statusIdle: 'siap dijalankan',
@@ -601,9 +618,7 @@ export const closingQueryI18n = {
     btnDone: 'Jalankan ulang',
   },
   en: {
-    eyebrow: 'Final query',
     heading: 'One last query before you go.',
-    subtext: "Just one row. Maybe exactly what you're looking for.",
     fileName: 'kontak.sql',
     engine: 'MySQL',
     statusIdle: 'ready to run',

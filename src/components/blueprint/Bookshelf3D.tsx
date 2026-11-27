@@ -351,7 +351,7 @@ export function Bookshelf3D({
     <div className="mt-7">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-500">
-          {lang === 'id' ? 'Buku yang akan saya baca berulang kali' : 'Books I would happily reread'}
+          {lang === 'id' ? 'BUKU YANG AKAN AKU BACA BERULANG KALI' : 'BOOKS I WOULD HAPPILY REREAD'}
         </h3>
         {activeBook && (
           <span className="text-[11px] font-mono text-neutral-400">

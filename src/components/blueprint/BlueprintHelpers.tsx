@@ -522,6 +522,7 @@ type BpBox = {
   strong?: boolean;
   dot?: boolean;
   round?: boolean;
+  pill?: boolean;
 };
 
 type BpLayout = {
@@ -538,6 +539,7 @@ type BpSpec = {
   strong?: boolean;
   dot?: boolean;
   round?: boolean;
+  pill?: boolean;
   children?: boolean;
 };
 
@@ -549,13 +551,13 @@ const BP_SPEC: Record<string, BpSpec> = {
   title: { tag: 'TITLE', group: 1 },
   loc: { tag: 'LOC', group: 1 },
   navitem: { tag: 'NAV', group: 1 },
+  mobilenav: { tag: 'NAV DOCK', group: 1, strong: true, pill: true },
   bio: { tag: 'COPY 02 · BIO', group: 2 },
   bullet: { tag: 'BULLET', group: 2, dot: true },
-  open: { tag: 'STATUS', group: 2 },
   cta: { tag: 'CTA', group: 2, strong: true, round: true, children: true },
   pills: { tag: 'LINK', group: 2, round: true, children: true },
-  section: { tag: 'SECTION 01', group: 2 },
-  card: { tag: 'CARD 01', group: 2, round: true },
+  section: { tag: 'SECTION', group: 2 },
+  card: { tag: 'CARD', group: 2, round: true },
 };
 
 function measureBlueprint(): BpLayout {
@@ -578,6 +580,7 @@ function measureBlueprint(): BpLayout {
       strong: spec.strong,
       dot: spec.dot,
       round: spec.round,
+      pill: spec.pill,
     });
   };
 
@@ -596,9 +599,10 @@ function measureBlueprint(): BpLayout {
       push(key, el, (el.textContent || '').trim() || spec.tag);
       return;
     }
-    if (key === 'bullet') {
+    if (key === 'bullet' || key === 'section' || key === 'card') {
       counters[key] = (counters[key] || 0) + 1;
-      push(key, el, `BULLET 0${counters[key]}`);
+      const num = String(counters[key]).padStart(2, '0');
+      push(key, el, `${spec.tag} ${num}`);
       return;
     }
     push(key, el, spec.tag);
@@ -781,11 +785,17 @@ export function BlueprintLoader() {
             }`}
             style={{
               ...hatchStyle,
+              ...(b.pill
+                ? {
+                    backgroundColor: phase >= 3 ? 'rgba(29, 71, 160, 0.92)' : '#1D47A0',
+                    zIndex: 20,
+                  }
+                : {}),
               left: b.x,
               top: b.y,
               width: b.w,
               height: b.h,
-              borderRadius: b.round ? 8 : 0,
+              borderRadius: b.pill ? 9999 : b.round ? 8 : 0,
               opacity: shown ? 1 : 0,
               transform: shown ? 'translateY(0)' : 'translateY(6px)',
               transition: 'opacity 300ms ease, transform 300ms ease',
@@ -796,12 +806,20 @@ export function BlueprintLoader() {
               <span className="absolute -left-3 top-2 w-1.5 h-1.5 rounded-full bg-white/80" />
             )}
             {showTag && (
-              <div className="absolute top-0.5 left-0.5 max-w-full overflow-hidden">
+              <div
+                className={`absolute top-0.5 max-w-full overflow-hidden ${
+                  b.pill ? 'left-3.5' : 'left-0.5'
+                }`}
+              >
                 <BpTag>{b.tag}</BpTag>
               </div>
             )}
             {showSize && (
-              <span className="absolute bottom-0.5 right-1 font-mono text-[8px] text-white/85">
+              <span
+                className={`absolute bottom-0.5 font-mono text-[8px] text-white/85 ${
+                  b.pill ? 'right-3.5' : 'right-1'
+                }`}
+              >
                 {Math.round(b.w)} × {Math.round(b.h)}
               </span>
             )}

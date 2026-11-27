@@ -37,7 +37,6 @@ import {
   techNames,
   iconMap,
   pick,
-  blueprintProfileMeta,
 } from './blueprintData';
 import { dashedX, dashedY, PointText } from './BlueprintHelpers';
 import { Bookshelf3D } from './Bookshelf3D';
@@ -318,11 +317,6 @@ export function AllProjectsView({
         <h1 className="mt-3 text-xl md:text-2xl font-bold tracking-tight">
           {lang === 'id' ? 'Semua Proyek & Studi Kasus' : 'All Projects & Case Studies'}
         </h1>
-        <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
-          {lang === 'id'
-            ? 'Semua proyek dan studi kasus saya, lengkap dengan tangkapan layar, metrik evaluasi, dan detail implementasi.'
-            : 'All my projects and case studies, complete with screenshots, evaluation metrics, and implementation details.'}
-        </p>
       </div>
 
       <div className="w-full h-[1px]" style={dashedX} />
@@ -578,11 +572,6 @@ export function AllHighlightsView({
             ? 'Highlights — Sertifikasi Pelatihan Profesional'
             : 'Highlights — Professional Training Certifications'}
         </h1>
-        <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
-          {lang === 'id'
-            ? 'Dua sertifikasi pelatihan yang sudah saya tuntaskan, lengkap dengan sertifikat aslinya.'
-            : 'Two training certifications I have completed, shown with the original certificates.'}
-        </p>
       </div>
 
       <div className="w-full h-[1px]" style={dashedX} />
@@ -649,11 +638,6 @@ export function AllAnimeMusicView({
             ? 'Tentang Diriku — Film, Buku & Musik'
             : 'Beyond the Data — Films, Books & Music'}
         </h1>
-        <p className="mt-1 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
-          {lang === 'id'
-            ? 'Di luar spreadsheet, inilah yang menemani saya: film yang rela saya tonton ulang, buku yang saya baca berkali-kali, dan lagu yang mengiringi sesi vibe coding.'
-            : 'Outside the spreadsheets, this is what keeps me company: films I will happily rewatch, books I keep rereading, and songs behind my vibe-coding sessions.'}
-        </p>
       </div>
 
       <div className="w-full h-[1px]" style={dashedX} />
@@ -736,11 +720,8 @@ export function AllAnimeMusicView({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
-              {lang === 'id' ? 'Rotasi Musik & Lagu Favorit' : 'Music Rotation & Top Track'}
+              {lang === 'id' ? 'Musik Favorit' : 'Favorite Music'}
             </h2>
-            <p className="text-xs text-neutral-500 mt-0.5">
-              {nowPlaying.title} — {nowPlaying.artist}
-            </p>
           </div>
           <a
             href={`https://open.spotify.com/track/${nowPlaying.trackId}`}
@@ -942,9 +923,6 @@ export function ContactPageView({
         <h1 className="mt-4 text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
           {lang === 'id' ? 'Hubungi Saya' : 'Get in Touch'}
         </h1>
-        <p className="mt-1.5 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
-          {pick(blueprintProfileMeta.openSentence, lang)}
-        </p>
       </div>
 
       <div className="w-full h-[1px]" style={dashedX} />
