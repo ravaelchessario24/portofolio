@@ -33,6 +33,9 @@ export type TechKey =
   | 'sql'
   | 'mysql'
   | 'excel'
+  | 'pivottable'
+  | 'xlookup'
+  | 'datacleaning'
   | 'sheets'
   | 'pandas'
   | 'numpy'
@@ -50,6 +53,9 @@ export const iconMap: Record<TechKey, TechIcon> = {
   sql: Database,
   mysql: SiMysql,
   excel: FileSpreadsheet,
+  pivottable: Table2,
+  xlookup: BarChart3,
+  datacleaning: Database,
   sheets: SiGooglesheets,
   pandas: SiPandas,
   numpy: SiNumpy,
@@ -68,6 +74,9 @@ export const techNames: Record<TechKey, string> = {
   sql: 'SQL',
   mysql: 'MySQL',
   excel: 'Microsoft Excel',
+  pivottable: 'Pivot Table & Slicer',
+  xlookup: 'XLOOKUP & SUMIFS',
+  datacleaning: 'Data Cleaning & Audit',
   sheets: 'Google Sheets',
   pandas: 'Pandas',
   numpy: 'NumPy',
@@ -354,30 +363,91 @@ export const blueprintProjects: BlueprintProject[] = [
     ],
   },
   {
-    slug: 'coming-soon',
+    slug: 'klinik-medinara',
     title: {
-      id: 'Coming Soon — Proyek Data Analyst & Dashboard Interaktif (Microsoft Excel)',
-      en: 'Coming Soon — Data Analyst & Interactive Dashboard Project (Microsoft Excel)',
+      id: 'Analisis Operasional, Finansial & Audit Data Klinik Medinara',
+      en: 'Klinik Medinara Operations, Financial & Medical Data Quality Dashboard',
     },
-    imageTitle: 'Coming Soon — Excel Data Analyst Project',
-    src: 'banner-dark.jpg',
-    gallery: [],
+    imageTitle: 'Klinik Medinara Excel Operations Dashboard',
+    src: 'images/projects/klinik-medinara-dashboard.webp',
+    gallery: [
+      {
+        src: 'images/projects/klinik-medinara-dashboard.webp',
+        caption: {
+          id: 'Ringkasan Operasi — Pusat Kendali Interaktif Berbasis Slicer & PivotTable (5.000 Janji Temu · Realisasi Rp 736,44 Jt)',
+          en: 'Operations Overview — Interactive Slicer & PivotTable Control Center (5,000 Appointments · IDR 736.44M Realized Revenue)',
+        },
+      },
+      {
+        src: 'images/projects/klinik-medinara-2.webp',
+        caption: {
+          id: 'Beban Kerja & No-Show Dokter — Evaluasi Kapasitas 25 Dokter di 8 Poli (Poli Mata 70,7 & THT 65,7 Appt/Hari Jadwal)',
+          en: 'Doctor Workload & No-Show Rate — Capacity Analysis Across 25 Doctors & 8 Clinics (Ophthalmology 70.7 & ENT 65.7 Appt/Day)',
+        },
+      },
+      {
+        src: 'images/projects/klinik-medinara-3.webp',
+        caption: {
+          id: 'Finansial & Asuransi — Kontribusi BPJS 61,1% (Rp 449,99 Jt), Poli Penyakit Dalam #1 & Kebocoran Batal/No-Show Rp 135,87 Jt',
+          en: 'Financial & Insurance Mix — 61.1% BPJS Share (IDR 449.99M), Internal Medicine #1 Revenue & IDR 135.87M Cancellation Leakage',
+        },
+      },
+      {
+        src: 'images/projects/klinik-medinara-4.webp',
+        caption: {
+          id: 'Keluhan Klinis & Retensi Pasien — Top Diagnosis ICD-10 & 70,5% Retensi Aktif (Pasien Repeat Menyumbang 87,4% Kunjungan)',
+          en: 'Clinical Complaints & Patient Retention — Top ICD-10 Diagnoses & 70.5% Active Retention (Repeat Patients Drive 87.4% Visits)',
+        },
+      },
+      {
+        src: 'images/projects/klinik-medinara-5.webp',
+        caption: {
+          id: 'Utilisasi Jam & Pola Musiman — Heatmap Jam × Hari, Blok Puncak 13:00–15:00 & Pertumbuhan Kunjungan +275,7% (2022–2024)',
+          en: 'Hourly Utilization & Seasonality — Hour × Day Heatmap, 13:00–15:00 Peak Block & +275.7% Full-Year Growth (2022–2024)',
+        },
+      },
+      {
+        src: 'images/projects/klinik-medinara-6.webp',
+        caption: {
+          id: 'Audit Kualitas Data SIMRS — Standarisasi 100% 3 Format Tanggal (11.000 Baris) & Deteksi 12.753 Anomali Lintas 5 Tabel Medis',
+          en: 'SIMRS Medical Data Quality Audit — 100% 3-Format Date Standardization (11,000 Rows) & 12,753 Anomalies Across 5 Tables',
+        },
+      },
+    ],
     description: {
-      id: 'Studi kasus analisis data bisnis, pembersihan data (Data Cleaning), fungsi lanjutan, Pivot Table, dan visualisasi dashboard interaktif menggunakan Microsoft Excel.',
-      en: 'Business data analysis case study featuring data cleaning, advanced formulas, Pivot Tables, and an interactive dashboard built with Microsoft Excel.',
+      id: 'Mengolah 16.905 record lintas 5 tabel rekam medis Klinik Medinara (Jun 2021 – Jan 2025) di Microsoft Excel menjadi 6 halaman dashboard operasional interaktif berbasis PivotTable dan Slicer: memetakan realisasi pendapatan Rp 736,44 Juta, beban 25 dokter di 8 poli, retensi 2.000 pasien, hingga audit 12.753 anomali kualitas data SIMRS.',
+      en: 'Processed 16,905 clinical records across 5 relational tables for Klinik Medinara (Jun 2021 – Jan 2025) in Microsoft Excel into a 6-sheet interactive PivotTable & Slicer dashboard: mapping IDR 736.44M in realized revenue, workload across 25 doctors in 8 clinics, 2,000-patient retention, and 12,753 SIMRS data quality anomalies.',
     },
     longDescription: {
       id: [
-        'Proyek Data Analyst menggunakan Microsoft Excel (meliputi Data Cleaning, Pivot Table, fungsi lanjutan, serta Dashboard Interaktif) sedang dalam tahap penyusunan studi kasus. Nantikan pembaruannya segera.',
+        'Standarisasi Data Mentah & Relasi 5 Tabel Klinis: Saya mengintegrasikan 16.905 record dari 5 tabel operasional (25 dokter, 2.000 pasien, 5.000 janji temu, 3.880 diagnosis ICD-10, dan 6.000 resep obat) menggunakan XLOOKUP, VLOOKUP, SUMIFS, dan COUNTIFS. Sebanyak 60% tanggal mentah berformat campuran (YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY) pada 11.000 baris transaksi distandarisasi 100% ke format ISO murni lewat rumus dinamis IF, MID, DATE, dan VALUE.',
+        'Kapasitas Poli, Jam Puncak & Kebocoran Revenue: Dalam 2 tahun kalender penuh (2022–2024), volume kunjungan melonjak +275,7% (679 menjadi 2.551 kunjungan/tahun) dengan realisasi pendapatan Rp 736,44 Juta (80,0% dari potensi gross Rp 920,79 Juta) yang ditopang klaim BPJS (61,1%) dan Poli Penyakit Dalam (Rp 133,65 Juta). Analisis per hari praktik mengungkap ketimpangan kapasitas: poli paruh waktu 3 hari/minggu (Mata 70,7 dan THT 65,7 janji temu/hari jadwal) menanggung beban 2x lipat dibanding Poli Gigi (35,1), sementara pembatalan dan no-show (puncak pukul 14:00 sebesar 8,8%) menggerus potensi pendapatan Rp 135,87 Juta.',
+        'Medical Data Quality Audit untuk Perbaikan SIMRS: Di luar metrik bisnis, saya menyusun modul audit otomatis 10 kategori (DQ-01 s/d DQ-10) yang mendeteksi 12.753 temuan anomali input hulu, termasuk 906 risiko overdosis penulisan satuan 500mg pada obat dosis kecil, 1.502 ketidakcocokan sediaan/rute obat, 1.832 booking di luar hari praktik dokter (termasuk 783 hari Minggu), serta 698 diagnosis tanpa kode ICD-10 yang berisiko menahan pencairan klaim asuransi.',
       ],
       en: [
-        'An upcoming Data Analyst project built with Microsoft Excel (covering Data Cleaning, Pivot Tables, advanced formulas, and an Interactive Dashboard) is currently in preparation. Stay tuned.',
+        'Raw Data Standardization & 5-Table Clinical Modeling: I integrated 16,905 records across 5 operational tables (25 doctors, 2,000 patients, 5,000 appointments, 3,880 ICD-10 diagnoses, and 6,000 prescriptions) using XLOOKUP, VLOOKUP, SUMIFS, and COUNTIFS. Across 11,000 transaction rows where 60% of dates were stored in mixed formats (YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY), a dynamic IF, MID, DATE, and VALUE formula pipeline achieved 100% ISO date standardization.',
+        'Clinic Capacity, Peak Hours & Revenue Leakage: Full-year appointment volume grew +275.7% between 2022 and 2024 (679 to 2,551 visits/year), generating IDR 736.44M in realized revenue (80.0% of IDR 920.79M gross scheduled potential), anchored by BPJS (61.1%) and Internal Medicine (IDR 133.65M). Normalizing by practice days exposed severe bottlenecks: part-time 3-day/week clinics (Ophthalmology at 70.7 and ENT at 65.7 appts/scheduled day) carried 2x the daily load of Dentistry (35.1), while cancellations and no-shows (peaking at 8.8% at 14:00) leaked IDR 135.87M.',
+        'Medical Data Quality Audit for SIMRS Hardening: Beyond operational KPIs, I built an automated 10-rule audit sheet (DQ-01 to DQ-10) surfacing 12,753 upstream input anomalies—including 906 overdose-risk 500mg unit entries on low-dose medications, 1,502 dosage-form/route mismatches, 1,832 off-schedule bookings (including 783 Sundays), and 698 diagnoses missing mandatory ICD-10 codes—paired with concrete validation rules for the clinic information system (SIMRS).',
       ],
     },
-    tech: ['excel', 'sheets'],
-    status: 'coming-soon',
-    hasPin: false,
-    isComingSoon: true,
+    tech: ['excel', 'pivottable', 'xlookup', 'datacleaning', 'sheets'],
+    downloads: [
+      {
+        file: 'files/Klinik_Medinara_Dashboard.xlsx',
+        label: {
+          id: 'Unduh Dashboard Interaktif (.xlsx)',
+          en: 'Download Interactive Dashboard (.xlsx)',
+        },
+      },
+    ],
+    status: 'live',
+    hasPin: true,
+    metrics: [
+      { label: { id: 'Total Janji Temu', en: 'Appointments Analyzed' }, value: '5.000' },
+      { label: { id: 'Realisasi Revenue (Rp)', en: 'Realized Revenue (IDR)' }, value: '736,44 Jt' },
+      { label: { id: 'Retensi Pasien Aktif', en: 'Active Retention Rate' }, value: '70,5%' },
+      { label: { id: 'Anomali SIMRS Teraudit', en: 'SIMRS Anomalies Audited' }, value: '12.753' },
+    ],
   },
 ];
 

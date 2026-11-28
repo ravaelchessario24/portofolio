@@ -122,24 +122,31 @@ export function ProjectDetailView({
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             )}
-            {project.downloads?.map((d) => (
-              <a
-                key={d.file}
-                href={withBase(d.file)}
-                download
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>{pick(d.label, lang)}</span>
-              </a>
-            ))}
+            {project.downloads?.map((d, idx) => {
+              const isPrimaryDownload = !project.live && idx === 0;
+              return (
+                <a
+                  key={d.file}
+                  href={withBase(d.file)}
+                  download
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition cursor-pointer ${
+                    isPrimaryDownload
+                      ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90'
+                      : 'border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                  }`}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>{pick(d.label, lang)}</span>
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>
 
       <div className="w-full h-[1px] my-2" style={dashedX} />
 
-      {/* Interactive 5-Slide Screenshot Viewer */}
+      {/* Interactive Multi-Slide Screenshot Viewer */}
       <div className="px-4 md:px-6 py-4">
         <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-100/70 dark:bg-neutral-900/60 p-3 md:p-4">
           <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 group">
@@ -197,7 +204,11 @@ export function ProjectDetailView({
           </div>
 
           {/* Thumbnail Strip */}
-          <div className="mt-3 grid grid-cols-5 gap-2">
+          <div
+            className={`mt-3 grid gap-2 ${
+              slides.length === 6 ? 'grid-cols-3 sm:grid-cols-6' : 'grid-cols-5'
+            }`}
+          >
             {slides.map((slide, idx) => (
               <button
                 key={slide.src}
@@ -1172,6 +1183,15 @@ export function CommandMenuModal({
       icon: <FolderGit2 className="w-4 h-4" />,
       action: () => {
         onSelectProject('mobile-jkn');
+        onClose();
+      },
+    },
+    {
+      group: lang === 'id' ? 'Studi Kasus Proyek' : 'Project Case Studies',
+      label: 'Klinik Medinara — Operations, Financial & Audit Dashboard (Excel)',
+      icon: <FolderGit2 className="w-4 h-4" />,
+      action: () => {
+        onSelectProject('klinik-medinara');
         onClose();
       },
     },

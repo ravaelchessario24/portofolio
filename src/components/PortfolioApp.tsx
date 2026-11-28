@@ -5,6 +5,7 @@ import {
   Award,
   Briefcase,
   ChevronDown,
+  Download,
   ExternalLink,
   FileText,
   FolderGit2,
@@ -995,7 +996,7 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                               className="flex items-center gap-2 text-neutral-500 shrink-0"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              {project.live && (
+                              {project.live ? (
                                 <a
                                   href={project.live}
                                   target="_blank"
@@ -1005,7 +1006,16 @@ export default function PortfolioApp({ baseUrl = '/' }: PortfolioAppProps) {
                                 >
                                   <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
-                              )}
+                              ) : project.downloads?.[0] ? (
+                                <a
+                                  href={withBase(project.downloads[0].file)}
+                                  download
+                                  title={pick(project.downloads[0].label, lang)}
+                                  className="hover:text-neutral-900 dark:hover:text-white transition"
+                                >
+                                  <Download className="w-3.5 h-3.5" />
+                                </a>
+                              ) : null}
                               <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </div>
                           )}
